@@ -37,8 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		026ECDC23C41FE6B280D37FA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		2DCD82DA7A9377F3DB24195F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		026ECDC23C41FE6B280D37FA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		2DCD82DA7A9377F3DB24195F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		4A05FB90235E94666E0CC167 /* Pods_JKNetworking_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JKNetworking_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D0934D339E44A7DF7B5E847 /* Pods-JKNetworking_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JKNetworking_Tests.release.xcconfig"; path = "Target Support Files/Pods-JKNetworking_Tests/Pods-JKNetworking_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* JKNetworking_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JKNetworking_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,7 +65,7 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9A98CFF7180161942D832B81 /* Pods-JKNetworking_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JKNetworking_Tests.debug.xcconfig"; path = "Target Support Files/Pods-JKNetworking_Tests/Pods-JKNetworking_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		AEE93E2D353570623E59CA9B /* Pods-JKNetworking_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JKNetworking_Example.release.xcconfig"; path = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example.release.xcconfig"; sourceTree = "<group>"; };
-		D59279436500EB7F60ACA953 /* JKNetworking.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = JKNetworking.podspec; path = ../JKNetworking.podspec; sourceTree = "<group>"; };
+		D59279436500EB7F60ACA953 /* JKNetworking.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = JKNetworking.podspec; path = ../JKNetworking.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		DF9CDC96F7B53DCA8FF1CD8B /* Pods_JKNetworking_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JKNetworking_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -193,7 +193,6 @@
 				9A98CFF7180161942D832B81 /* Pods-JKNetworking_Tests.debug.xcconfig */,
 				4D0934D339E44A7DF7B5E847 /* Pods-JKNetworking_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -259,6 +258,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -321,10 +321,14 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
+				"${BUILT_PRODUCTS_DIR}/JKDataHelper/JKDataHelper.framework",
 				"${BUILT_PRODUCTS_DIR}/JKNetworking/JKNetworking.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JKDataHelper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JKNetworking.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

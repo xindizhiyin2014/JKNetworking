@@ -1,0 +1,30 @@
+{
+  "name": "JKNetworking",
+  "version": "0.1.0",
+  "summary": "A short description of JKNetworking.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/xindizhiyin2014/JKNetworking",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "xindizhiyin2014": "hlhan@vova.com.hk"
+  },
+  "source": {
+    "git": "https://github.com/xindizhiyin2014/JKNetworking.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "JKNetworking/Classes/**/*",
+  "dependencies": {
+    "AFNetworking": [
+
+    ],
+    "JKDataHelper": [
+
+    ]
+  }
+}

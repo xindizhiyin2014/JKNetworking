@@ -22,7 +22,7 @@ pod 'JKNetworking'
 
 ## Author
 
-xindizhiyin2014, hlhan@vova.com.hk
+xindizhiyin2014, 929097264@qq.com
 
 ## License
 
