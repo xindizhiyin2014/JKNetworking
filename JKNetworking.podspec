@@ -7,7 +7,7 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'JKNetworking'
+  s.name             = 'JKNetworking_'
   s.version          = '0.1.0'
   s.summary          = 'this is a network tool,it refrence YTKNetwork,and depend on AFNetworking'
 
