@@ -7,9 +7,9 @@
 
 #ifndef JKNetworking_h
 #define JKNetworking_h
-#import <JKNetworking/JKBaseRequest.h>
-#import <JKNetworking/JKBatchRequest.h>
-#import <JKNetworking/JKNetworkAgent.h>
-#import <JKNetworking/JKNetworkConfig.h>
+#import <JKNetworking_/JKBaseRequest.h>
+#import <JKNetworking_/JKBatchRequest.h>
+#import <JKNetworking_/JKNetworkAgent.h>
+#import <JKNetworking_/JKNetworkConfig.h>
 
 #endif /* JKNetworking_h */
