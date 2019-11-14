@@ -9,22 +9,8 @@
 #import "JKNetworkAgent.h"
 #import "JKNetworkConfig.h"
 #import <JKDataHelper/JKDataHelper.h>
-
-@interface JKBaseDownloadRequest :JKBaseRequest
-
-@property (nonatomic, copy) NSString *absoluteString;
-
-@end
-
-
-@implementation JKBaseDownloadRequest
-
-- (NSString *)buildCustomRequestUrl
-{
-    return self.absoluteString;
-}
-
-@end
+#import <CommonCrypto/CommonCryptor.h>
+#import <CommonCrypto/CommonDigest.h>
 
 @interface JKBaseRequest()
 
@@ -35,27 +21,40 @@
 @property (nonatomic, strong, readwrite, nullable) id responseJSONObject;
 
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
+/// is the response frome cache
+@property (nonatomic, assign, readwrite) BOOL isDataFromCache;
 
-@property (nonatomic, assign, readwrite) BOOL isDataFromCache; ///< is the response frome cache
+@property (nonatomic, assign, readwrite) BOOL isIndependentRequest;
 
-@property (nonatomic, copy, nullable) void(^successCompletionBlock)(__kindof JKBaseRequest *request); ///< the request success block
-
-@property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request); ///< the request failure block
-
-@property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);      ///< the download/upload request progress block
-
-@property (nonatomic, assign) BOOL isDownload;                 ///< is a download request or not
-
-@property (nonatomic, assign) BOOL isUpload;                   ///< is a upload request or not
-
-@property (nonatomic, strong) NSData *uploadData;              ///< the data need to upload
-
-@property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);   ///< when upload data cofig the formData
+/// the request success block
+@property (nonatomic, copy, nullable) void(^successCompletionBlock)(__kindof JKBaseRequest *request);
+/// the request failure block
+@property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request);
+/// the download/upload request progress block
+@property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
+/// is a download request or not
+@property (nonatomic, assign) BOOL isDownload;
+/// is a upload request or not
+@property (nonatomic, assign) BOOL isUpload;
+/// the data need to upload
+@property (nonatomic, strong) NSData *uploadData;
+/// when upload data cofig the formData
+@property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
 
 
 @end
 
 @implementation JKBaseRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _requestTimeoutInterval = 60;
+        _isIndependentRequest = YES;
+    }
+    return self;
+}
 
 - (void)clearCompletionBlock
 {
@@ -74,7 +73,7 @@
         return;
     }
     
-    if (!self.isInBatchRequest) {
+    if (self.isIndependentRequest) {
         if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
             [self.requestAccessory requestWillStart:self];
         }
@@ -122,6 +121,7 @@
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
 {
     if (self.isDownload || self.isUpload) {
+        NSAssert(NO, @"request is upload request of download request,please use the specified func");
         return;
     }
     self.successCompletionBlock = successBlock;
@@ -129,18 +129,15 @@
     [self start];
 }
 
-+ (__kindof JKBaseRequest *)downloadWithUrl:(NSString *)urlStr
++ (__kindof JKBaseDownloadRequest *)downloadWithUrl:(NSString *)urlStr
                                    progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
                                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
 {
-
-    JKBaseDownloadRequest *request = [JKBaseDownloadRequest new];
-    request.absoluteString = urlStr;
+    JKBaseDownloadRequest *request = [JKBaseDownloadRequest initWithUrl:urlStr];
     request.successCompletionBlock = successBlock;
     request.failureCompletionBlock = failureBlock;
     request.progressBlock = downloadProgressBlock;
-    request.isDownload = YES;
     [[JKNetworkAgent sharedAgent] addRequest:request];
     return request;
 }
@@ -160,7 +157,7 @@
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
 
-- (void)addRequstHeader:(NSDictionary <NSString *,NSString *>*)header
+- (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header
 {
     if (!self.requestHeaders) {
         if (jk_safeDict(header)) {
@@ -255,9 +252,79 @@
     return self.requestTask.state == NSURLSessionTaskStateRunning;
 }
 
++ (NSString *)MD5String:(NSString *)string
+{
+   if (jk_safeStr(string)) {
+        return nil;
+    }
+    const char *cStr = [string UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output?:@"";
+}
+
++ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString
+{
+    if (jk_safeStr(urlString)) {
+        return nil;
+    }
+    
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+        BOOL isDirectory;
+        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
+            isDirectory = NO;
+    #if DEBUG
+            NSAssert(isDirectory, @"please makse sure the [JKNetworkConfig sharedConfig].downloadFolderPath is a directory");
+    #endif
+        }
+        // If targetPath is a directory, use the file name we got from the urlRequest.
+        // Make sure downloadTargetPath is always a file, not directory.
+        if (isDirectory) {
+            NSString *fileName = [JKBaseRequest MD5String:urlString];
+            fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]];
+           NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
+            return downloadTargetPath;
+        }
+    return nil;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass([self class]), self, self.requestTask.currentRequest.URL, self.requestTask.currentRequest.HTTPMethod, self.requestArgument];
 
 }
+@end
+
+@interface JKBaseDownloadRequest()
+
+@property (nonatomic, copy, readwrite) NSString *absoluteString;       ///< the url of the download file resoure
+@property (nonatomic, copy, readwrite) NSString *downloadedFilePath;   ///< the filePath of the downloaded file
+@end
+
+@implementation JKBaseDownloadRequest
+
+
++ (instancetype)initWithUrl:(nonnull NSString *)url
+{
+    JKBaseDownloadRequest *request = [[self alloc] init];
+    if (request) {
+        request.absoluteString = url;
+        request.isDownload = YES;
+        request.downloadedFilePath = [self downloadFilePathWithUrlString:url];
+    }
+    return request;
+}
+
+- (NSString *)buildCustomRequestUrl
+{
+    return self.absoluteString;
+}
+
+
 @end

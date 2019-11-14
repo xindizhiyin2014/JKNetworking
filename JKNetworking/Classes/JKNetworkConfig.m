@@ -30,9 +30,11 @@
 {
     self = [super init];
     if (self) {
-        _host = @"";
-        _cdnHost = @"";
         _securityPolicy = [AFSecurityPolicy defaultPolicy];
+        _sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
+        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+        _downloadFolderPath = [documentPath stringByAppendingPathComponent:@"JKNetworking_download"];
+        _mockModelTimeoutInterval = 300;
     }
     return self;
 }

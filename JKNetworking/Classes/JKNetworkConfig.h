@@ -44,14 +44,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedConfig;
 
-@property (nonatomic, copy, nullable) NSString *host;              ///< the host of request,default is @""
+/// the host of request,default is @""
+@property (nonatomic, copy, nullable) NSString *baseUrl;
 
-@property (nonatomic, copy, nullable) NSString *cdnHost;           ///< the cdnHost of the resource,default is @""
+/// the cdnHost of the resource,default is @""
+@property (nonatomic, copy, nullable) NSString *cdnBaseUrl;
 
-@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;    ///< the security policy ,it use AFNetworking  AFSecurityPolicy
-@property (nonatomic, strong) NSURLSessionConfiguration *sessionConfiguration;
+/// the mock host of the request
+@property (nonatomic, copy, nullable) NSString *mockBaseUrl;
 
-@property (nonatomic, copy) NSString *downloadFolderPath;          ///< the folder filePath of the download file
+/// the status of the mock,default is NO
+@property (nonatomic, assign) BOOL isMock;
+
+/// the all request timeoutInterval in mock model,default is 300 second.
+@property (nonatomic, assign) NSUInteger mockModelTimeoutInterval;
+
+/// the security policy ,it use AFNetworking  AFSecurityPolicy
+@property (nonatomic, strong, nonnull) AFSecurityPolicy *securityPolicy;
+
+@property (nonatomic, strong, nonnull) NSURLSessionConfiguration *sessionConfiguration;
+
+/// the folder filePath of the download file,the defalut is under doment /JKNetworking_download
+@property (nonatomic, copy, nonnull) NSString *downloadFolderPath;
 
 @property (nonatomic, strong, readonly, nullable) id<JKRequestHelperProtocol> requestHelper;
 

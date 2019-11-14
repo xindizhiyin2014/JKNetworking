@@ -34,7 +34,9 @@ typedef NS_ENUM(NSInteger,JKResponseSerializerType)
 };
 
 typedef NS_ENUM(NSInteger,JKNetworkErrorType) {
+   /// the request not support signature
   JKNetworkErrorNotSupportSignature = 10000,
+   /// the response is not a valid json
   JKNetworkErrorInvalidJSONFormat,
 };
 
@@ -52,53 +54,105 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @end
 
+@class JKBaseRequest,JKBaseDownloadRequest;
+
+@protocol JKRequestConfigProtocol <NSObject>
+
+/// config the upload request if the request in JKBatchRequest or JKChainRequest
+/// @param request request
+/// @param data the data need to upload
+/// @param uploadProgressBlock the upload progress block
+/// @param formDataBlock the formData config block
+- (void)configUploadRequest:(__kindof JKBaseRequest *)request
+                       data:(nullable NSData *)data
+                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock;
+
+/// config the download request if the request in JKBatchRequest or JKChainRequest
+/// @param request request
+/// @param downloadProgressBlock the download progress block
+- (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
+                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock;
+
+@end
+
+
 @interface JKBaseRequest : NSObject
 
-@property (nonatomic, copy, nonnull) NSString *requestUrl;                     ///< the request apiName
+/// the request apiName
+@property (nonatomic, copy, nonnull) NSString *requestUrl;
 
-@property (nonatomic, copy, nullable) NSString *host;                          ///< the request host domain
+/// the request host domain
+@property (nonatomic, copy, nullable) NSString *baseUrl;
 
-@property (nonatomic, copy, nullable) NSString *cdnHost;                       ///< the request cdn host domain
+/// the request cdn host domain
+@property (nonatomic, copy, nullable) NSString *cdnBaseUrl;
 
-@property (nonatomic, assign) BOOL useCDN;                                     ///< use cdn or not,default is NO
+/// use cdn or not,default is NO
+@property (nonatomic, assign) BOOL useCDN;
 
-@property (nonatomic, assign) NSTimeInterval requestTimeoutInterval;           ///< the request timeout interval
+/// the request timeout interval
+@property (nonatomic, assign) NSTimeInterval requestTimeoutInterval;
 
-@property (nonatomic, assign) JKRequestMethod requestMethod;                   ///< the method of the request,default is GET
+/// the method of the request,default is GET
+@property (nonatomic, assign) JKRequestMethod requestMethod;
 
-@property (nonatomic, assign) JKRequestSerializerType requestSerializerType;   ///< the request serializer type
+/// the request serializer type
+@property (nonatomic, assign) JKRequestSerializerType requestSerializerType;
 
-@property (nonatomic, assign) JKResponseSerializerType responseSerializerType; ///< the response serializer type
+/// the response serializer type
+@property (nonatomic, assign) JKResponseSerializerType responseSerializerType;
 
-@property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;         ///< the requestTask of the Request
+/// the requestTask of the Request
+@property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;
 
-@property (nonatomic, strong, readonly, nullable) id responseObject;           ///< the responseObject of the request
+/// the responseObject of the request
+@property (nonatomic, strong, readonly, nullable) id responseObject;
 
-@property (nonatomic, strong, readonly, nullable) id responseJSONObject;       ///< the requestJSONObject of the request if the responseObject can not convert to a JSON object it is nil
-@property (nonatomic, strong, nullable) id jsonValidator;                       ///< the object of the json validate config
+/// the requestJSONObject of the request if the responseObject can not convert to a JSON object it is nil
+@property (nonatomic, strong, readonly, nullable) id responseJSONObject;
 
-@property (nonatomic, strong, readonly, nullable) NSError *error;              ///< the error of the requestTask
+/// the object of the json validate config
+@property (nonatomic, strong, nullable) id jsonValidator;
 
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;    ///< the status of the requestTask is cancelled or not
+/// the error of the requestTask
+@property (nonatomic, strong, readonly, nullable) NSError *error;
 
-@property (nonatomic, assign, readonly, getter=isExecuting) BOOL executing;    ///< the status of the requestTask is executing of not
-@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *requestHeaders; ///< the request header dic
+/// the status of the requestTask is cancelled or not
+@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
 
-@property (nonatomic, copy, nullable) NSDictionary *requestArgument;                   ///< the params of the request
+/// the status of the requestTask is executing of not
+@property (nonatomic, assign, readonly, getter=isExecuting) BOOL executing;
 
-@property (nonatomic, assign) BOOL ignoreCache;                   ///< use cache or not default is NO
+/// the request header dic
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *requestHeaders;
 
-@property (nonatomic, assign) NSInteger cacheTimeInSeconds;       ///< if the use the cache please make the value bigger than zero
+/// the params of the request
+@property (nonatomic, copy, nullable) NSDictionary *requestArgument;
 
-@property (nonatomic, assign, readonly) BOOL isDataFromCache;     ///< is the response is use the cache data,default is NO
+/// use cache or not default is NO
+@property (nonatomic, assign) BOOL ignoreCache;
 
-@property (nonatomic, assign) BOOL isInBatchRequest;              ///< is a request of the batch request,default is NO;
+/// if the use the cache please make the value bigger than zero
+@property (nonatomic, assign) NSInteger cacheTimeInSeconds;
 
-@property (nonatomic, assign) BOOL useSignature;                  ///< is use the signature for the request;
-@property (nonatomic, copy, nullable) NSString *signaturedUrl;    ///< the url has signatured
-@property (nonatomic, strong, nullable) id signaturedParams;      ///< the params has signatured
+/// is the response is use the cache data,default is NO
+@property (nonatomic, assign, readonly) BOOL isDataFromCache;
 
-@property (nonatomic,strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory; ///< the network status handle class
+/// the status of the request is not in a batchRequest or not in a chainRequest,default is YES
+@property (nonatomic, assign, readonly) BOOL isIndependentRequest;
+
+/// is use the signature for the request
+@property (nonatomic, assign) BOOL useSignature;
+
+/// the url has signatured
+@property (nonatomic, copy, nullable) NSString *signaturedUrl;
+
+/// the params has signatured
+@property (nonatomic, strong, nullable) id signaturedParams;
+
+/// the network status handle class
+@property (nonatomic,strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
 
 - (void)clearCompletionBlock;
 
@@ -106,14 +160,10 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 - (void)stop;
 
-/**
- after request success before successBlock callback,do this func
- */
+/// after request success before successBlock callback,do this func
 - (void)requestSuccessPreHandle;
 
-/**
- after request failure before successBlock callback,do this func
- */
+///after request failure before successBlock callback,do this func
 - (void)requestFailurePreHandle;
 
 - (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
@@ -124,7 +174,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// @param downloadProgressBlock downloadProgressBlock
 /// @param successBlock successBlock
 /// @param failureBlock failureBlock
-+ (__kindof JKBaseRequest *)downloadWithUrl:(NSString *)urlStr
++ (__kindof JKBaseDownloadRequest *)downloadWithUrl:(NSString *)urlStr
                                    progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
                                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
@@ -141,7 +191,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
                failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
 
 
-- (void)addRequstHeader:(NSDictionary <NSString *,NSString *>*)header;
+- (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header;
 
 /// add the validator for the reponse,if the jsonValidator isn't kind of NSArray or NSDictionary,the func do nothing
 - (void)addJsonValidator:(NSDictionary *)validator;
@@ -157,6 +207,28 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 - (BOOL)readResponseFromCache:(NSError **)error;
 
 - (void)writeResponseToCacheFile;
+
+/// get the md5 string of the target sting
++ (NSString *)MD5String:(NSString *)string;
+
+/// get the downloadFilePath with urlString
++ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString;
+
+@end
+
+
+@interface JKBaseDownloadRequest :JKBaseRequest
+
+/// the url of the download file resoure
+@property (nonatomic, copy, readonly) NSString *absoluteString;
+/// the filePath of the downloaded file
+@property (nonatomic, copy, readonly) NSString *downloadedFilePath;
+
++ (instancetype)new NS_UNAVAILABLE;
+
++ (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)initWithUrl:(nonnull NSString *)url;
 
 @end
 

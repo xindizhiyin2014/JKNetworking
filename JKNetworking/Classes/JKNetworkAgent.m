@@ -8,10 +8,9 @@
 #import "JKNetworkAgent.h"
 #import <AFNetworking/AFNetworking.h>
 #import "JKBaseRequest.h"
+#import "JKGroupRequest.h"
 #import "JKNetworkConfig.h"
-#import <CommonCrypto/CommonCryptor.h>
-#import <CommonCrypto/CommonDigest.h>
-
+#import "JKMockManager.h"
 
 @interface JKBaseRequest(Private)
 
@@ -19,22 +18,25 @@
 @property (nonatomic, strong, readwrite, nullable) id responseObject;
 @property (nonatomic, strong, readwrite, nullable) id responseJSONObject;
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
-@property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);      ///< the download/upload request
-@property (nonatomic, copy, nullable) void(^successCompletionBlock)(__kindof JKBaseRequest *request); ///< the request success block
+/// the progressBlock of download/upload request
+@property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
+
+/// the request success block
+@property (nonatomic, copy, nullable) void(^successCompletionBlock)(__kindof JKBaseRequest *request);
 
 @property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request); ///< the request failure block progress block
 @property (nonatomic, assign) BOOL isDownload;                 ///< is a download request or not
 @property (nonatomic, assign) BOOL isUpload;                   ///< is a upload request or not
 @property (nonatomic, strong) NSData *uploadData;              ///< the data need to upload
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);   ///< when upload data cofig the formData
-
-
 @end
 
 @implementation JKBaseRequest(Private)
 @dynamic requestTask,responseObject,responseJSONObject,error,progressBlock,successCompletionBlock,failureCompletionBlock,isDownload,isUpload,uploadData,formDataBlock;
 
 @end
+
+
 
 @interface JKNetworkAgent()
 {
@@ -45,7 +47,22 @@
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @property (nonatomic, strong) AFJSONResponseSerializer *jsonResponseSerializer;
 @property (nonatomic, strong) AFXMLParserResponseSerializer *xmlParserResponseSerialzier;
-@property (nonatomic, strong) NSIndexSet *allStatusCodes;        ///< the set of the request status
+
+/// the set of the request status
+@property (nonatomic, strong) NSIndexSet *allStatusCodes;
+
+/// the array of the batchRequest
+@property (nonatomic, strong) NSMutableArray *batchRequests;
+
+/// the array of the chainRequest
+@property (nonatomic, strong) NSMutableArray *chainRequests;
+
+
+/// the priority first request
+@property (nonatomic, strong, nullable) id priprityFirstRequest;
+
+/// the requests need after it fininsed,if the priority first request is not nil,
+@property (nonatomic, strong, nonnull) NSMutableArray *bufferRequests;
 
 @end
 
@@ -67,6 +84,9 @@
     self = [super init];
     if (self) {
         _requestDic = [NSMutableDictionary dictionary];
+        _batchRequests = [NSMutableArray new];
+        _chainRequests = [NSMutableArray new];
+        _bufferRequests = [NSMutableArray new];
         _lock = [[NSLock alloc] init];
         _processingQueue =dispatch_queue_create("com.jk.networkAgent.processing", DISPATCH_QUEUE_CONCURRENT);
         _sessionManager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:[JKNetworkConfig sharedConfig].sessionConfiguration];
@@ -81,6 +101,13 @@
 
 - (void)addRequest:(__kindof JKBaseRequest *)request
 {
+    [self.lock lock];
+    if (self.priprityFirstRequest) {
+        [self.bufferRequests addObject:request];
+        return;
+    }
+    [self.lock unlock];
+
     if (request.isExecuting) {
         return;
     }
@@ -118,6 +145,19 @@
     NSArray *allKeys = nil;
     [self.lock lock];
     allKeys = [self.requestDic allKeys];
+    if (self.priprityFirstRequest) {
+        if ([self.priprityFirstRequest isKindOfClass:[JKBaseRequest class]]) {
+            JKBaseRequest *request = (JKBaseRequest *)self.priprityFirstRequest;
+            [request stop];
+        } else if ([self.priprityFirstRequest isKindOfClass:[JKBatchRequest class]]) {
+            JKBatchRequest *request = (JKBatchRequest *)self.priprityFirstRequest;
+            [request stop];
+        } else if ([self.priprityFirstRequest isKindOfClass:[JKChainRequest class]]){
+            JKChainRequest *request = (JKChainRequest *)self.priprityFirstRequest;
+            [request stop];
+        }
+    }
+    [self.bufferRequests removeAllObjects];
     [self.lock unlock];
     
     if (allKeys && allKeys.count > 0) {
@@ -160,6 +200,23 @@
     }else {
         url = [self buildRequestUrl:request];
         param = request.requestArgument;
+    }
+    
+    if ([JKNetworkConfig sharedConfig].isMock) {
+        BOOL needMock = [JKMockManager matchRequest:request url:url];
+        if (needMock) {
+            NSURL *Url = [NSURL URLWithString:url];
+            NSString *scheme = Url.scheme;
+            NSString *host = Url.host;
+            NSNumber *port = Url.port;
+            NSString *domain = nil;
+            if (port) {
+                domain = [NSString stringWithFormat:@"%@://%@:%@",scheme,host,port];
+            } else {
+               domain = [NSString stringWithFormat:@"%@://%@",scheme,host];
+            }
+           url = [url stringByReplacingOccurrencesOfString:domain withString:[JKNetworkConfig sharedConfig].mockBaseUrl];
+        }
     }
     
     AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
@@ -226,7 +283,8 @@
     // If targetPath is a directory, use the file name we got from the urlRequest.
     // Make sure downloadTargetPath is always a file, not directory.
     if (isDirectory) {
-        NSString *fileName = [urlRequest.URL lastPathComponent];
+        NSString *fileName = [JKBaseRequest MD5String:urlRequest.URL.absoluteString];
+        fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension];
         downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
     } else {
         return nil;
@@ -391,7 +449,7 @@
         [request requestSuccessPreHandle];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (!request.isInBatchRequest) {
+        if (request.isIndependentRequest) {
             if (request.requestAccessory && [request.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [request.requestAccessory requestWillStop:request];
             }
@@ -399,12 +457,14 @@
         if (request.successCompletionBlock) {
             request.successCompletionBlock(request);
         }
-        if (!request.isInBatchRequest) {
+        if (request.isIndependentRequest) {
             if (request.requestAccessory && [request.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [request.requestAccessory requestDidStop:request];
             }
         }
     });
+    [self judgeToStartBufferRequestsWithRequest:request];
+    
 }
 
 - (void)requestDidFailWithRequest:(__kindof JKBaseRequest *)request error:(NSError *)error
@@ -414,7 +474,7 @@
         [request requestFailurePreHandle];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (!request.isInBatchRequest) {
+        if (request.isIndependentRequest) {
             if (request.requestAccessory && [request.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [request.requestAccessory requestWillStop:request];
             }
@@ -422,12 +482,13 @@
         if (request.failureCompletionBlock) {
             request.failureCompletionBlock(request);
         }
-        if (!request.isInBatchRequest) {
+        if (request.isIndependentRequest) {
             if (request.requestAccessory && [request.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [request.requestAccessory requestDidStop:request];
             }
         }
     });
+    [self judgeToStartBufferRequestsWithRequest:request];
     
 }
 
@@ -443,20 +504,25 @@
         
         NSString *baseUrl = @"";
         if ([request useCDN]) {
-            if (request.cdnHost.length > 0) {
-                baseUrl = request.cdnHost;
+            if (request.cdnBaseUrl.length > 0) {
+                baseUrl = request.cdnBaseUrl;
             }else{
                 if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(hostOfRequest:)]) {
                      baseUrl = [[JKNetworkConfig sharedConfig].requestHelper hostOfRequest:request];
                 }else {
-                    baseUrl = [JKNetworkConfig sharedConfig].cdnHost;
+                    baseUrl = [JKNetworkConfig sharedConfig].cdnBaseUrl;
                 }
             }
         }else{
           if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(hostOfRequest:)]) {
                baseUrl = [[JKNetworkConfig sharedConfig].requestHelper hostOfRequest:request];
           }else {
-              baseUrl = [JKNetworkConfig sharedConfig].cdnHost;
+              if (request.useCDN) {
+                  baseUrl = [JKNetworkConfig sharedConfig].cdnBaseUrl;
+              } else {
+                  baseUrl = [JKNetworkConfig sharedConfig].baseUrl;
+              }
+              
           }
         }
         
@@ -464,9 +530,71 @@
         if (baseUrl.length > 0 && ![baseUrl hasSuffix:@"/"]) {
             url = [url URLByAppendingPathComponent:@""];
         }
+        if (![[url path] isEqualToString:@"/"]) {
+          detailUrl = [NSString stringWithFormat:@"%@%@",[url path],detailUrl];
+        }
         urlStr = [NSURL URLWithString:detailUrl relativeToURL:url].absoluteString;
     }
     return urlStr;
+}
+
+- (void)addBatchRequest:(__kindof JKBatchRequest *)request
+{
+    [self.lock lock];
+    [self.batchRequests addObject:request];
+    [self.lock unlock];
+}
+
+- (void)removeBatchRequest:(__kindof JKBatchRequest *)request
+{
+    [self.lock lock];
+    [self.batchRequests removeObject:request];
+    [self.lock unlock];
+    [self judgeToStartBufferRequestsWithRequest:request];
+}
+
+- (void)addChainRequest:(__kindof JKChainRequest *)request
+{
+    [self.lock lock];
+    [self.chainRequests addObject:request];
+    [self.lock unlock];
+}
+
+- (void)removeChainRequest:(__kindof JKChainRequest *)request
+{
+    [self.lock lock];
+    [self.chainRequests removeObject:request];
+    [self.lock unlock];
+    [self judgeToStartBufferRequestsWithRequest:request];
+}
+
+- (void)addPriorityFirstRequest:(id)request
+{
+    if ([request isKindOfClass:[JKBaseRequest class]] || [request isKindOfClass:[JKBatchRequest class]] || [request isKindOfClass:[JKChainRequest class]]) {
+#if DEBUG
+        NSAssert(NO, @"no support this request as a PriorityFirstRequest");
+#endif
+    }
+    
+#if DEBUG
+    if (self.requestDic.count > 0) {
+        NSAssert(NO, @"addPriorityFirstRequest func must use before any request started");
+    }
+#endif
+    self.priprityFirstRequest = request;
+}
+
+- (void)judgeToStartBufferRequestsWithRequest:(id)request
+{
+    if (self.priprityFirstRequest && [self.priprityFirstRequest isEqual:request]) {
+        [self.lock lock];
+        self.priprityFirstRequest = nil;
+        for (JKBaseRequest *request in self.bufferRequests) {
+            [self addRequest:request];
+        }
+        [self.bufferRequests removeAllObjects];
+        [self.lock unlock];
+    }
 }
 
 - (AFHTTPRequestSerializer *)requestSerializerForRequest:(__kindof JKBaseRequest *)request {
@@ -476,7 +604,12 @@
     } else if (request.requestSerializerType == JKRequestSerializerTypeJSON) {
         requestSerializer = [AFJSONRequestSerializer serializer];
     }
-    requestSerializer.timeoutInterval = [request requestTimeoutInterval];
+    if ([JKNetworkConfig sharedConfig].isMock) {
+     requestSerializer.timeoutInterval = [JKNetworkConfig sharedConfig].mockModelTimeoutInterval;
+    } else {
+     requestSerializer.timeoutInterval = [request requestTimeoutInterval];
+    }
+    
     // If api needs to add custom value to HTTPHeaderField
     NSDictionary<NSString *, NSString *> *headerFieldValueDictionary = [request requestHeaders];
     if (headerFieldValueDictionary != nil) {
@@ -531,7 +664,7 @@
 
 - (NSURL *)incompleteDownloadTempPathForDownloadPath:(NSString *)downloadPath {
     NSString *tempPath = nil;
-    NSString *md5URLStr = [self MD5String:downloadPath];
+    NSString *md5URLStr = [JKBaseRequest MD5String:downloadPath];
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLStr];
     return [NSURL fileURLWithPath:tempPath];
 }
@@ -623,21 +756,5 @@
     }
 }
 
-- (NSString *)MD5String:(__kindof NSString *)string
-{
- if (!string || [string isKindOfClass:[NSString class]]) {
-        return nil;
-    }
-    const char *cStr = [string UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
-    
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", digest[i]];
-    
-    return  output?:@"";
-}
 
 @end
