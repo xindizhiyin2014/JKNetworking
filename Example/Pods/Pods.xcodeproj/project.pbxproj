@@ -7,25 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		006D4B9C5EDD1C0F64F86E6A2B9EF84E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */; };
 		010EC6B555F00AC990C46D4E4019B4EB /* KWProbePoller.h in Headers */ = {isa = PBXBuildFile; fileRef = 29F2A291C7FE336A0DC9FCE102F9A38D /* KWProbePoller.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0126ED337580101E28E8A26ED4F44674 /* KWGenericMatchingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = A80A1EFAF75171505DF44CD72108CCA0 /* KWGenericMatchingAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		021B9C94F6EBD5074380FC2C7B8A5CC4 /* KWExampleNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 0DC20F33FF3EE7C6801A21C2C8F4C7B8 /* KWExampleNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0254EABA2D0AACFBFA5E2BAD753C5E2D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */; };
 		02D81AE06C0CC6DA3FEC05B446CE0589 /* JKDataHelper-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 70D9871D448B7CCABCF58222EAD2EC5E /* JKDataHelper-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		032EEB0C04A2AD2898688F0AB048F46F /* JKNetworkingMacro.h in Headers */ = {isa = PBXBuildFile; fileRef = C3CBDA1A041316226F4F938171438D9F /* JKNetworkingMacro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0402D44147B3DEA1BAFC4EF91577D3FF /* KWItNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BCEE35E8343C92C41EDEC6363FCC609 /* KWItNode.m */; };
 		05F3A6432D6AD96A9BC357C0DBC5F512 /* KWSymbolicator.h in Headers */ = {isa = PBXBuildFile; fileRef = 551C3E73A04494E1197060BD6CB60D5B /* KWSymbolicator.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0658C20DC4448D574C43FE02C970751D /* JKBatchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D9243950AFDCF03548C1FD7491207C31 /* JKBatchRequest.m */; };
 		0881EDF00878A56FA7626A4546E5CC2B /* NSArray+JKDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9663650D17ACEEFA8425AC32FD48C0 /* NSArray+JKDataHelper.m */; };
 		08C86FCC1314B64540C9F48A1FA0D548 /* KWBeforeEachNode.h in Headers */ = {isa = PBXBuildFile; fileRef = FAA14BA2B5D29C9E6D6F21097ADFB814 /* KWBeforeEachNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09C0387C6B0EA72FFCE430F93D350AF4 /* KWValue.m in Sources */ = {isa = PBXBuildFile; fileRef = EF92C80668B919C77BDBDFADDF9BB079 /* KWValue.m */; };
 		09E2F57C3C2B897ACC8AF5C49F1E9592 /* UIImage+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = AA99D61FC83417F21C6987D55D10A1A8 /* UIImage+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		09E785555B549DE5974C744DB8324B91 /* UIRefreshControl+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F24A555EA5AC15B34B5CD5ACB3921C /* UIRefreshControl+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0A2D3898B82BD6987E2FFACCCE70682F /* JKNetworkAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 507BA25A61ABEF30B98E86697F27D94C /* JKNetworkAgent.m */; };
 		0A3AD1AD88F6A611F70FC084722B21C4 /* KWMessageTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F961ED9B3C4FE0A270FD2A8E81B48D /* KWMessageTracker.m */; };
 		0A8954F8CF85C7F699C04C73E91A5B38 /* KWSharedExample.m in Sources */ = {isa = PBXBuildFile; fileRef = 1378A7260166820A8DDC623BD7096589 /* KWSharedExample.m */; };
 		0BB33445FD5FB877ED9EF29C70A95EF4 /* NSProxy+KiwiVerifierAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7525C340E035E1D375CD60C359839D06 /* NSProxy+KiwiVerifierAdditions.m */; };
-		0BD65F2F3037A9050CC3F575063C4ECC /* Pods-JKNetworking_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 907AB1BA3778CC16119FC0B8A9EC20FE /* Pods-JKNetworking_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D40EE6956924384435BBBD4B718DEC8 /* AFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = DBEB26A4D85828E8F798E55A0397AA75 /* AFImageDownloader.m */; };
-		0E27F1F6CB12C751CE6B9CFCF456D4AF /* JKNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 8FFDB41771F61E35AF3044299D73229E /* JKNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0E5A5B2E594DEF57980F8F0FCF9F33CE /* JKGroupRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 050107EDF7C5A8BB394E858ED7E6551B /* JKGroupRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0F89BD3F84DB7DE7B7692F385C295531 /* NSObject+KiwiStubAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3479D0C9AD6D4526AFDA888243E2CFD9 /* NSObject+KiwiStubAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135EA78DF787D2987A359A3436AAA38B /* KWAfterEachNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 8201E2995B484A45B7FD961A0B5CE305 /* KWAfterEachNode.m */; };
 		140C4A4674B8E0142EA1BE39DCE9C101 /* KWNotificationMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 2985DAA9BD9751D7014D21252364C92D /* KWNotificationMatcher.m */; };
@@ -36,14 +37,12 @@
 		169B3FC2BD33B8FBC2D4C35A1C1DC6BF /* AFHTTPSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C9761C2A90945259A18CDE86CE07D929 /* AFHTTPSessionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		17D6A066C5F987FEFF8B89D7EFDFD375 /* AFURLRequestSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 223A3FD2E905444BAEC2AA98DE4A9139 /* AFURLRequestSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		17F4A97760C7C00B11E9350DD19AE9EB /* KWPendingNode.h in Headers */ = {isa = PBXBuildFile; fileRef = ED079A35CB46978B34EB5F00A6B03CC0 /* KWPendingNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		182BDE8D873FDDFAF12F844F5270A883 /* JKNetworkAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1989648EAAE393331996E40951FD0D6C /* JKNetworkAgent.m */; };
 		194D482D3AABD6196028EFC13EE5F5F7 /* JKDataHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AEDC797F19DA217F828660FF11AB2B7 /* JKDataHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		19F90082625BF9D282FF0096D2312801 /* KWProbe.h in Headers */ = {isa = PBXBuildFile; fileRef = 806A9D05A70B4150B8433EE86729D45D /* KWProbe.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AC36159DEDD4452C304D5B1FFB688D1 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2383A2B6E5E1BA94D877CA7AD0F718F /* MobileCoreServices.framework */; };
 		1B880B7F9E1179C74EE666ED7031C24D /* KWCaptureSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A1A57B8197A7794F042E6702A55C655 /* KWCaptureSpy.m */; };
 		1D6B9B253C8890A625684F68E61B3730 /* KWBeEmptyMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C5296A918B99F67F15CE8EEB0449A43 /* KWBeEmptyMatcher.m */; };
 		1DA06E9FD118F89543D237F6AE5722C6 /* KWAllTestsSuite.m in Sources */ = {isa = PBXBuildFile; fileRef = C578CE9619FAA2051DFB63E91FE2726C /* KWAllTestsSuite.m */; };
-		1DFEAD62ACC6A2CE38CB4C24C72134E3 /* JKNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 2215989E68856C1554427A947B97B9AA /* JKNetworkConfig.m */; };
 		1E46A04E7DA9733DA22912A2572FBCE9 /* KWMessageTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = A33263B08112CDC361EFCE535205BC9D /* KWMessageTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1E6006352BAE6BB4B9F321B6F161B538 /* KWBeforeEachNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 344A96FFD923C64DAD09E9F4A2CDA5DC /* KWBeforeEachNode.m */; };
 		1ECF1E22DA5C464156858B0A6B4F142D /* KWValue.h in Headers */ = {isa = PBXBuildFile; fileRef = AF4E0F87BBDF6C793FEB03738A1920F0 /* KWValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -52,9 +51,7 @@
 		2194598279B8D7D3190D31A788090D84 /* KWSuiteConfigurationBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 68FD7F4471EBCB10134558C3B3EFE65B /* KWSuiteConfigurationBase.m */; };
 		227E6349C52D58B07C718EA8528EFF1A /* KWLetNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B762C301CAE953D1F4223DBEA810848 /* KWLetNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2321896CDA4A2E4393878446B0E31C41 /* KWMatchers.h in Headers */ = {isa = PBXBuildFile; fileRef = 31ADCB7BF8A793607B6EEC67CEC494D2 /* KWMatchers.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		23F4A2FDAC105F6E2E0D69203C5D4942 /* JKNetworkingMacro.h in Headers */ = {isa = PBXBuildFile; fileRef = 74428221AA60701F34D1CA108D1174EF /* JKNetworkingMacro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		259AD097F124BC66C716E804A924E1AA /* KWUserDefinedMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 86566C0281A4B6555CB1AB8B8D5F9A65 /* KWUserDefinedMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2614C06D3311F462E8AAEE7C1F62384F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */; };
 		274C5E5824CD5877521BDA5E3DE0E96D /* KWStub.h in Headers */ = {isa = PBXBuildFile; fileRef = D6DDD0AC74C546687DCB15C812B7054D /* KWStub.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		277F493F2093FCAEA4E8EF2F8712F9EA /* KWIntercept.h in Headers */ = {isa = PBXBuildFile; fileRef = 031B2EEEDA7DF1AFB9FDE3842579AE39 /* KWIntercept.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		27D6B36B293DC8603F9DECBD03076AC6 /* KWSharedExampleRegistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 06AD5C34D7D19778B3B4E6AFDC17DCAB /* KWSharedExampleRegistry.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,7 +59,6 @@
 		2AE1F29F045D02727E815DBBAC8C7B4F /* AFNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 303DC232EB02A46B5D4FCEC47C2DE7FC /* AFNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CC0CF3444006977E8B05AC1D254194A /* KWBeZeroMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = C74BEC3BDD88C73E68F1AFB1790888F0 /* KWBeZeroMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3033C2DE9CB2085ECBB95717CFB6425A /* AFAutoPurgingImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B8782E17C40010934D6F40E0699E9CD /* AFAutoPurgingImageCache.m */; };
-		318CE62390A73567A7297F6ECDA0C89B /* JKNetworking-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C6936BBEAB2E0A5551C028EA241885E0 /* JKNetworking-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		32E3575A9536CB741D117DBA6EBC150C /* KWCallSite.m in Sources */ = {isa = PBXBuildFile; fileRef = F6B80740FE83609C84C2D3DD8986F0D5 /* KWCallSite.m */; };
 		330BF28E26860EB055FBA85D740D341B /* NSMethodSignature+KiwiAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 00424F41B89038B2AD5B5FC7A220D4C1 /* NSMethodSignature+KiwiAdditions.m */; };
 		34A7C5747B4C0825465453E196E57FAA /* UIButton+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = C9B280892A0937410309237616096D6F /* UIButton+AFNetworking.m */; };
@@ -109,6 +105,7 @@
 		634876E37E67D3C424AD37CE4C7F516D /* KWVerifying.h in Headers */ = {isa = PBXBuildFile; fileRef = AE1A510A16B8C33A0C6B8E183F701CEB /* KWVerifying.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63EA00AA88B1C1E1522DE59D30EF3F88 /* KWAfterAllNode.m in Sources */ = {isa = PBXBuildFile; fileRef = F696B233D3BF11650F7480A5579945A5 /* KWAfterAllNode.m */; };
 		6470B1951B36628BD20835DC70A28DEF /* KWReceiveMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 9ABEA11FED48AB5300DE84BCA517EFDA /* KWReceiveMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		64B2496460D80C4A6E372EB9CD29FB96 /* JKNetworking_-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C45AC2BFEA032211EA6DB73190DBDB3D /* JKNetworking_-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		64BD03CF1DA9F58367DB782BC0FCDDAA /* KWBeKindOfClassMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 067A4572DA6F6489A9B8831BBC1AA5C7 /* KWBeKindOfClassMatcher.m */; };
 		64D229C3BC5DD74CE975E2F18041D42B /* KWConformToProtocolMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A8AAD0EB410FC3E19C7C289941BC052 /* KWConformToProtocolMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		663DADA69252F2E777BCE43FD77B0B62 /* KWRegularExpressionPatternMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = A5C505168201F838A541894B0C1B1342 /* KWRegularExpressionPatternMatcher.m */; };
@@ -116,10 +113,11 @@
 		66D8BAAB107E25FBC0EB65842279CAF7 /* KWStringPrefixMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = FE73436F058CB03225F42115DDE3F802 /* KWStringPrefixMatcher.m */; };
 		67B3C173EF40BA3D141885C2625CA232 /* KWWorkarounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 154079396576DFB84A28B1D79220EF2A /* KWWorkarounds.m */; };
 		685F2A847E0E5CE1E7C3EDA97C05E0DE /* KWRegisterMatchersNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D922BAA9212E21951D9A40675B9826BD /* KWRegisterMatchersNode.m */; };
-		6A2558D2EA6117BA0312C3077351E119 /* JKNetworkConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = ED693D95ADAEEBA5923FA6C16EC56EF5 /* JKNetworkConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6B0C9FFF0AEAA478D629599AF7BEC188 /* JKDataHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A574294422B47B88F8A478D9E916B04 /* JKDataHelper.framework */; };
 		6C32F04CB5E5F03C50F9598786ACD882 /* KWBeKindOfClassMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 67177A7B71B3FEB18276DEE7108D3D4A /* KWBeKindOfClassMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6C59F4AC4CB08BA5DA5F04AE59C5CEA6 /* KWNilMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 0280AEC9BFCD816E296873F5BE98A4DA /* KWNilMatcher.m */; };
 		6CE8F545FA4F0D77F488BAF11D29510E /* KWBackgroundTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 11D461A08632DBD8267DB2CCD5BAD13B /* KWBackgroundTask.m */; };
+		6D479F569118A415E720689C28704BC3 /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CD1327BBECC0397C3D739D7A0E73A3 /* AFNetworking.framework */; };
 		6E4C66ABA27A0F4EFDAA3E8B21A9384F /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BBBCF173F19DEFEF30E10603EC727BA /* AFNetworkActivityIndicatorManager.m */; };
 		6EA2C946AE0F26E4109D53B0233B6432 /* KWBeIdenticalToMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1199A3BE27EA29CFFA6942D3C8FC5C39 /* KWBeIdenticalToMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F6C4414DE96E08267712DA4C17C3CBB /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = CD29610A035DC30425B216B82D946174 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -128,8 +126,8 @@
 		716BF643B9E590E9EDC71DCD0477CD09 /* KWSharedExample.h in Headers */ = {isa = PBXBuildFile; fileRef = A0DFA0B34D7BCBE7E7944737606E2C4D /* KWSharedExample.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72EE785E78F6BBCFB8DE91CE18804624 /* KWCountType.h in Headers */ = {isa = PBXBuildFile; fileRef = 888D5E7F80939F354772F17B9AF760A9 /* KWCountType.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73258C154A2B1CF97BC0BAB685705899 /* KWStringContainsMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F8EF8C39277E4CF66F96461A8BDEB95 /* KWStringContainsMatcher.m */; };
+		73DC578AAAC496188754AF97022ADF3B /* JKNetworkConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E486AE3323ACA66E17D8FAB8B2194B79 /* JKNetworkConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73FB3C41ABF9FFD350B7A8658482F7C7 /* KWAsyncVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F256768091B113691745A7F00F03F6 /* KWAsyncVerifier.m */; };
-		74DC5B85B5A1B027904FA74948EEDD0A /* JKDataHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A574294422B47B88F8A478D9E916B04 /* JKDataHelper.framework */; };
 		75BEDE54BF96BF5148558E48D545F14D /* KWLet.h in Headers */ = {isa = PBXBuildFile; fileRef = F1F59374A5374CEDD6EFFAF3D0339DA7 /* KWLet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7624F1D59A0863C620767DEF22A57A99 /* KWNotificationMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = B3958F736C806BE3D14651D0BA9EAC99 /* KWNotificationMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		768C16CDD6C3D754C0BB23C907E82D3B /* NSDictionary+JKDataHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = CCCB602369C98656ACDE00E3B9E13221 /* NSDictionary+JKDataHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -141,16 +139,18 @@
 		7C6E533F74BFE85EE532BAFF2C49771E /* KWAny.h in Headers */ = {isa = PBXBuildFile; fileRef = 38DA09055A4E462682A43BCBCD8455C5 /* KWAny.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7EBAFD889907C5F0B9327119564AE205 /* KWBeSubclassOfClassMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = C8EA4C5CC693CD026901C6637E8D9AB2 /* KWBeSubclassOfClassMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F372985CE80B69B5524CC3277E1C1AF /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 39D7095891BD0F20DCB37475DF86CE8A /* AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80EA601987A70C9AD03D2B445C2FCD5C /* JKBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DB14F9CB375DE4882393659C549F8492 /* JKBaseRequest.m */; };
 		8287FC563E1817CAD9ABC02A25E55280 /* KWMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 90A73E9982BAC03AEA07084926044DF1 /* KWMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		833294ADDFDA5793FB8C2E10B64394EE /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7CD1327BBECC0397C3D739D7A0E73A3 /* AFNetworking.framework */; };
 		856B571FA3AE9D65E81FACB19E3557F4 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C43BF1160E65987DB74394DE81C79D0 /* AFURLSessionManager.m */; };
+		85816CB16E1E3EA260CAC1A2C54DFE61 /* JKNetworking_-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C721251AE36826D2277EB830208F782 /* JKNetworking_-dummy.m */; };
 		870044029B3BA449A0932AAE3A495DE9 /* AFAutoPurgingImageCache.h in Headers */ = {isa = PBXBuildFile; fileRef = EB020E51ACB907FF60AED36498C5D767 /* AFAutoPurgingImageCache.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A15D5FDEFDD14582D13C8548992FCFC /* JKBatchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D635906CA5E7AEE012A1FFEA7316104 /* JKBatchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8A257B2F83D8881164C8B479398CC720 /* KWExampleDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3358E2DFE9BF82C79F0A53F3337954AD /* KWExampleDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AF38478B686878D7179B8D73E7DCBF7 /* KWAny.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B32F448A2AECFACB881C658CDB7C97 /* KWAny.m */; };
 		8BF027B676130A01572134A15F8AAD21 /* KWStringPrefixMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 31DA3BCBBCB2CF4977F2BAF6A068609E /* KWStringPrefixMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8C11D687BD5E286E9F76D1F726A7FC20 /* KWNull.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C35B4E8575D22AAE397FC7D2138538B /* KWNull.m */; };
 		8C5391FB4D234F8CAFE3E59C0A520DD2 /* JKDataHelper-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DF9186FF504148E765C51CDA956994B /* JKDataHelper-dummy.m */; };
+		8C5682303E7D55EBFB88A86DD0E5559D /* JKGroupRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D8983E64585D18425525EF9A9D1DCEC /* JKGroupRequest.m */; };
+		8CE5D8E338DC9BB824B1293ED84C19BD /* JKNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 602AD8E4779A32FCBCAA19EEBF9FE268 /* JKNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8D04DD37703C899A71CE8D9A05727B7B /* Kiwi-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A28948E3BC5F28ECC087EE78657835D1 /* Kiwi-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8E6C4D032491E68AEEF5846F86A3BE45 /* KWInequalityMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 293EB48D70494B02FE4575F57E5A73B1 /* KWInequalityMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8F96E82F250EE718FA3F08AC9AB58423 /* UIActivityIndicatorView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F6DCEA66DF37CD395BF04D88175728 /* UIActivityIndicatorView+AFNetworking.m */; };
@@ -191,6 +191,7 @@
 		B05DCB97D87DBFB9CA8C11810FB93647 /* KWInvocationCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1694B414EE11C1261DD94C01E2FCC0F6 /* KWInvocationCapturer.m */; };
 		B0BE797282690E7F23A1CF735339B1DC /* KWAsyncVerifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 103FF7061241729FD7FB92DEA56F0B9A /* KWAsyncVerifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B0E599AA2DBC19E30881FD8A7F52643B /* KWSpec.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B3CB2BFF8E2259D4D40E45DF0E4EC6B /* KWSpec.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B1C051C14E3C8C7E15216946A5193BCE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */; };
 		B26EDD2D9A9BC8CDDEADEA8DBEC606A7 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF5896EE91A78F3E86EA3F3AD0F5333 /* SystemConfiguration.framework */; };
 		B2B6A46771616C156BD3BDC483A764E8 /* KWExistVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 60390DEAFAD22F524FD92CC54D2FF7BD /* KWExistVerifier.m */; };
 		B2C2DB49C3236CBA2A9F80891C7D6B7E /* NSInvocation+OCMAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DB762CFC1B377488D891E54E129423A /* NSInvocation+OCMAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -199,15 +200,14 @@
 		B58E0763D927BD1A56DE9B3C48EB75F3 /* KWBeforeAllNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 10750E4B8CE5E5866E806A48E325903C /* KWBeforeAllNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B5AD0B8F0F9304975A01978B2908B62F /* UIActivityIndicatorView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9776D53BD4321E3E0138FD639D8CAD4D /* UIActivityIndicatorView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B66505741DBB031A8C61F7B1BEDA9888 /* KWRegularExpressionPatternMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = E45AD04425C26EF03227A0D58A19DC1A /* KWRegularExpressionPatternMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B6947E215272914549FBD0F65C4C5934 /* JKBaseRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = C432EAD3B25AFE837CA1D58E46452DF4 /* JKBaseRequest.m */; };
 		B6C52EE7C38E5C22B724F70B5A11E060 /* KWFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1218C0F2E7271669DD26DDBEC84E6043 /* KWFormatter.m */; };
 		B73248255BD327AB8883693C5570D70D /* KWExample.m in Sources */ = {isa = PBXBuildFile; fileRef = AC7E736438AC4CD60C1A5709B7413A1D /* KWExample.m */; };
 		B9161BFE6F0299FDF02F097ED8EC904E /* KWInequalityMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = ADF132C222CF179C81F2EDE3C7920FB6 /* KWInequalityMatcher.m */; };
-		BA0D7E5237DA4809B3773D1080B2D092 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */; };
-		BA94BE0DB908EF7079C77E17C66C9BB9 /* Pods-JKNetworking_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 08172BF092048B76C3A3F7343CA988BB /* Pods-JKNetworking_Example-dummy.m */; };
 		BB035E1FE93185F9259EF1DD9CC16F8A /* KWBeTrueMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 779EDAA5CA77715FEDD047974A6E451B /* KWBeTrueMatcher.m */; };
 		BC947B8BE47D3AD0B2D25F8A779E73C2 /* KWUserDefinedMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 02953ADE1782722711A1D00A9D11E8BE /* KWUserDefinedMatcher.m */; };
+		BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */; };
 		BE678BBFEF6576AF4BB72AF2C4FB673B /* KWLetNode.m in Sources */ = {isa = PBXBuildFile; fileRef = B315FF5F52821271C4522D8C4F58E61F /* KWLetNode.m */; };
+		BEBC2EBDFF85C2F9F172A66EF85E9A2F /* Pods-JKNetworking_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 08172BF092048B76C3A3F7343CA988BB /* Pods-JKNetworking_Example-dummy.m */; };
 		C015416161F6C15368919102BAB3A6DC /* KWFailure.m in Sources */ = {isa = PBXBuildFile; fileRef = 4819CB2F60055754A71A03C76B22C0EF /* KWFailure.m */; };
 		C056FD8ADE6D8D54E2F221FD59774979 /* KWExistVerifier.h in Headers */ = {isa = PBXBuildFile; fileRef = 76F8A96174BFE6CC0775EBAC8C12BC51 /* KWExistVerifier.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C15A07F0EAC150AED92F3C598EAC1843 /* KWInvocationCapturer.h in Headers */ = {isa = PBXBuildFile; fileRef = 464C7D7CC2463DB041BB7787A40DFE73 /* KWInvocationCapturer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -217,20 +217,21 @@
 		C3531590FC8C19F031BA711156BA8F82 /* KWProbePoller.m in Sources */ = {isa = PBXBuildFile; fileRef = 200181C05DBB7040BA2D620A3C9278A6 /* KWProbePoller.m */; };
 		C7A3E1F157DAC1639FB646D161D16BDB /* KWHaveValueMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = DC270D01F514B9652257035F090F3A6E /* KWHaveValueMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C800B03CDB011C68C4CA9FEE0796DBAA /* KWExampleSuiteBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F3E528913D28C6A8C8BECCEC2B0BDA10 /* KWExampleSuiteBuilder.m */; };
-		C8A5E6677E3FC6EABC6EC692DED916ED /* JKNetworkAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB7F5F7F26B9996425948B2AA4DCA2A /* JKNetworkAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C8D0644E3AFCF616220FF72135553713 /* KWCallSite.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BF33CBCA6E77D8F2FBE11F6B6FD9726 /* KWCallSite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CA5D1E23D5BEFC0710DC5E3876617B79 /* NSValue+KiwiAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 569D8A7D54C0D60EB3C10E7CCD0FF1C9 /* NSValue+KiwiAdditions.m */; };
 		CB8C3468AF77128202FA7B7701587B9C /* KWGenericMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 19452E9E6D96D8FC28970E3EC12DE673 /* KWGenericMatcher.m */; };
 		CBF1FE276824F04BAE37B176F3D3DE47 /* KWRegisterMatchersNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 83364331DBE86D273B081BD10F95C9D6 /* KWRegisterMatchersNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CC8AA92193334642725524E81D3C8436 /* KWNilMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B22668EF5185269FBAE4C0CB0656221 /* KWNilMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CCECBBA6F32AC866A9918B54886997A2 /* JKMockManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB8F013DE6D51F1E7FBEE923EDF8D2B3 /* JKMockManager.m */; };
 		CE3EAE3FCFF63A5C8B06FC698E134D29 /* Kiwi.h in Headers */ = {isa = PBXBuildFile; fileRef = E699F992F91E9B165A825B14A27584A7 /* Kiwi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF140EDB27E0D81613EF78E132B0D23E /* KWChangeMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 905B6C1BCDCBD31475EA4732295F3F71 /* KWChangeMatcher.m */; };
 		CF87111CE5A447A27DA89FC288C9654C /* KWBeTrueMatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 57F9DDA4303AC7C66BDD22C1CBD5418E /* KWBeTrueMatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D1D60073397B1E4EFDD65B4D2E9F4212 /* KWMatchVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 589182FAAE9CA464FD9810447078BAA6 /* KWMatchVerifier.m */; };
 		D29F2AD07AF58334781F008905C30C35 /* UIRefreshControl+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDC7F0976CEA96A463DDB6B6EE7CB06 /* UIRefreshControl+AFNetworking.m */; };
-		D4639A4A2EE99EEC7A035E6346627A38 /* JKBaseRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AEF723898AC3096E2C05308AD5B29032 /* JKBaseRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D59E2A517A48D101120EB57F90F140A5 /* AFURLSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D0E842FCCDF550F9BAD1D3CB4F40C12E /* AFURLSessionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D74FEFEAC09F1E5ACA2EA0C5CE3C94AC /* KWExample.h in Headers */ = {isa = PBXBuildFile; fileRef = 9AE7101F0E0F7DAE396005C54A0F2F26 /* KWExample.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D7F95FA41B9BDFB07FF37D5279252D2D /* JKMockManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 106C08E50593ADB90F944ECFC1E5429D /* JKMockManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D94636654621FFB16E62836EF0DBCA6F /* JKNetworkAgent.h in Headers */ = {isa = PBXBuildFile; fileRef = 09E8471C58513755682128399B1C64DA /* JKNetworkAgent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D94C70E221BC494D370A7203F5D688A7 /* KWBeIdenticalToMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4FB82713ECD99A4AACFD51CEAC633F /* KWBeIdenticalToMatcher.m */; };
 		D9B66A7DBEEA77D032679B600DBD4602 /* NSInvocation+KiwiAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C45089D0541F7E8AAD2682663DD0D1E /* NSInvocation+KiwiAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB2783810E744F94967DCED028BA77CB /* KWCaptureSpy.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D0EF1F9813A3366628E945A082A8165 /* KWCaptureSpy.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -242,6 +243,7 @@
 		DE4CFA31A9EB08CD815C95D088F6D939 /* KWGenericMatchingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 51606A4025B785348FEAB2FD4A1439C8 /* KWGenericMatchingAdditions.m */; };
 		E022211844E729C2ABE05587E5549123 /* NSNumber+KiwiAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 625E7B463773460668C008D3E22F66C1 /* NSNumber+KiwiAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E058B31F77ED224A3E918CA35EAC5CAD /* KWMatchers.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA8CBB77B628A3FD43463615A7FBF3A /* KWMatchers.m */; };
+		E0CFB7A367CB03B7EC4FC31E7D0B502A /* JKBaseRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 01A07D97EACB351110DC4045B4948DDC /* JKBaseRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E17973BC9CEAE4ED0A7492450F95ACEF /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C534C1835FA16364718C53463262FDCA /* AFURLRequestSerialization.m */; };
 		E1CFF55C840ED2E80F857A22A6F402E3 /* KWHaveMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF6431155C8DB2E96947449C1AB004D /* KWHaveMatcher.m */; };
 		E261B82A0EEFE0EA897EA1A36C69C1CE /* AFImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = ED823528205767F63C5F300AE8A2CC9E /* AFImageDownloader.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -259,9 +261,9 @@
 		F6C957D37D7F0706199245650139BE59 /* KWMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 47439EB98B5B084F8AF58249A94398FC /* KWMatcher.m */; };
 		F6F372577C48AE7FD66B3D6DD2E32383 /* KWBlockNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FEE8177C3AB2A36414E88BAD6516D0B /* KWBlockNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F701D25209C4F89C10B4ACE0DBC3393F /* KWMock.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4B9CCEE97779FE7887A8980A05D711 /* KWMock.m */; };
+		F7FB215E7D8AA45718FDA2B825078B01 /* Pods-JKNetworking_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 907AB1BA3778CC16119FC0B8A9EC20FE /* Pods-JKNetworking_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F9365645888FED2FCADAB946040DA004 /* KWBeforeAllNode.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0254A59530B3662521EAB42C186691 /* KWBeforeAllNode.m */; };
 		F9D4FCB1A3FB0B4D7A6E55EE82BAE7DA /* KWExpectationType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DF14D046BC82A516F8C53B7250D32C9 /* KWExpectationType.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FA53C003438AC6F745742421B72266CB /* JKNetworking-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BC1FA7EA91BD8205F7EF46B71419E9D /* JKNetworking-dummy.m */; };
 		FA6BD8968C77C0F6C7A7D5C8F6A08B40 /* KWDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6013A453B4BB718FCB035A9F19C9BE90 /* KWDeviceInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FADE3A8DB197FEB93BB865324AB90B25 /* KWBeMemberOfClassMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 94939142F10BEABB56783E1273B18627 /* KWBeMemberOfClassMatcher.m */; };
 		FC251E1F0E59D0212874296CEF5C90F2 /* NSNumber+KiwiAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FC37F55537EBE09604632E08B48A584 /* NSNumber+KiwiAdditions.m */; };
@@ -270,14 +272,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3D59A5D8D8A1CD0E4A917C41BB175BE1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A2D8C144E698491B4BFC1D6228796E92;
-			remoteInfo = JKNetworking;
-		};
-		475D4B723722061C7AB187D0577CBC69 /* PBXContainerItemProxy */ = {
+		4C469A83ECF4204DB62C687CBA8369C1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -291,14 +286,14 @@
 			remoteGlobalIDString = D5A4060DC193E269FE369F036E4781A9;
 			remoteInfo = Kiwi;
 		};
-		9B5BAE2B9F05272AE19FDB99D96603D2 /* PBXContainerItemProxy */ = {
+		987B8EE0943A37706BA911196ADF52DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 0130B3724283586C0E9D2A112D4F2AA1;
-			remoteInfo = AFNetworking;
+			remoteGlobalIDString = 31CCF4B976A4A7C99672125205B6D848;
+			remoteInfo = JKNetworking_;
 		};
-		BA8E8E1D7F8920F93F1B1490DB4C8134 /* PBXContainerItemProxy */ = {
+		C306713A2095746C135CF35268D7BC92 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
@@ -312,23 +307,32 @@
 			remoteGlobalIDString = 257EA05FF86BC3EDA841D20605645D80;
 			remoteInfo = "Pods-JKNetworking_Example";
 		};
-		DF0EFC90F7B0891607B7032C8C2F2DD7 /* PBXContainerItemProxy */ = {
+		D635B540C35B8285C2C8FF84E387639F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = C39ADDDA7893545387B1E244A18FCDE7;
 			remoteInfo = JKDataHelper;
 		};
+		FDE362B1D234B911790208D42CD3F568 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0130B3724283586C0E9D2A112D4F2AA1;
+			remoteInfo = AFNetworking;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		00424F41B89038B2AD5B5FC7A220D4C1 /* NSMethodSignature+KiwiAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSMethodSignature+KiwiAdditions.m"; path = "Classes/Core/NSMethodSignature+KiwiAdditions.m"; sourceTree = "<group>"; };
 		00856DBE1FA1C3AC50166308C756BB5F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
+		01A07D97EACB351110DC4045B4948DDC /* JKBaseRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKBaseRequest.h; path = JKNetworking/Classes/JKBaseRequest.h; sourceTree = "<group>"; };
 		0280AEC9BFCD816E296873F5BE98A4DA /* KWNilMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWNilMatcher.m; path = Classes/Matchers/KWNilMatcher.m; sourceTree = "<group>"; };
 		02953ADE1782722711A1D00A9D11E8BE /* KWUserDefinedMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWUserDefinedMatcher.m; path = Classes/Matchers/KWUserDefinedMatcher.m; sourceTree = "<group>"; };
 		02AE63F5E59B4EADE5FD9D82DEBF81AA /* KWDeviceInfo.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWDeviceInfo.m; path = Classes/Core/KWDeviceInfo.m; sourceTree = "<group>"; };
 		031B2EEEDA7DF1AFB9FDE3842579AE39 /* KWIntercept.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWIntercept.h; path = Classes/Stubbing/KWIntercept.h; sourceTree = "<group>"; };
 		03A2E7C39EBBF4C29F4E3B699EF69F5A /* KWConformToProtocolMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWConformToProtocolMatcher.m; path = Classes/Matchers/KWConformToProtocolMatcher.m; sourceTree = "<group>"; };
+		050107EDF7C5A8BB394E858ED7E6551B /* JKGroupRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKGroupRequest.h; path = JKNetworking/Classes/JKGroupRequest.h; sourceTree = "<group>"; };
 		0566054C4DCBC824E6821B2A6DA78CBD /* JKDataHelper-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKDataHelper-prefix.pch"; sourceTree = "<group>"; };
 		0604440FEAAA6EEB0A00EB4C22B94219 /* Kiwi-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Kiwi-dummy.m"; sourceTree = "<group>"; };
 		0666858DD024A9D8F6FF2F55B705A04D /* KWContextNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWContextNode.h; path = Classes/Nodes/KWContextNode.h; sourceTree = "<group>"; };
@@ -339,6 +343,7 @@
 		08172BF092048B76C3A3F7343CA988BB /* Pods-JKNetworking_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JKNetworking_Example-dummy.m"; sourceTree = "<group>"; };
 		08AA7312417ACB8912E510FF6179A307 /* KWContainStringMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWContainStringMatcher.m; path = Classes/Matchers/KWContainStringMatcher.m; sourceTree = "<group>"; };
 		08B7F5DFD66D51D4973E36E6E71C9EF4 /* KWStringUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWStringUtilities.m; path = Classes/Core/KWStringUtilities.m; sourceTree = "<group>"; };
+		09E8471C58513755682128399B1C64DA /* JKNetworkAgent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkAgent.h; path = JKNetworking/Classes/JKNetworkAgent.h; sourceTree = "<group>"; };
 		0AEDC797F19DA217F828660FF11AB2B7 /* JKDataHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKDataHelper.h; path = JKDataHelper/Classes/JKDataHelper.h; sourceTree = "<group>"; };
 		0B22668EF5185269FBAE4C0CB0656221 /* KWNilMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWNilMatcher.h; path = Classes/Matchers/KWNilMatcher.h; sourceTree = "<group>"; };
 		0BCEE35E8343C92C41EDEC6363FCC609 /* KWItNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWItNode.m; path = Classes/Nodes/KWItNode.m; sourceTree = "<group>"; };
@@ -346,6 +351,7 @@
 		0DC20F33FF3EE7C6801A21C2C8F4C7B8 /* KWExampleNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExampleNode.h; path = Classes/Nodes/KWExampleNode.h; sourceTree = "<group>"; };
 		0FC37F55537EBE09604632E08B48A584 /* NSNumber+KiwiAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSNumber+KiwiAdditions.m"; path = "Classes/Core/NSNumber+KiwiAdditions.m"; sourceTree = "<group>"; };
 		103FF7061241729FD7FB92DEA56F0B9A /* KWAsyncVerifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWAsyncVerifier.h; path = Classes/Verifiers/KWAsyncVerifier.h; sourceTree = "<group>"; };
+		106C08E50593ADB90F944ECFC1E5429D /* JKMockManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKMockManager.h; path = JKNetworking/Classes/JKMockManager.h; sourceTree = "<group>"; };
 		10750E4B8CE5E5866E806A48E325903C /* KWBeforeAllNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeforeAllNode.h; path = Classes/Nodes/KWBeforeAllNode.h; sourceTree = "<group>"; };
 		1199A3BE27EA29CFFA6942D3C8FC5C39 /* KWBeIdenticalToMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeIdenticalToMatcher.h; path = Classes/Matchers/KWBeIdenticalToMatcher.h; sourceTree = "<group>"; };
 		11D461A08632DBD8267DB2CCD5BAD13B /* KWBackgroundTask.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBackgroundTask.m; path = Classes/Core/KWBackgroundTask.m; sourceTree = "<group>"; };
@@ -357,18 +363,15 @@
 		165486FCD8C1E5965AED417CF21B961F /* AFNetworking-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AFNetworking-prefix.pch"; sourceTree = "<group>"; };
 		1694B414EE11C1261DD94C01E2FCC0F6 /* KWInvocationCapturer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWInvocationCapturer.m; path = Classes/Core/KWInvocationCapturer.m; sourceTree = "<group>"; };
 		19452E9E6D96D8FC28970E3EC12DE673 /* KWGenericMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWGenericMatcher.m; path = Classes/Matchers/KWGenericMatcher.m; sourceTree = "<group>"; };
-		1989648EAAE393331996E40951FD0D6C /* JKNetworkAgent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKNetworkAgent.m; path = JKNetworking/Classes/JKNetworkAgent.m; sourceTree = "<group>"; };
 		1A9500A5CCD3D39BDC846057F7295CE9 /* KWBackgroundTask.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBackgroundTask.h; path = Classes/Core/KWBackgroundTask.h; sourceTree = "<group>"; };
 		1BF33CBCA6E77D8F2FBE11F6B6FD9726 /* KWCallSite.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWCallSite.h; path = Classes/Core/KWCallSite.h; sourceTree = "<group>"; };
 		1C45089D0541F7E8AAD2682663DD0D1E /* NSInvocation+KiwiAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSInvocation+KiwiAdditions.h"; path = "Classes/Core/NSInvocation+KiwiAdditions.h"; sourceTree = "<group>"; };
 		1CF278470EFA7175EFB88C37B95BC1A6 /* KWSharedExampleRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSharedExampleRegistry.m; path = "Classes/Shared Examples/KWSharedExampleRegistry.m"; sourceTree = "<group>"; };
-		1D635906CA5E7AEE012A1FFEA7316104 /* JKBatchRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKBatchRequest.h; path = JKNetworking/Classes/JKBatchRequest.h; sourceTree = "<group>"; };
 		1D936105197E1B35AA73DA76D2FB0CE3 /* Pods-JKNetworking_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JKNetworking_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		200181C05DBB7040BA2D620A3C9278A6 /* KWProbePoller.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWProbePoller.m; path = Classes/Core/KWProbePoller.m; sourceTree = "<group>"; };
 		2187326B187145AE45991D0325153DA5 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIKit+AFNetworking.h"; path = "UIKit+AFNetworking/UIKit+AFNetworking.h"; sourceTree = "<group>"; };
 		21C7BCAC688CE5B8368761E5955E9BB9 /* NSString+JKDataHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+JKDataHelper.h"; path = "JKDataHelper/Classes/NSString+JKDataHelper.h"; sourceTree = "<group>"; };
 		21F8CEDF50D11B4D4B3BF59275C69883 /* Pods_JKNetworking_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_JKNetworking_Tests.framework; path = "Pods-JKNetworking_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2215989E68856C1554427A947B97B9AA /* JKNetworkConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKNetworkConfig.m; path = JKNetworking/Classes/JKNetworkConfig.m; sourceTree = "<group>"; };
 		223A3FD2E905444BAEC2AA98DE4A9139 /* AFURLRequestSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLRequestSerialization.h; path = AFNetworking/AFURLRequestSerialization.h; sourceTree = "<group>"; };
 		2342FA19B27199A354E85A3308E6260A /* KiwiBlockMacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KiwiBlockMacros.h; path = Classes/Core/KiwiBlockMacros.h; sourceTree = "<group>"; };
 		2349ED1E2F0644EC5D9656B35382052B /* Pods-JKNetworking_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-JKNetworking_Tests-dummy.m"; sourceTree = "<group>"; };
@@ -403,8 +406,8 @@
 		40DFDF2260DFF9AEC6577B626672F2D5 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
 		4104C941C47AEAED1723D43D4FB4912F /* Pods-JKNetworking_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JKNetworking_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		416F4D3A89B75C93B16655D1B1E1C38B /* KWMatching.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMatching.h; path = Classes/Core/KWMatching.h; sourceTree = "<group>"; };
+		4317F195F5DDAC9B9148F7842B1F4DD8 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		43D3EAF21BC41B942F4EC856867DB111 /* KWAfterEachNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWAfterEachNode.h; path = Classes/Nodes/KWAfterEachNode.h; sourceTree = "<group>"; };
-		43F95193BFBDBC62CDF97E29091326E3 /* JKNetworking.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JKNetworking.xcconfig; sourceTree = "<group>"; };
 		464C7D7CC2463DB041BB7787A40DFE73 /* KWInvocationCapturer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWInvocationCapturer.h; path = Classes/Core/KWInvocationCapturer.h; sourceTree = "<group>"; };
 		471B0BF606D2BF28EE8F3F31D32BF958 /* KWBeBetweenMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeBetweenMatcher.h; path = Classes/Matchers/KWBeBetweenMatcher.h; sourceTree = "<group>"; };
 		47439EB98B5B084F8AF58249A94398FC /* KWMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMatcher.m; path = Classes/Core/KWMatcher.m; sourceTree = "<group>"; };
@@ -420,6 +423,7 @@
 		4CA8CBB77B628A3FD43463615A7FBF3A /* KWMatchers.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMatchers.m; path = Classes/Core/KWMatchers.m; sourceTree = "<group>"; };
 		4D0EF1F9813A3366628E945A082A8165 /* KWCaptureSpy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWCaptureSpy.h; path = Classes/Core/KWCaptureSpy.h; sourceTree = "<group>"; };
 		4FB743BF10E4C6801C9CBA221A40998E /* KWSymbolicator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSymbolicator.m; path = Classes/Core/KWSymbolicator.m; sourceTree = "<group>"; };
+		507BA25A61ABEF30B98E86697F27D94C /* JKNetworkAgent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKNetworkAgent.m; path = JKNetworking/Classes/JKNetworkAgent.m; sourceTree = "<group>"; };
 		51606A4025B785348FEAB2FD4A1439C8 /* KWGenericMatchingAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWGenericMatchingAdditions.m; path = Classes/Matchers/KWGenericMatchingAdditions.m; sourceTree = "<group>"; };
 		52B11DFDB8FFFA430B42295533FDB340 /* KWBeWithinMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeWithinMatcher.h; path = Classes/Matchers/KWBeWithinMatcher.h; sourceTree = "<group>"; };
 		5403A10855F2871E68EE87361C8DAC87 /* KWExampleSuite.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExampleSuite.h; path = Classes/Core/KWExampleSuite.h; sourceTree = "<group>"; };
@@ -428,18 +432,18 @@
 		569D8A7D54C0D60EB3C10E7CCD0FF1C9 /* NSValue+KiwiAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSValue+KiwiAdditions.m"; path = "Classes/Core/NSValue+KiwiAdditions.m"; sourceTree = "<group>"; };
 		57F9DDA4303AC7C66BDD22C1CBD5418E /* KWBeTrueMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeTrueMatcher.h; path = Classes/Matchers/KWBeTrueMatcher.h; sourceTree = "<group>"; };
 		589182FAAE9CA464FD9810447078BAA6 /* KWMatchVerifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMatchVerifier.m; path = Classes/Verifiers/KWMatchVerifier.m; sourceTree = "<group>"; };
+		5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKNetworkConfig.m; path = JKNetworking/Classes/JKNetworkConfig.m; sourceTree = "<group>"; };
 		59B107CF34D70A50638E85AEB0A10557 /* KWExampleSuiteBuilder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExampleSuiteBuilder.h; path = Classes/Core/KWExampleSuiteBuilder.h; sourceTree = "<group>"; };
 		5A1A57B8197A7794F042E6702A55C655 /* KWCaptureSpy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWCaptureSpy.m; path = Classes/Core/KWCaptureSpy.m; sourceTree = "<group>"; };
 		5A6A535D14705ED3706A436516256AE7 /* Pods-JKNetworking_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JKNetworking_Tests-umbrella.h"; sourceTree = "<group>"; };
-		5BC1FA7EA91BD8205F7EF46B71419E9D /* JKNetworking-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JKNetworking-dummy.m"; sourceTree = "<group>"; };
 		5C33B8E5363A84628EABF1367CBD742D /* NSString+JKDataHelper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+JKDataHelper.m"; path = "JKDataHelper/Classes/NSString+JKDataHelper.m"; sourceTree = "<group>"; };
 		5CDA7DF14CC0C98611753ACA84A3C807 /* KWNull.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWNull.h; path = Classes/Core/KWNull.h; sourceTree = "<group>"; };
 		5D4FB82713ECD99A4AACFD51CEAC633F /* KWBeIdenticalToMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeIdenticalToMatcher.m; path = Classes/Matchers/KWBeIdenticalToMatcher.m; sourceTree = "<group>"; };
-		5DB7F5F7F26B9996425948B2AA4DCA2A /* JKNetworkAgent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkAgent.h; path = JKNetworking/Classes/JKNetworkAgent.h; sourceTree = "<group>"; };
 		5DF9186FF504148E765C51CDA956994B /* JKDataHelper-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JKDataHelper-dummy.m"; sourceTree = "<group>"; };
 		5E78EB20BBA61A45C2C52491D61A1C6C /* KWBlockRaiseMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBlockRaiseMatcher.h; path = Classes/Matchers/KWBlockRaiseMatcher.h; sourceTree = "<group>"; };
 		5EC4FAF31D303C7605EEA8D430836C28 /* KWReceiveMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWReceiveMatcher.m; path = Classes/Matchers/KWReceiveMatcher.m; sourceTree = "<group>"; };
 		6013A453B4BB718FCB035A9F19C9BE90 /* KWDeviceInfo.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWDeviceInfo.h; path = Classes/Core/KWDeviceInfo.h; sourceTree = "<group>"; };
+		602AD8E4779A32FCBCAA19EEBF9FE268 /* JKNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworking.h; path = JKNetworking/Classes/JKNetworking.h; sourceTree = "<group>"; };
 		60390DEAFAD22F524FD92CC54D2FF7BD /* KWExistVerifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWExistVerifier.m; path = Classes/Verifiers/KWExistVerifier.m; sourceTree = "<group>"; };
 		6096A8AC422105DA1B0789F9B15B8FF2 /* KWBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBlock.m; path = Classes/Core/KWBlock.m; sourceTree = "<group>"; };
 		60F256768091B113691745A7F00F03F6 /* KWAsyncVerifier.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWAsyncVerifier.m; path = Classes/Verifiers/KWAsyncVerifier.m; sourceTree = "<group>"; };
@@ -449,7 +453,6 @@
 		6314BB8199BC2781007E02F433AC7195 /* NSObject+KiwiVerifierAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+KiwiVerifierAdditions.m"; path = "Classes/Core/NSObject+KiwiVerifierAdditions.m"; sourceTree = "<group>"; };
 		66F6DCEA66DF37CD395BF04D88175728 /* UIActivityIndicatorView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIActivityIndicatorView+AFNetworking.m"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.m"; sourceTree = "<group>"; };
 		66F961ED9B3C4FE0A270FD2A8E81B48D /* KWMessageTracker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMessageTracker.m; path = Classes/Core/KWMessageTracker.m; sourceTree = "<group>"; };
-		670C212E3ED5B8DA4D28BBB83A214811 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		67177A7B71B3FEB18276DEE7108D3D4A /* KWBeKindOfClassMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeKindOfClassMatcher.h; path = Classes/Matchers/KWBeKindOfClassMatcher.h; sourceTree = "<group>"; };
 		68FD7F4471EBCB10134558C3B3EFE65B /* KWSuiteConfigurationBase.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSuiteConfigurationBase.m; path = Classes/Config/KWSuiteConfigurationBase.m; sourceTree = "<group>"; };
 		69636FFC1439FEDCC270D146CF5F0BB4 /* UIProgressView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIProgressView+AFNetworking.m"; path = "UIKit+AFNetworking/UIProgressView+AFNetworking.m"; sourceTree = "<group>"; };
@@ -457,10 +460,8 @@
 		6C35B4E8575D22AAE397FC7D2138538B /* KWNull.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWNull.m; path = Classes/Core/KWNull.m; sourceTree = "<group>"; };
 		6E375B1D178B242F4ADE69E865CA553A /* AFNetworking-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "AFNetworking-Info.plist"; sourceTree = "<group>"; };
 		6FC2451716CC8978C30CA4DA4BC5DEC7 /* KWObjCUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWObjCUtilities.m; path = Classes/Core/KWObjCUtilities.m; sourceTree = "<group>"; };
-		703FAFC9124DA62ACFD2B4F6B8B8550F /* JKNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JKNetworking.framework; path = JKNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		709C1B4BF0EDECC5AE661AEDDF7B0043 /* KWItNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWItNode.h; path = Classes/Nodes/KWItNode.h; sourceTree = "<group>"; };
 		70D9871D448B7CCABCF58222EAD2EC5E /* JKDataHelper-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKDataHelper-umbrella.h"; sourceTree = "<group>"; };
-		74428221AA60701F34D1CA108D1174EF /* JKNetworkingMacro.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkingMacro.h; path = JKNetworking/Classes/JKNetworkingMacro.h; sourceTree = "<group>"; };
 		7525C340E035E1D375CD60C359839D06 /* NSProxy+KiwiVerifierAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSProxy+KiwiVerifierAdditions.m"; path = "Classes/Core/NSProxy+KiwiVerifierAdditions.m"; sourceTree = "<group>"; };
 		76F8A96174BFE6CC0775EBAC8C12BC51 /* KWExistVerifier.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExistVerifier.h; path = Classes/Verifiers/KWExistVerifier.h; sourceTree = "<group>"; };
 		779EDAA5CA77715FEDD047974A6E451B /* KWBeTrueMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeTrueMatcher.m; path = Classes/Matchers/KWBeTrueMatcher.m; sourceTree = "<group>"; };
@@ -489,19 +490,20 @@
 		89C93AEA4E5A308AAC5976E79AE4DB5E /* Pods-JKNetworking_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JKNetworking_Example.release.xcconfig"; sourceTree = "<group>"; };
 		89E7B4B2527F806AB737DD47DBA26AB1 /* UIWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWebView+AFNetworking.h"; path = "UIKit+AFNetworking/UIWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		8A21F0991B39FEE432422E437C3C138A /* KiwiConfiguration.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KiwiConfiguration.h; path = Classes/Core/KiwiConfiguration.h; sourceTree = "<group>"; };
+		8C721251AE36826D2277EB830208F782 /* JKNetworking_-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "JKNetworking_-dummy.m"; sourceTree = "<group>"; };
 		8C760363CAD36E2FEF34B385E5BDDD8A /* KWMatcherFactory.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMatcherFactory.m; path = Classes/Core/KWMatcherFactory.m; sourceTree = "<group>"; };
 		8CDC7F0976CEA96A463DDB6B6EE7CB06 /* UIRefreshControl+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIRefreshControl+AFNetworking.m"; path = "UIKit+AFNetworking/UIRefreshControl+AFNetworking.m"; sourceTree = "<group>"; };
-		8FFDB41771F61E35AF3044299D73229E /* JKNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworking.h; path = JKNetworking/Classes/JKNetworking.h; sourceTree = "<group>"; };
+		8D8983E64585D18425525EF9A9D1DCEC /* JKGroupRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKGroupRequest.m; path = JKNetworking/Classes/JKGroupRequest.m; sourceTree = "<group>"; };
 		905B6C1BCDCBD31475EA4732295F3F71 /* KWChangeMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWChangeMatcher.m; path = Classes/Matchers/KWChangeMatcher.m; sourceTree = "<group>"; };
 		907AB1BA3778CC16119FC0B8A9EC20FE /* Pods-JKNetworking_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-JKNetworking_Example-umbrella.h"; sourceTree = "<group>"; };
 		90A73E9982BAC03AEA07084926044DF1 /* KWMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMatcher.h; path = Classes/Core/KWMatcher.h; sourceTree = "<group>"; };
 		917C9A3D03B7DB0F6CAE96FF8B15D6F7 /* KWRespondToSelectorMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWRespondToSelectorMatcher.h; path = Classes/Matchers/KWRespondToSelectorMatcher.h; sourceTree = "<group>"; };
 		91E471A3B4969BB472A3516D0274E51F /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+AFNetworking.m"; path = "UIKit+AFNetworking/UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
 		92B32F448A2AECFACB881C658CDB7C97 /* KWAny.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWAny.m; path = Classes/Core/KWAny.m; sourceTree = "<group>"; };
+		940C20D9C96C1559530D2BB50D9DF975 /* JKNetworking_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JKNetworking_.framework; path = JKNetworking_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		94939142F10BEABB56783E1273B18627 /* KWBeMemberOfClassMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeMemberOfClassMatcher.m; path = Classes/Matchers/KWBeMemberOfClassMatcher.m; sourceTree = "<group>"; };
 		96B9479B2DC750E22108E549F41E93D3 /* JKDataHelper.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JKDataHelper.xcconfig; sourceTree = "<group>"; };
 		9776D53BD4321E3E0138FD639D8CAD4D /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIActivityIndicatorView+AFNetworking.h"; path = "UIKit+AFNetworking/UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
-		97C288A09055ADB80FDC2429A011CD94 /* JKNetworking.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = JKNetworking.modulemap; sourceTree = "<group>"; };
 		9ABEA11FED48AB5300DE84BCA517EFDA /* KWReceiveMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWReceiveMatcher.h; path = Classes/Matchers/KWReceiveMatcher.h; sourceTree = "<group>"; };
 		9AE7101F0E0F7DAE396005C54A0F2F26 /* KWExample.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWExample.h; path = Classes/Core/KWExample.h; sourceTree = "<group>"; };
 		9B3CB2BFF8E2259D4D40E45DF0E4EC6B /* KWSpec.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWSpec.h; path = Classes/Core/KWSpec.h; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 		A33263B08112CDC361EFCE535205BC9D /* KWMessageTracker.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMessageTracker.h; path = Classes/Core/KWMessageTracker.h; sourceTree = "<group>"; };
 		A3D314CD67F7512F1C867B552BEB7F8E /* KWSpec.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWSpec.m; path = Classes/Core/KWSpec.m; sourceTree = "<group>"; };
 		A3EA0D12DCC410D448EC81B32B9CA770 /* NSObject+KiwiSpyAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+KiwiSpyAdditions.m"; path = "Classes/Core/NSObject+KiwiSpyAdditions.m"; sourceTree = "<group>"; };
+		A4AC9A6191DE595A49B31A4D9615C444 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		A4FA15D44DF6BAC7550EDEED10862AA3 /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = AFNetworking.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5C505168201F838A541894B0C1B1342 /* KWRegularExpressionPatternMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWRegularExpressionPatternMatcher.m; path = Classes/Matchers/KWRegularExpressionPatternMatcher.m; sourceTree = "<group>"; };
 		A5F1E408F1E034F0499772DB21D8DE3D /* AFNetworking.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = AFNetworking.xcconfig; sourceTree = "<group>"; };
@@ -535,36 +538,36 @@
 		ADF132C222CF179C81F2EDE3C7920FB6 /* KWInequalityMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWInequalityMatcher.m; path = Classes/Matchers/KWInequalityMatcher.m; sourceTree = "<group>"; };
 		ADFF1A607E20C4834C2925E076E9CB52 /* KWStringContainsMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWStringContainsMatcher.h; path = Classes/Matchers/KWStringContainsMatcher.h; sourceTree = "<group>"; };
 		AE1A510A16B8C33A0C6B8E183F701CEB /* KWVerifying.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWVerifying.h; path = Classes/Verifiers/KWVerifying.h; sourceTree = "<group>"; };
-		AEF723898AC3096E2C05308AD5B29032 /* JKBaseRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKBaseRequest.h; path = JKNetworking/Classes/JKBaseRequest.h; sourceTree = "<group>"; };
 		AF4E0F87BBDF6C793FEB03738A1920F0 /* KWValue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWValue.h; path = Classes/Core/KWValue.h; sourceTree = "<group>"; };
-		B020C6089A1DC48E238A20531EDCB1A2 /* JKNetworking-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKNetworking-prefix.pch"; sourceTree = "<group>"; };
-		B05139924BB5542026D83E27F7A0AF6A /* JKNetworking-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JKNetworking-Info.plist"; sourceTree = "<group>"; };
 		B097FF5DB4268DC03A698F8B39A8BD64 /* KWSuiteConfigurationBase.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWSuiteConfigurationBase.h; path = Classes/Config/KWSuiteConfigurationBase.h; sourceTree = "<group>"; };
 		B0A502FF8542F35CE85A772C00EAC122 /* Pods-JKNetworking_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-JKNetworking_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		B0E5CAE3E50A154F2FBF4B661C92005C /* KWBeEmptyMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeEmptyMatcher.h; path = Classes/Matchers/KWBeEmptyMatcher.h; sourceTree = "<group>"; };
 		B315FF5F52821271C4522D8C4F58E61F /* KWLetNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWLetNode.m; path = Classes/Nodes/KWLetNode.m; sourceTree = "<group>"; };
 		B3958F736C806BE3D14651D0BA9EAC99 /* KWNotificationMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWNotificationMatcher.h; path = Classes/Matchers/KWNotificationMatcher.h; sourceTree = "<group>"; };
 		B3F22527BA39DE5928DFBE8BDB835195 /* Pods-JKNetworking_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-JKNetworking_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		B40B7DCCD869F8145690229C15C6E0AB /* JKNetworking_.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = JKNetworking_.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B4FADA34DA6C9FB798F5BB13DF9AFA4A /* KWMock.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMock.h; path = Classes/Mocking/KWMock.h; sourceTree = "<group>"; };
+		B523F617DD9C7B410FB6BCBD66CB887F /* JKNetworking_.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = JKNetworking_.xcconfig; sourceTree = "<group>"; };
 		B697740D7CDB3ED3D9848CC1022D2A3E /* AFNetworking-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AFNetworking-umbrella.h"; sourceTree = "<group>"; };
 		B8D2ED18B6D48830E78A1E3667CD0898 /* KWBeZeroMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeZeroMatcher.m; path = Classes/Matchers/KWBeZeroMatcher.m; sourceTree = "<group>"; };
 		B9ABE15F1C312598715EB73616B082AC /* KWEqualMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWEqualMatcher.h; path = Classes/Matchers/KWEqualMatcher.h; sourceTree = "<group>"; };
 		BE431806EA4ED36693C6C355C3E8265E /* KWMatcherFactory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMatcherFactory.h; path = Classes/Core/KWMatcherFactory.h; sourceTree = "<group>"; };
-		C01E1C8B4A693C0C5285CE49791F3D41 /* JKNetworking.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = JKNetworking.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		C0BD25AFD56DCA0368FC7C852DD194F1 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		C37F377673FFDAD5A9DA645D1B74AFAE /* KWPendingNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWPendingNode.m; path = Classes/Nodes/KWPendingNode.m; sourceTree = "<group>"; };
-		C432EAD3B25AFE837CA1D58E46452DF4 /* JKBaseRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKBaseRequest.m; path = JKNetworking/Classes/JKBaseRequest.m; sourceTree = "<group>"; };
+		C3CBDA1A041316226F4F938171438D9F /* JKNetworkingMacro.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkingMacro.h; path = JKNetworking/Classes/JKNetworkingMacro.h; sourceTree = "<group>"; };
+		C45AC2BFEA032211EA6DB73190DBDB3D /* JKNetworking_-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKNetworking_-umbrella.h"; sourceTree = "<group>"; };
 		C534C1835FA16364718C53463262FDCA /* AFURLRequestSerialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFURLRequestSerialization.m; path = AFNetworking/AFURLRequestSerialization.m; sourceTree = "<group>"; };
 		C578CE9619FAA2051DFB63E91FE2726C /* KWAllTestsSuite.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWAllTestsSuite.m; path = Classes/Config/KWAllTestsSuite.m; sourceTree = "<group>"; };
 		C6125CA491709DF7265B342A0324BE5A /* NSDictionary+JKDataHelper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+JKDataHelper.m"; path = "JKDataHelper/Classes/NSDictionary+JKDataHelper.m"; sourceTree = "<group>"; };
 		C6353591B3FBFBBD5BED4CB76A498AA8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		C6936BBEAB2E0A5551C028EA241885E0 /* JKNetworking-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKNetworking-umbrella.h"; sourceTree = "<group>"; };
 		C74BEC3BDD88C73E68F1AFB1790888F0 /* KWBeZeroMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeZeroMatcher.h; path = Classes/Matchers/KWBeZeroMatcher.h; sourceTree = "<group>"; };
 		C8EA4C5CC693CD026901C6637E8D9AB2 /* KWBeSubclassOfClassMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWBeSubclassOfClassMatcher.h; path = Classes/Matchers/KWBeSubclassOfClassMatcher.h; sourceTree = "<group>"; };
+		C9201754BE595005AA8EE3BC9372CA22 /* JKNetworking_-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "JKNetworking_-prefix.pch"; sourceTree = "<group>"; };
 		C9761C2A90945259A18CDE86CE07D929 /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFHTTPSessionManager.h; path = AFNetworking/AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		C9B280892A0937410309237616096D6F /* UIButton+AFNetworking.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIButton+AFNetworking.m"; path = "UIKit+AFNetworking/UIButton+AFNetworking.m"; sourceTree = "<group>"; };
 		C9CB506DF105DB8948625EB366BDFCC4 /* KWBlockRaiseMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBlockRaiseMatcher.m; path = Classes/Matchers/KWBlockRaiseMatcher.m; sourceTree = "<group>"; };
 		CA771464BABB3540D0618ED79A0C2DC5 /* KWGenericMatchEvaluator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWGenericMatchEvaluator.m; path = Classes/Matchers/KWGenericMatchEvaluator.m; sourceTree = "<group>"; };
+		CB8F013DE6D51F1E7FBEE923EDF8D2B3 /* JKMockManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKMockManager.m; path = JKNetworking/Classes/JKMockManager.m; sourceTree = "<group>"; };
 		CC0254A59530B3662521EAB42C186691 /* KWBeforeAllNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeforeAllNode.m; path = Classes/Nodes/KWBeforeAllNode.m; sourceTree = "<group>"; };
 		CCCB602369C98656ACDE00E3B9E13221 /* NSDictionary+JKDataHelper.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+JKDataHelper.h"; path = "JKDataHelper/Classes/NSDictionary+JKDataHelper.h"; sourceTree = "<group>"; };
 		CCCBEBFA086856115CC9D2FD6F7C1EBC /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFURLResponseSerialization.m; path = AFNetworking/AFURLResponseSerialization.m; sourceTree = "<group>"; };
@@ -577,25 +580,26 @@
 		D202ECC38F9EC701FF7D40906A7A228D /* KWBeWithinMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeWithinMatcher.m; path = Classes/Matchers/KWBeWithinMatcher.m; sourceTree = "<group>"; };
 		D20880B919DE46038093692322AAB459 /* KWAfterAllNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWAfterAllNode.h; path = Classes/Nodes/KWAfterAllNode.h; sourceTree = "<group>"; };
 		D53B6F9630A22119CA9B37680E256E7C /* AFURLResponseSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFURLResponseSerialization.h; path = AFNetworking/AFURLResponseSerialization.h; sourceTree = "<group>"; };
+		D614DD79D888AC88E5276A9A31A0D66E /* JKNetworking_-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "JKNetworking_-Info.plist"; sourceTree = "<group>"; };
 		D6DDD0AC74C546687DCB15C812B7054D /* KWStub.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWStub.h; path = Classes/Stubbing/KWStub.h; sourceTree = "<group>"; };
 		D7CD1327BBECC0397C3D739D7A0E73A3 /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7DB32B95C8ED73276151E1B21E3158F /* Pods-JKNetworking_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-JKNetworking_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		D8576FE86068903803800E2F4CCEA831 /* NSObject+KiwiStubAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+KiwiStubAdditions.m"; path = "Classes/Stubbing/NSObject+KiwiStubAdditions.m"; sourceTree = "<group>"; };
 		D922BAA9212E21951D9A40675B9826BD /* KWRegisterMatchersNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWRegisterMatchersNode.m; path = Classes/Nodes/KWRegisterMatchersNode.m; sourceTree = "<group>"; };
-		D9243950AFDCF03548C1FD7491207C31 /* JKBatchRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKBatchRequest.m; path = JKNetworking/Classes/JKBatchRequest.m; sourceTree = "<group>"; };
 		DA4B9CCEE97779FE7887A8980A05D711 /* KWMock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWMock.m; path = Classes/Mocking/KWMock.m; sourceTree = "<group>"; };
+		DB14F9CB375DE4882393659C549F8492 /* JKBaseRequest.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKBaseRequest.m; path = JKNetworking/Classes/JKBaseRequest.m; sourceTree = "<group>"; };
 		DBEB26A4D85828E8F798E55A0397AA75 /* AFImageDownloader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFImageDownloader.m; path = "UIKit+AFNetworking/AFImageDownloader.m"; sourceTree = "<group>"; };
 		DC270D01F514B9652257035F090F3A6E /* KWHaveValueMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWHaveValueMatcher.h; path = Classes/Matchers/KWHaveValueMatcher.h; sourceTree = "<group>"; };
 		E45AD04425C26EF03227A0D58A19DC1A /* KWRegularExpressionPatternMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWRegularExpressionPatternMatcher.h; path = Classes/Matchers/KWRegularExpressionPatternMatcher.h; sourceTree = "<group>"; };
+		E486AE3323ACA66E17D8FAB8B2194B79 /* JKNetworkConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkConfig.h; path = JKNetworking/Classes/JKNetworkConfig.h; sourceTree = "<group>"; };
 		E598F5AA34CD17ACA578292110D03646 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		E699F992F91E9B165A825B14A27584A7 /* Kiwi.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Kiwi.h; path = Classes/Core/Kiwi.h; sourceTree = "<group>"; };
+		E82AF2144BE935C6DF1E142FF44E70DA /* JKNetworking_.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = JKNetworking_.modulemap; sourceTree = "<group>"; };
 		E8C7C41051724FAA34B9423478482CAC /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = AFNetworkReachabilityManager.m; path = AFNetworking/AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		EB020E51ACB907FF60AED36498C5D767 /* AFAutoPurgingImageCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFAutoPurgingImageCache.h; path = "UIKit+AFNetworking/AFAutoPurgingImageCache.h"; sourceTree = "<group>"; };
 		EC1B4A65A67499DA7E115D20137836DE /* KWFutureObject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWFutureObject.h; path = Classes/Core/KWFutureObject.h; sourceTree = "<group>"; };
-		EC358FD1226601C4693BD7EBB647781A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		EC91B4FCD21F45210E3D7A721F93843F /* Pods-JKNetworking_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-JKNetworking_Tests-Info.plist"; sourceTree = "<group>"; };
 		ED079A35CB46978B34EB5F00A6B03CC0 /* KWPendingNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWPendingNode.h; path = Classes/Nodes/KWPendingNode.h; sourceTree = "<group>"; };
-		ED693D95ADAEEBA5923FA6C16EC56EF5 /* JKNetworkConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = JKNetworkConfig.h; path = JKNetworking/Classes/JKNetworkConfig.h; sourceTree = "<group>"; };
 		ED823528205767F63C5F300AE8A2CC9E /* AFImageDownloader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFImageDownloader.h; path = "UIKit+AFNetworking/AFImageDownloader.h"; sourceTree = "<group>"; };
 		EF8456B5DEBB8074B110B8602AD476C7 /* JKDataHelper.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = JKDataHelper.modulemap; sourceTree = "<group>"; };
 		EF92C80668B919C77BDBDFADDF9BB079 /* KWValue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWValue.m; path = Classes/Core/KWValue.m; sourceTree = "<group>"; };
@@ -629,29 +633,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3BB4B8A9DC1844DA65FA337FE38D6B60 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				833294ADDFDA5793FB8C2E10B64394EE /* AFNetworking.framework in Frameworks */,
-				2614C06D3311F462E8AAEE7C1F62384F /* Foundation.framework in Frameworks */,
-				74DC5B85B5A1B027904FA74948EEDD0A /* JKDataHelper.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4D07D9B0015672894D2E1020AF538054 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				5C304678F9FAC750612BB6B499409333 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		78A1A0195C43BCCF690B3701E792CB33 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BA0D7E5237DA4809B3773D1080B2D092 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,9 +661,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E5CE68165A3745D608464CE6DFE890F9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				006D4B9C5EDD1C0F64F86E6A2B9EF84E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2F08C4712AA680B6F3F945C1555E2E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6D479F569118A415E720689C28704BC3 /* AFNetworking.framework in Frameworks */,
+				B1C051C14E3C8C7E15216946A5193BCE /* Foundation.framework in Frameworks */,
+				6B0C9FFF0AEAA478D629599AF7BEC188 /* JKDataHelper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		070C0C1027A1B5F9626CA366AECF9299 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				B40B7DCCD869F8145690229C15C6E0AB /* JKNetworking_.podspec */,
+				4317F195F5DDAC9B9148F7842B1F4DD8 /* LICENSE */,
+				A4AC9A6191DE595A49B31A4D9615C444 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		12D661183D4D9384EA1218A69A9FEAA1 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,6 +926,28 @@
 			path = Kiwi;
 			sourceTree = "<group>";
 		};
+		2BF3650B054A2CB5127C9A924C8D0B84 /* JKNetworking_ */ = {
+			isa = PBXGroup;
+			children = (
+				01A07D97EACB351110DC4045B4948DDC /* JKBaseRequest.h */,
+				DB14F9CB375DE4882393659C549F8492 /* JKBaseRequest.m */,
+				050107EDF7C5A8BB394E858ED7E6551B /* JKGroupRequest.h */,
+				8D8983E64585D18425525EF9A9D1DCEC /* JKGroupRequest.m */,
+				106C08E50593ADB90F944ECFC1E5429D /* JKMockManager.h */,
+				CB8F013DE6D51F1E7FBEE923EDF8D2B3 /* JKMockManager.m */,
+				09E8471C58513755682128399B1C64DA /* JKNetworkAgent.h */,
+				507BA25A61ABEF30B98E86697F27D94C /* JKNetworkAgent.m */,
+				E486AE3323ACA66E17D8FAB8B2194B79 /* JKNetworkConfig.h */,
+				5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */,
+				602AD8E4779A32FCBCAA19EEBF9FE268 /* JKNetworking.h */,
+				C3CBDA1A041316226F4F938171438D9F /* JKNetworkingMacro.h */,
+				070C0C1027A1B5F9626CA366AECF9299 /* Pod */,
+				3EE85D6906D2DF36AF6E0409D6561EF6 /* Support Files */,
+			);
+			name = JKNetworking_;
+			path = ../..;
+			sourceTree = "<group>";
+		};
 		36DECC28D03A5E2AC94C86FAE0FE61F4 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -927,6 +963,20 @@
 			path = AFNetworking;
 			sourceTree = "<group>";
 		};
+		3EE85D6906D2DF36AF6E0409D6561EF6 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E82AF2144BE935C6DF1E142FF44E70DA /* JKNetworking_.modulemap */,
+				B523F617DD9C7B410FB6BCBD66CB887F /* JKNetworking_.xcconfig */,
+				8C721251AE36826D2277EB830208F782 /* JKNetworking_-dummy.m */,
+				D614DD79D888AC88E5276A9A31A0D66E /* JKNetworking_-Info.plist */,
+				C9201754BE595005AA8EE3BC9372CA22 /* JKNetworking_-prefix.pch */,
+				C45AC2BFEA032211EA6DB73190DBDB3D /* JKNetworking_-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/JKNetworking_";
+			sourceTree = "<group>";
+		};
 		4F77A4E36418FA4C0EF49E02B8864E6D /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -940,14 +990,17 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		7BBE9DD600484B9BB2E663D787B897BC /* Pod */ = {
+		5D729E577FFBD1CCDFD9E702E44B3F03 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C01E1C8B4A693C0C5285CE49791F3D41 /* JKNetworking.podspec */,
-				670C212E3ED5B8DA4D28BBB83A214811 /* LICENSE */,
-				EC358FD1226601C4693BD7EBB647781A /* README.md */,
+				A4FA15D44DF6BAC7550EDEED10862AA3 /* AFNetworking.framework */,
+				F6C0EF9E5C75364F45A5CABFD3AC4116 /* JKDataHelper.framework */,
+				940C20D9C96C1559530D2BB50D9DF975 /* JKNetworking_.framework */,
+				0C26E0179F81C13A342E1D93EE7708D4 /* Kiwi.framework */,
+				077561A3B9558C9D8698DBF9F3F9619A /* Pods_JKNetworking_Example.framework */,
+				21F8CEDF50D11B4D4B3BF59275C69883 /* Pods_JKNetworking_Tests.framework */,
 			);
-			name = Pod;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		7E4618081888EE8B2EBA021C408FE335 /* JKDataHelper */ = {
@@ -992,19 +1045,6 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		837CA00408F6C09DB01B87D01AFFAE0C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A4FA15D44DF6BAC7550EDEED10862AA3 /* AFNetworking.framework */,
-				F6C0EF9E5C75364F45A5CABFD3AC4116 /* JKDataHelper.framework */,
-				703FAFC9124DA62ACFD2B4F6B8B8550F /* JKNetworking.framework */,
-				0C26E0179F81C13A342E1D93EE7708D4 /* Kiwi.framework */,
-				077561A3B9558C9D8698DBF9F3F9619A /* Pods_JKNetworking_Example.framework */,
-				21F8CEDF50D11B4D4B3BF59275C69883 /* Pods_JKNetworking_Tests.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		85266314EA35293994234076412DD074 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1039,24 +1079,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B1F93DE95F917E712A6CC6ED31551ADF /* JKNetworking */ = {
+		98D97A4D784F9BF9055C670B1249F398 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				AEF723898AC3096E2C05308AD5B29032 /* JKBaseRequest.h */,
-				C432EAD3B25AFE837CA1D58E46452DF4 /* JKBaseRequest.m */,
-				1D635906CA5E7AEE012A1FFEA7316104 /* JKBatchRequest.h */,
-				D9243950AFDCF03548C1FD7491207C31 /* JKBatchRequest.m */,
-				5DB7F5F7F26B9996425948B2AA4DCA2A /* JKNetworkAgent.h */,
-				1989648EAAE393331996E40951FD0D6C /* JKNetworkAgent.m */,
-				ED693D95ADAEEBA5923FA6C16EC56EF5 /* JKNetworkConfig.h */,
-				2215989E68856C1554427A947B97B9AA /* JKNetworkConfig.m */,
-				8FFDB41771F61E35AF3044299D73229E /* JKNetworking.h */,
-				74428221AA60701F34D1CA108D1174EF /* JKNetworkingMacro.h */,
-				7BBE9DD600484B9BB2E663D787B897BC /* Pod */,
-				EB8AC04A750DDB6978DC8358DD76152E /* Support Files */,
+				2BF3650B054A2CB5127C9A924C8D0B84 /* JKNetworking_ */,
 			);
-			name = JKNetworking;
-			path = ../..;
+			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		B70E3C30B310C9D8CD05661666CFE889 /* Support Files */ = {
@@ -1094,10 +1122,10 @@
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				F49090F4C16E69AEA53FAEDE599868F4 /* Development Pods */,
+				98D97A4D784F9BF9055C670B1249F398 /* Development Pods */,
 				937ACA09312A6A5D3BC318C65A3846A0 /* Frameworks */,
 				85266314EA35293994234076412DD074 /* Pods */,
-				837CA00408F6C09DB01B87D01AFFAE0C /* Products */,
+				5D729E577FFBD1CCDFD9E702E44B3F03 /* Products */,
 				82C934BC89A252E9A3D47D3B33E47516 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -1118,28 +1146,6 @@
 				E8C7C41051724FAA34B9423478482CAC /* AFNetworkReachabilityManager.m */,
 			);
 			name = Reachability;
-			sourceTree = "<group>";
-		};
-		EB8AC04A750DDB6978DC8358DD76152E /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				97C288A09055ADB80FDC2429A011CD94 /* JKNetworking.modulemap */,
-				43F95193BFBDBC62CDF97E29091326E3 /* JKNetworking.xcconfig */,
-				5BC1FA7EA91BD8205F7EF46B71419E9D /* JKNetworking-dummy.m */,
-				B05139924BB5542026D83E27F7A0AF6A /* JKNetworking-Info.plist */,
-				B020C6089A1DC48E238A20531EDCB1A2 /* JKNetworking-prefix.pch */,
-				C6936BBEAB2E0A5551C028EA241885E0 /* JKNetworking-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/JKNetworking";
-			sourceTree = "<group>";
-		};
-		F49090F4C16E69AEA53FAEDE599868F4 /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B1F93DE95F917E712A6CC6ED31551ADF /* JKNetworking */,
-			);
-			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		F6885554000A2FFA88BAB4ED43C75EE2 /* NSURLSession */ = {
@@ -1168,14 +1174,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		0F5161CCBFC9D0AD7A72B78BD95C7D6F /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0BD65F2F3037A9050CC3F575063C4ECC /* Pods-JKNetworking_Example-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3CC6C1A258885BCEF8E8C84D3706B295 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -1196,17 +1194,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DACA75D1EFC93D578EDE25578BBB4A8C /* Headers */ = {
+		85983982344E48DF3DC6C1CC27DCC22C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4639A4A2EE99EEC7A035E6346627A38 /* JKBaseRequest.h in Headers */,
-				8A15D5FDEFDD14582D13C8548992FCFC /* JKBatchRequest.h in Headers */,
-				C8A5E6677E3FC6EABC6EC692DED916ED /* JKNetworkAgent.h in Headers */,
-				6A2558D2EA6117BA0312C3077351E119 /* JKNetworkConfig.h in Headers */,
-				318CE62390A73567A7297F6ECDA0C89B /* JKNetworking-umbrella.h in Headers */,
-				0E27F1F6CB12C751CE6B9CFCF456D4AF /* JKNetworking.h in Headers */,
-				23F4A2FDAC105F6E2E0D69203C5D4942 /* JKNetworkingMacro.h in Headers */,
+				E0CFB7A367CB03B7EC4FC31E7D0B502A /* JKBaseRequest.h in Headers */,
+				0E5A5B2E594DEF57980F8F0FCF9F33CE /* JKGroupRequest.h in Headers */,
+				D7F95FA41B9BDFB07FF37D5279252D2D /* JKMockManager.h in Headers */,
+				D94636654621FFB16E62836EF0DBCA6F /* JKNetworkAgent.h in Headers */,
+				73DC578AAAC496188754AF97022ADF3B /* JKNetworkConfig.h in Headers */,
+				8CE5D8E338DC9BB824B1293ED84C19BD /* JKNetworking.h in Headers */,
+				64B2496460D80C4A6E372EB9CD29FB96 /* JKNetworking_-umbrella.h in Headers */,
+				032EEB0C04A2AD2898688F0AB048F46F /* JKNetworkingMacro.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85A1F3519B794D8306D1492A8AE57283 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F7FB215E7D8AA45718FDA2B825078B01 /* Pods-JKNetworking_Example-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1367,23 +1374,43 @@
 		};
 		257EA05FF86BC3EDA841D20605645D80 /* Pods-JKNetworking_Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A856750CD7A8AF21CEF5E9467DFA0452 /* Build configuration list for PBXNativeTarget "Pods-JKNetworking_Example" */;
+			buildConfigurationList = 3D25045A87691A697C671814B55A6680 /* Build configuration list for PBXNativeTarget "Pods-JKNetworking_Example" */;
 			buildPhases = (
-				0F5161CCBFC9D0AD7A72B78BD95C7D6F /* Headers */,
-				F0DF5ECBF1EA8D595E8974C9C840D659 /* Sources */,
-				78A1A0195C43BCCF690B3701E792CB33 /* Frameworks */,
-				619CE55AB221C2EABEA6F0E75EA62B91 /* Resources */,
+				85A1F3519B794D8306D1492A8AE57283 /* Headers */,
+				1FC563DF7D448D614F71002D9C906688 /* Sources */,
+				E5CE68165A3745D608464CE6DFE890F9 /* Frameworks */,
+				4BCA7D37DC4C485C330B4BC0FC9B6C6B /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5612383115681682DADD74F58C0B13EA /* PBXTargetDependency */,
-				D06F6E30A0582C985DF226103027A597 /* PBXTargetDependency */,
-				8989DD256C9746B4C7D09BB5BFDB3227 /* PBXTargetDependency */,
+				00638E62CE3C4A5DFC0915451AF69BF3 /* PBXTargetDependency */,
+				FBA2B8A37DC28AFBC77ADDF297322E8B /* PBXTargetDependency */,
+				844DB672D0241BC8141588EB6EA8AE56 /* PBXTargetDependency */,
 			);
 			name = "Pods-JKNetworking_Example";
 			productName = "Pods-JKNetworking_Example";
 			productReference = 077561A3B9558C9D8698DBF9F3F9619A /* Pods_JKNetworking_Example.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		31CCF4B976A4A7C99672125205B6D848 /* JKNetworking_ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 36ED04C956811F74142ADDC781A2BC22 /* Build configuration list for PBXNativeTarget "JKNetworking_" */;
+			buildPhases = (
+				85983982344E48DF3DC6C1CC27DCC22C /* Headers */,
+				58B744DE2D4083FE3B184CAE84074A84 /* Sources */,
+				F2F08C4712AA680B6F3F945C1555E2E4 /* Frameworks */,
+				1305E5E204B9B6AB6E473D86BA43B498 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				52FE43A36FC4500EAFB773CBD0A9F90C /* PBXTargetDependency */,
+				0F80B59D5026DBECAE03F41F80FEAD68 /* PBXTargetDependency */,
+			);
+			name = JKNetworking_;
+			productName = JKNetworking_;
+			productReference = 940C20D9C96C1559530D2BB50D9DF975 /* JKNetworking_.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		92B1E4507ED809532F5F949D07631263 /* Pods-JKNetworking_Tests */ = {
@@ -1404,26 +1431,6 @@
 			name = "Pods-JKNetworking_Tests";
 			productName = "Pods-JKNetworking_Tests";
 			productReference = 21F8CEDF50D11B4D4B3BF59275C69883 /* Pods_JKNetworking_Tests.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		A2D8C144E698491B4BFC1D6228796E92 /* JKNetworking */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F22C69E6E996C92757BF305093D5EDF /* Build configuration list for PBXNativeTarget "JKNetworking" */;
-			buildPhases = (
-				DACA75D1EFC93D578EDE25578BBB4A8C /* Headers */,
-				34B4A2B4F94FD2650F859FB5F226C139 /* Sources */,
-				3BB4B8A9DC1844DA65FA337FE38D6B60 /* Frameworks */,
-				BBD5162CE862A37EAAAEEEC4F360DAC2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				39CDEB45768E985DC7D81FF2287E1B0A /* PBXTargetDependency */,
-				0252F739003676F3E6CF0435089B0EC4 /* PBXTargetDependency */,
-			);
-			name = JKNetworking;
-			productName = JKNetworking;
-			productReference = 703FAFC9124DA62ACFD2B4F6B8B8550F /* JKNetworking.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		C39ADDDA7893545387B1E244A18FCDE7 /* JKDataHelper */ = {
@@ -1479,13 +1486,13 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 837CA00408F6C09DB01B87D01AFFAE0C /* Products */;
+			productRefGroup = 5D729E577FFBD1CCDFD9E702E44B3F03 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				0130B3724283586C0E9D2A112D4F2AA1 /* AFNetworking */,
 				C39ADDDA7893545387B1E244A18FCDE7 /* JKDataHelper */,
-				A2D8C144E698491B4BFC1D6228796E92 /* JKNetworking */,
+				31CCF4B976A4A7C99672125205B6D848 /* JKNetworking_ */,
 				D5A4060DC193E269FE369F036E4781A9 /* Kiwi */,
 				257EA05FF86BC3EDA841D20605645D80 /* Pods-JKNetworking_Example */,
 				92B1E4507ED809532F5F949D07631263 /* Pods-JKNetworking_Tests */,
@@ -1494,7 +1501,21 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1305E5E204B9B6AB6E473D86BA43B498 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2C07EBEF999075B4D5EE02B0EB7A6715 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BCA7D37DC4C485C330B4BC0FC9B6C6B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1508,21 +1529,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		619CE55AB221C2EABEA6F0E75EA62B91 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		904407FA6D0B28EE52CBC9DC0B738341 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BBD5162CE862A37EAAAEEEC4F360DAC2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1632,15 +1639,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34B4A2B4F94FD2650F859FB5F226C139 /* Sources */ = {
+		1FC563DF7D448D614F71002D9C906688 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6947E215272914549FBD0F65C4C5934 /* JKBaseRequest.m in Sources */,
-				0658C20DC4448D574C43FE02C970751D /* JKBatchRequest.m in Sources */,
-				182BDE8D873FDDFAF12F844F5270A883 /* JKNetworkAgent.m in Sources */,
-				1DFEAD62ACC6A2CE38CB4C24C72134E3 /* JKNetworkConfig.m in Sources */,
-				FA53C003438AC6F745742421B72266CB /* JKNetworking-dummy.m in Sources */,
+				BEBC2EBDFF85C2F9F172A66EF85E9A2F /* Pods-JKNetworking_Example-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1649,6 +1652,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FEEB14F742238D9FFA14BFC2E3FF76F /* Pods-JKNetworking_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		58B744DE2D4083FE3B184CAE84074A84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80EA601987A70C9AD03D2B445C2FCD5C /* JKBaseRequest.m in Sources */,
+				8C5682303E7D55EBFB88A86DD0E5559D /* JKGroupRequest.m in Sources */,
+				CCECBBA6F32AC866A9918B54886997A2 /* JKMockManager.m in Sources */,
+				0A2D3898B82BD6987E2FFACCCE70682F /* JKNetworkAgent.m in Sources */,
+				BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */,
+				85816CB16E1E3EA260CAC1A2C54DFE61 /* JKNetworking_-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1686,34 +1702,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F0DF5ECBF1EA8D595E8974C9C840D659 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BA94BE0DB908EF7079C77E17C66C9BB9 /* Pods-JKNetworking_Example-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0252F739003676F3E6CF0435089B0EC4 /* PBXTargetDependency */ = {
+		00638E62CE3C4A5DFC0915451AF69BF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AFNetworking;
+			target = 0130B3724283586C0E9D2A112D4F2AA1 /* AFNetworking */;
+			targetProxy = C306713A2095746C135CF35268D7BC92 /* PBXContainerItemProxy */;
+		};
+		0F80B59D5026DBECAE03F41F80FEAD68 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = JKDataHelper;
 			target = C39ADDDA7893545387B1E244A18FCDE7 /* JKDataHelper */;
-			targetProxy = DF0EFC90F7B0891607B7032C8C2F2DD7 /* PBXContainerItemProxy */;
+			targetProxy = D635B540C35B8285C2C8FF84E387639F /* PBXContainerItemProxy */;
 		};
-		39CDEB45768E985DC7D81FF2287E1B0A /* PBXTargetDependency */ = {
+		52FE43A36FC4500EAFB773CBD0A9F90C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AFNetworking;
 			target = 0130B3724283586C0E9D2A112D4F2AA1 /* AFNetworking */;
-			targetProxy = BA8E8E1D7F8920F93F1B1490DB4C8134 /* PBXContainerItemProxy */;
-		};
-		5612383115681682DADD74F58C0B13EA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AFNetworking;
-			target = 0130B3724283586C0E9D2A112D4F2AA1 /* AFNetworking */;
-			targetProxy = 9B5BAE2B9F05272AE19FDB99D96603D2 /* PBXContainerItemProxy */;
+			targetProxy = FDE362B1D234B911790208D42CD3F568 /* PBXContainerItemProxy */;
 		};
 		80A5912DC617313C7A1A6961942D722C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1727,17 +1735,17 @@
 			target = 257EA05FF86BC3EDA841D20605645D80 /* Pods-JKNetworking_Example */;
 			targetProxy = D1C0BC7866464AEDC7B2E6434B0791CC /* PBXContainerItemProxy */;
 		};
-		8989DD256C9746B4C7D09BB5BFDB3227 /* PBXTargetDependency */ = {
+		844DB672D0241BC8141588EB6EA8AE56 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = JKNetworking;
-			target = A2D8C144E698491B4BFC1D6228796E92 /* JKNetworking */;
-			targetProxy = 3D59A5D8D8A1CD0E4A917C41BB175BE1 /* PBXContainerItemProxy */;
+			name = JKNetworking_;
+			target = 31CCF4B976A4A7C99672125205B6D848 /* JKNetworking_ */;
+			targetProxy = 987B8EE0943A37706BA911196ADF52DA /* PBXContainerItemProxy */;
 		};
-		D06F6E30A0582C985DF226103027A597 /* PBXTargetDependency */ = {
+		FBA2B8A37DC28AFBC77ADDF297322E8B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = JKDataHelper;
 			target = C39ADDDA7893545387B1E244A18FCDE7 /* JKDataHelper */;
-			targetProxy = 475D4B723722061C7AB187D0577CBC69 /* PBXContainerItemProxy */;
+			targetProxy = 4C469A83ECF4204DB62C687CBA8369C1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1763,6 +1771,38 @@
 				MODULEMAP_FILE = "Target Support Files/JKDataHelper/JKDataHelper.modulemap";
 				PRODUCT_MODULE_NAME = JKDataHelper;
 				PRODUCT_NAME = JKDataHelper;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2F5206EDA844C86A8EFEF9DFAF2829FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B523F617DD9C7B410FB6BCBD66CB887F /* JKNetworking_.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JKNetworking_/JKNetworking_-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JKNetworking_/JKNetworking_-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JKNetworking_/JKNetworking_.modulemap";
+				PRODUCT_MODULE_NAME = JKNetworking_;
+				PRODUCT_NAME = JKNetworking_;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
@@ -1805,40 +1845,6 @@
 			};
 			name = Debug;
 		};
-		3A8DB39B2B66B3ABE37DA24E47F966CA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C93AEA4E5A308AAC5976E79AE4DB5E /* Pods-JKNetworking_Example.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		44A1AB3A37F3625B365BFACF1C14CBBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 83017EF75FAEE4EBE3D5683F5D0266A8 /* Kiwi.xcconfig */;
@@ -1871,6 +1877,37 @@
 			};
 			name = Release;
 		};
+		466C159D3A0010E766B376FB84C3DAF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B523F617DD9C7B410FB6BCBD66CB887F /* JKNetworking_.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/JKNetworking_/JKNetworking_-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/JKNetworking_/JKNetworking_-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/JKNetworking_/JKNetworking_.modulemap";
+				PRODUCT_MODULE_NAME = JKNetworking_;
+				PRODUCT_NAME = JKNetworking_;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		4BB4C5B319ADC7EAEAD725D12BF18EDA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 96B9479B2DC750E22108E549F41E93D3 /* JKDataHelper.xcconfig */;
@@ -1901,38 +1938,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		4BE3772652F7724E8818A8CC06DACC46 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43F95193BFBDBC62CDF97E29091326E3 /* JKNetworking.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JKNetworking/JKNetworking-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JKNetworking/JKNetworking-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JKNetworking/JKNetworking.modulemap";
-				PRODUCT_MODULE_NAME = JKNetworking;
-				PRODUCT_NAME = JKNetworking;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		4BE66A09A74FD25164AAB3C2645B9B93 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1993,70 +1998,6 @@
 				SYMROOT = "${SRCROOT}/../build";
 			};
 			name = Release;
-		};
-		4E8846DD498A57A945C42ECB70D52FBD /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = FCC70AF79C25ADDD99B612E32564FDD6 /* Pods-JKNetworking_Example.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		5E0979AB5B497DD2967FFD727A8DFD8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43F95193BFBDBC62CDF97E29091326E3 /* JKNetworking.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/JKNetworking/JKNetworking-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/JKNetworking/JKNetworking-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/JKNetworking/JKNetworking.modulemap";
-				PRODUCT_MODULE_NAME = JKNetworking;
-				PRODUCT_NAME = JKNetworking;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		7711C4021E19F02E4BA0F6C2093958FC /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2185,6 +2126,39 @@
 			};
 			name = Debug;
 		};
+		8DF3FA7F6BF2BC753A33A334D3FDA21F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FCC70AF79C25ADDD99B612E32564FDD6 /* Pods-JKNetworking_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		9752BCBC9833F098BAACD8FC6EE00878 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D7DB32B95C8ED73276151E1B21E3158F /* Pods-JKNetworking_Tests.release.xcconfig */;
@@ -2205,6 +2179,40 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-JKNetworking_Tests/Pods-JKNetworking_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		DC316343B3B2EA9DA7E678A4953DB142 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89C93AEA4E5A308AAC5976E79AE4DB5E /* Pods-JKNetworking_Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-JKNetworking_Example/Pods-JKNetworking_Example.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
@@ -2264,20 +2272,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1F22C69E6E996C92757BF305093D5EDF /* Build configuration list for PBXNativeTarget "JKNetworking" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5E0979AB5B497DD2967FFD727A8DFD8E /* Debug */,
-				4BE3772652F7724E8818A8CC06DACC46 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		264D9923AF16156CEA96F2043CEAF731 /* Build configuration list for PBXNativeTarget "JKDataHelper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4BB4C5B319ADC7EAEAD725D12BF18EDA /* Debug */,
 				1AEDA9D4941579C42EC501222181668F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		36ED04C956811F74142ADDC781A2BC22 /* Build configuration list for PBXNativeTarget "JKNetworking_" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				466C159D3A0010E766B376FB84C3DAF5 /* Debug */,
+				2F5206EDA844C86A8EFEF9DFAF2829FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D25045A87691A697C671814B55A6680 /* Build configuration list for PBXNativeTarget "Pods-JKNetworking_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8DF3FA7F6BF2BC753A33A334D3FDA21F /* Debug */,
+				DC316343B3B2EA9DA7E678A4953DB142 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2296,15 +2313,6 @@
 			buildConfigurations = (
 				7EF7227D9B20A1D549000096ACCB23D7 /* Debug */,
 				4BE66A09A74FD25164AAB3C2645B9B93 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A856750CD7A8AF21CEF5E9467DFA0452 /* Build configuration list for PBXNativeTarget "Pods-JKNetworking_Example" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4E8846DD498A57A945C42ECB70D52FBD /* Debug */,
-				3A8DB39B2B66B3ABE37DA24E47F966CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

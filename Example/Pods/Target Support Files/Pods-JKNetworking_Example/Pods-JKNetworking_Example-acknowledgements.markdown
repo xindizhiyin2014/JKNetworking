@@ -47,9 +47,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-## JKNetworking
+## JKNetworking_
 
-Copyright (c) 2019 xindizhiyin2014 <hlhan@vova.com.hk>
+Copyright (c) 2019 xindizhiyin2014 <929097264@qq.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

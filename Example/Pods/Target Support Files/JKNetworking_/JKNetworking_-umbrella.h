@@ -11,12 +11,13 @@
 #endif
 
 #import "JKBaseRequest.h"
-#import "JKBatchRequest.h"
+#import "JKGroupRequest.h"
+#import "JKMockManager.h"
 #import "JKNetworkAgent.h"
 #import "JKNetworkConfig.h"
 #import "JKNetworking.h"
 #import "JKNetworkingMacro.h"
 
-FOUNDATION_EXPORT double JKNetworkingVersionNumber;
-FOUNDATION_EXPORT const unsigned char JKNetworkingVersionString[];
+FOUNDATION_EXPORT double JKNetworking_VersionNumber;
+FOUNDATION_EXPORT const unsigned char JKNetworking_VersionString[];
 

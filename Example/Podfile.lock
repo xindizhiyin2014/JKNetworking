@@ -15,13 +15,13 @@ PODS:
   - AFNetworking/UIKit (3.2.1):
     - AFNetworking/NSURLSession
   - JKDataHelper (0.1.18)
-  - JKNetworking (0.1.0):
+  - JKNetworking_ (0.1.0):
     - AFNetworking
     - JKDataHelper
   - Kiwi (3.0.0)
 
 DEPENDENCIES:
-  - JKNetworking (from `../`)
+  - JKNetworking_ (from `../`)
   - Kiwi
 
 SPEC REPOS:
@@ -31,15 +31,15 @@ SPEC REPOS:
     - Kiwi
 
 EXTERNAL SOURCES:
-  JKNetworking:
+  JKNetworking_:
     :path: "../"
 
 SPEC CHECKSUMS:
   AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   JKDataHelper: 1b73891270accdbb10498909f8daf13bd891a32f
-  JKNetworking: 488f5a588067944799a3ebea11097e0799df9ea1
+  JKNetworking_: 022646fbb6ca7ae03b3c26884de0351f9205f6fe
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
 
-PODFILE CHECKSUM: 3b73c434d64e18231692c570a8b39ef34ce36b02
+PODFILE CHECKSUM: 4cff109182264745c8d3cb9b08ed9f957dbe833e
 
 COCOAPODS: 1.8.4

@@ -3,7 +3,7 @@ use_frameworks!
 platform :ios, '8.0'
 
 target 'JKNetworking_Example' do
-  pod 'JKNetworking', :path => '../'
+  pod 'JKNetworking_', :path => '../'
 
   target 'JKNetworking_Tests' do
     inherit! :search_paths

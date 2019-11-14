@@ -644,7 +644,7 @@
 }
 
 - (NSString *)incompleteDownloadTempCacheFolder {
-    NSFileManager *fileManager = [NSFileManager new];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     static NSString *cacheFolder;
 
     if (!cacheFolder) {

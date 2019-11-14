@@ -72,7 +72,7 @@ THE SOFTWARE.
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>Copyright (c) 2019 xindizhiyin2014 &lt;hlhan@vova.com.hk&gt;
+			<string>Copyright (c) 2019 xindizhiyin2014 &lt;929097264@qq.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -95,7 +95,7 @@ THE SOFTWARE.
 			<key>License</key>
 			<string>MIT</string>
 			<key>Title</key>
-			<string>JKNetworking</string>
+			<string>JKNetworking_</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
