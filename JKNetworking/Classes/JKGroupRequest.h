@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface JKBatchRequest : NSObject<JKRequestConfigProtocol>
 
 /// the array of the JKBaseRequest
-@property (nonatomic, strong, readonly) NSArray<__kindof JKBaseRequest *> *requestArray;
+@property (nonatomic, strong, readonly) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
 
 /// the failed request in the chainRequest
 @property (nonatomic, strong , readonly, nullable) __kindof JKBaseRequest *failedRequest;

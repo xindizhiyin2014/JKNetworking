@@ -38,7 +38,7 @@
 
 @property (nonatomic, copy, nullable) void (^successCompletionBlock)(JKBatchRequest *);
 @property (nonatomic, copy, nullable) void (^failureCompletionBlock)(JKBatchRequest *);
-@property (nonatomic, strong, readwrite) NSArray<__kindof JKBaseRequest *> *requestArray;
+@property (nonatomic, strong, readwrite) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
 @property (nonatomic, strong , readwrite, nullable) __kindof JKBaseRequest *failedRequest;
 @property (nonatomic, assign) NSInteger finishedCount;
 
@@ -50,7 +50,7 @@
 {
     self = [super init];
     if (self) {
-        _requestArray = [requestArray copy];
+        _requestArray = [requestArray mutableCopy];
         for (JKBaseRequest *request in requestArray) {
             request.isIndependentRequest = NO;
         }
@@ -71,6 +71,9 @@
 - (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
 {
+#if DEBUG
+    NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only supportJKBaseDownloadRequest");
+#endif
         request.progressBlock = downloadProgressBlock;
 }
 
@@ -100,14 +103,19 @@
                     if (self.successCompletionBlock) {
                         self.successCompletionBlock(self);
                     }
+                     [self clearRequests];
+                     [self clearCompletionBlock];
+                     self.finishedCount = 0;
+                    [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
+
                 });
                 if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                     [self.requestAccessory requestDidStop:self];
                 }
-                [self stop];
             }
         } failure:^(__kindof JKBaseRequest * _Nonnull request) {
             @strongify(self);
+            [self stopRequests];
             self.failedRequest = request;
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [self.requestAccessory requestWillStop:self];
@@ -116,8 +124,11 @@
                 if (self.failureCompletionBlock) {
                     self.failureCompletionBlock(self);
                 }
+               [self clearRequests];
+               [self clearCompletionBlock];
+               self.finishedCount = 0;
+               [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
             });
-            [self stop];
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [self.requestAccessory requestDidStop:self];
             }
@@ -127,9 +138,8 @@
 
 - (void)stop
 {
-    for (__kindof JKBaseRequest *request in self.requestArray) {
-        [request stop];
-    }
+    [self stopRequests];
+    [self clearRequests];
     [self clearCompletionBlock];
     self.finishedCount = 0;
     [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
@@ -141,6 +151,18 @@
     self.successCompletionBlock = successBlock;
     self.failureCompletionBlock = failureBlock;
     [self start];
+}
+
+- (void)stopRequests
+{
+  for (__kindof JKBaseRequest *request in self.requestArray) {
+        [request stop];
+    }
+}
+
+- (void)clearRequests
+{
+    [self.requestArray removeAllObjects];
 }
 
 - (void)clearCompletionBlock
@@ -210,6 +232,9 @@
 - (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
 {
+    #if DEBUG
+        NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only supportJKBaseDownloadRequest");
+    #endif
         request.progressBlock = downloadProgressBlock;
 }
 
@@ -241,7 +266,8 @@
 
 - (void)stop
 {
-    [self clearRequest];
+    [self stopRequests];
+    [self clearRequests];
     [self clearBlock];
     self.nextRequestIndex = 0;
     [[JKNetworkAgent sharedAgent] removeChainRequest:self];
@@ -268,14 +294,18 @@
                     if (self.successBlock) {
                         self.successBlock(self);
                     }
+                    [self clearRequests];
+                    [self clearBlock];
+                    self.nextRequestIndex = 0;
+                    [[JKNetworkAgent sharedAgent] removeChainRequest:self];
                 });
                 if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                     [self.requestAccessory requestDidStop:self];
                 }
-                [self stop];
 
             }
         } failure:^(__kindof JKBaseRequest * request) {
+            [self stopRequests];
             self.failedRequest = request;
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [self.requestAccessory requestWillStop:self];
@@ -284,22 +314,29 @@
                 if (self.failureBlock) {
                     self.failureBlock(self);
                 }
+                [self clearRequests];
+                [self clearBlock];
+                self.nextRequestIndex = 0;
+                [[JKNetworkAgent sharedAgent] removeChainRequest:self];
             });
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [self.requestAccessory requestDidStop:self];
             }
-            [self stop];
         }];
         return YES;
     }
     return NO;
 }
 
-- (void)clearRequest
+- (void)stopRequests
 {
     for (JKBaseRequest *request in self.requestArray) {
-        [request stop];
+      [request stop];
     }
+}
+
+- (void)clearRequests
+{
     [self.requestArray removeAllObjects];
     [self.successBlocksDic removeAllObjects];
 }

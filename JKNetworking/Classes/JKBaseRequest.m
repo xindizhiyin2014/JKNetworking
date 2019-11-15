@@ -129,19 +129,6 @@
     [self start];
 }
 
-+ (__kindof JKBaseDownloadRequest *)downloadWithUrl:(NSString *)urlStr
-                                   progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                                    success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                                    failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
-{
-    JKBaseDownloadRequest *request = [JKBaseDownloadRequest initWithUrl:urlStr];
-    request.successCompletionBlock = successBlock;
-    request.failureCompletionBlock = failureBlock;
-    request.progressBlock = downloadProgressBlock;
-    [[JKNetworkAgent sharedAgent] addRequest:request];
-    return request;
-}
-
 - (void)uploadWithData:(nullable NSData *)data
               progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
          formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
@@ -252,48 +239,6 @@
     return self.requestTask.state == NSURLSessionTaskStateRunning;
 }
 
-+ (NSString *)MD5String:(NSString *)string
-{
-   if (jk_safeStr(string)) {
-        return nil;
-    }
-    const char *cStr = [string UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
-    
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", digest[i]];
-    
-    return  output?:@"";
-}
-
-+ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString
-{
-    if (jk_safeStr(urlString)) {
-        return nil;
-    }
-    
-        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-        BOOL isDirectory;
-        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
-            isDirectory = NO;
-    #if DEBUG
-            NSAssert(isDirectory, @"please makse sure the [JKNetworkConfig sharedConfig].downloadFolderPath is a directory");
-    #endif
-        }
-        // If targetPath is a directory, use the file name we got from the urlRequest.
-        // Make sure downloadTargetPath is always a file, not directory.
-        if (isDirectory) {
-            NSString *fileName = [JKBaseRequest MD5String:urlString];
-            fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]];
-           NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
-            return downloadTargetPath;
-        }
-    return nil;
-}
-
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass([self class]), self, self.requestTask.currentRequest.URL, self.requestTask.currentRequest.HTTPMethod, self.requestArgument];
@@ -324,6 +269,59 @@
 - (NSString *)buildCustomRequestUrl
 {
     return self.absoluteString;
+}
+
+- (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
+                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
+{
+    self.successCompletionBlock = successBlock;
+    self.failureCompletionBlock = failureBlock;
+    self.progressBlock = downloadProgressBlock;
+    [[JKNetworkAgent sharedAgent] addRequest:self];
+}
+
+
++ (NSString *)MD5String:(NSString *)string
+{
+   if (!jk_safeStr(string)) {
+        return nil;
+    }
+    const char *cStr = [string UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( cStr, (CC_LONG)strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output?:@"";
+}
+
++ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString
+{
+    if (!jk_safeStr(urlString)) {
+        return nil;
+    }
+    
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+        BOOL isDirectory;
+        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
+            isDirectory = NO;
+    #if DEBUG
+            NSAssert(isDirectory, @"please makse sure the [JKNetworkConfig sharedConfig].downloadFolderPath is a directory");
+    #endif
+        }
+        // If targetPath is a directory, use the file name we got from the urlRequest.
+        // Make sure downloadTargetPath is always a file, not directory.
+        if (isDirectory) {
+            NSString *fileName = [JKBaseDownloadRequest MD5String:urlString];
+            fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]];
+           NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
+            return downloadTargetPath;
+        }
+    return nil;
 }
 
 

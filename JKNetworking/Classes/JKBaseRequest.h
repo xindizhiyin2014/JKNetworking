@@ -168,17 +168,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 - (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
-
-/// downloadFile
-/// @param urlStr the urlStr of the file
-/// @param downloadProgressBlock downloadProgressBlock
-/// @param successBlock successBlock
-/// @param failureBlock failureBlock
-+ (__kindof JKBaseDownloadRequest *)downloadWithUrl:(NSString *)urlStr
-                                   progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                                    success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                                    failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
-
 /// upload data
 /// @param data data
 /// @param uploadProgressBlock uploadProgressBlock
@@ -208,12 +197,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 - (void)writeResponseToCacheFile;
 
-/// get the md5 string of the target sting
-+ (NSString *)MD5String:(NSString *)string;
-
-/// get the downloadFilePath with urlString
-+ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString;
-
 @end
 
 
@@ -229,6 +212,18 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 + (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)initWithUrl:(nonnull NSString *)url;
+
+/// downloadFile
+/// @param downloadProgressBlock downloadProgressBlock
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
+                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
+
+/// get the md5 string of the target sting
++ (NSString *)MD5String:(NSString *)string;
+
 
 @end
 

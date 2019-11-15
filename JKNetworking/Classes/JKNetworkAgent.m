@@ -275,15 +275,12 @@
     NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
     BOOL isDirectory;
     if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
-        isDirectory = NO;
-#if DEBUG
-        NSAssert(isDirectory, @"please makse sure the [JKNetworkConfig sharedConfig].downloadFolderPath is a directory");
-#endif
+       isDirectory = [[NSFileManager defaultManager] createDirectoryAtPath:downloadFolderPath withIntermediateDirectories:YES attributes:nil error:nil];
     }
     // If targetPath is a directory, use the file name we got from the urlRequest.
     // Make sure downloadTargetPath is always a file, not directory.
     if (isDirectory) {
-        NSString *fileName = [JKBaseRequest MD5String:urlRequest.URL.absoluteString];
+        NSString *fileName = [JKBaseDownloadRequest MD5String:urlRequest.URL.absoluteString];
         fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension];
         downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
     } else {
@@ -664,7 +661,7 @@
 
 - (NSURL *)incompleteDownloadTempPathForDownloadPath:(NSString *)downloadPath {
     NSString *tempPath = nil;
-    NSString *md5URLStr = [JKBaseRequest MD5String:downloadPath];
+    NSString *md5URLStr = [JKBaseDownloadRequest MD5String:downloadPath];
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLStr];
     return [NSURL fileURLWithPath:tempPath];
 }
