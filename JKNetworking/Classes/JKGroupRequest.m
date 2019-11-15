@@ -89,7 +89,6 @@
         [self.requestAccessory requestWillStart:self];
     }
     self.failedRequest = nil;
-    [[JKNetworkAgent sharedAgent] addBatchRequest:self];
     for (__kindof JKBaseRequest *request in self.requestArray) {
         @weakify(self);
         [request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
@@ -150,7 +149,7 @@
 {
     self.successCompletionBlock = successBlock;
     self.failureCompletionBlock = failureBlock;
-    [self start];
+    [[JKNetworkAgent sharedAgent] addBatchRequest:self];
 }
 
 - (void)stopRequests
@@ -243,7 +242,8 @@
 {
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
-    [self start];
+    [[JKNetworkAgent sharedAgent] addChainRequest:self];
+
 }
 
 - (void)start
@@ -259,7 +259,6 @@
         if (self.requestAccessory  && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
             [self.requestAccessory requestWillStart:self];
         }
-        [[JKNetworkAgent sharedAgent] addChainRequest:self];
         [self startNextRequest];
     }
 }

@@ -101,13 +101,19 @@
 
 - (void)addRequest:(__kindof JKBaseRequest *)request
 {
-    [self.lock lock];
     if (self.priprityFirstRequest) {
-        [self.bufferRequests addObject:request];
-        return;
+        if (([self.priprityFirstRequest isKindOfClass:[JKBaseRequest class]] && ![self.priprityFirstRequest isEqual:request])
+            || ([self.priprityFirstRequest isKindOfClass:[JKBatchRequest class]] && ![[(JKBatchRequest *)self.priprityFirstRequest requestArray] containsObject:request])
+            ||([self.priprityFirstRequest isKindOfClass:[JKChainRequest class]] && ![[(JKChainRequest *)self.priprityFirstRequest requestArray] containsObject:request])) {
+            [self.lock lock];
+            if (![self.bufferRequests containsObject:request]) {
+               [self.bufferRequests addObject:request];
+            }
+            [self.lock unlock];
+            return;
+        }
     }
-    [self.lock unlock];
-
+    
     if (request.isExecuting) {
         return;
     }
@@ -537,9 +543,21 @@
 
 - (void)addBatchRequest:(__kindof JKBatchRequest *)request
 {
-    [self.lock lock];
-    [self.batchRequests addObject:request];
-    [self.lock unlock];
+    if (self.priprityFirstRequest && ![self.priprityFirstRequest isEqual:request]) {
+        [self.lock lock];
+        if (![self.bufferRequests containsObject:request]) {
+            [self.bufferRequests addObject:request];
+        }
+        [self.lock unlock];
+
+    } else{
+        [self.lock lock];
+        if (![self.batchRequests containsObject:request]) {
+            [self.batchRequests addObject:request];
+        }
+        [self.lock unlock];
+        [request start];
+    }
 }
 
 - (void)removeBatchRequest:(__kindof JKBatchRequest *)request
@@ -552,9 +570,21 @@
 
 - (void)addChainRequest:(__kindof JKChainRequest *)request
 {
-    [self.lock lock];
-    [self.chainRequests addObject:request];
-    [self.lock unlock];
+    if (self.priprityFirstRequest && ![self.priprityFirstRequest isEqual:request]) {
+        [self.lock lock];
+        if (![self.bufferRequests containsObject:request]) {
+            [self.bufferRequests addObject:request];
+        }
+        [self.lock unlock];
+
+    } else{
+        [self.lock lock];
+        if (![self.chainRequests containsObject:request]) {
+            [self.chainRequests addObject:request];
+        }
+        [self.lock unlock];
+        [request start];
+    }
 }
 
 - (void)removeChainRequest:(__kindof JKChainRequest *)request
@@ -567,7 +597,7 @@
 
 - (void)addPriorityFirstRequest:(id)request
 {
-    if ([request isKindOfClass:[JKBaseRequest class]] || [request isKindOfClass:[JKBatchRequest class]] || [request isKindOfClass:[JKChainRequest class]]) {
+    if (!([request isKindOfClass:[JKBaseRequest class]] || [request isKindOfClass:[JKBatchRequest class]] || [request isKindOfClass:[JKChainRequest class]])) {
 #if DEBUG
         NSAssert(NO, @"no support this request as a PriorityFirstRequest");
 #endif
@@ -584,13 +614,17 @@
 - (void)judgeToStartBufferRequestsWithRequest:(id)request
 {
     if (self.priprityFirstRequest && [self.priprityFirstRequest isEqual:request]) {
-        [self.lock lock];
         self.priprityFirstRequest = nil;
-        for (JKBaseRequest *request in self.bufferRequests) {
-            [self addRequest:request];
+        for (id tmpRequest in self.bufferRequests) {
+            if ([tmpRequest isKindOfClass:[JKBaseRequest class]]) {
+                [self addRequest:tmpRequest];
+            } else if ([tmpRequest isKindOfClass:[JKBatchRequest class]]) {
+                [self addBatchRequest:tmpRequest];
+            } else if([tmpRequest isKindOfClass:[JKChainRequest class]]) {
+                [self addChainRequest:tmpRequest];
+            }
         }
         [self.bufferRequests removeAllObjects];
-        [self.lock unlock];
     }
 }
 

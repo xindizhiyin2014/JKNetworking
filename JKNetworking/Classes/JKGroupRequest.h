@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param failureBlock the block of failure
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
                                     failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock;
+- (void)start;
+
 - (void)stop;
 
 
@@ -65,6 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param failureBlock the block of failure
 - (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
                                     failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
+- (void)start;
 
 /// stop the chain request
 - (void)stop;
