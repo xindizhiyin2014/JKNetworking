@@ -82,10 +82,10 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the request apiName
 @property (nonatomic, copy, nonnull) NSString *requestUrl;
 
-/// the request host domain
+/// the request baseurl, it can contain host,port,and some path
 @property (nonatomic, copy, nullable) NSString *baseUrl;
 
-/// the request cdn host domain
+/// the request baseurl of cdn it can contain host,port,and some path
 @property (nonatomic, copy, nullable) NSString *cdnBaseUrl;
 
 /// use cdn or not,default is NO
@@ -104,7 +104,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, assign) JKResponseSerializerType responseSerializerType;
 
 /// the requestTask of the Request
-@property (nonatomic, strong, readonly) NSURLSessionTask *requestTask;
+@property (nonatomic, strong, readonly, nullable) NSURLSessionTask *requestTask;
 
 /// the responseObject of the request
 @property (nonatomic, strong, readonly, nullable) id responseObject;
@@ -133,7 +133,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// use cache or not default is NO
 @property (nonatomic, assign) BOOL ignoreCache;
 
-/// if the use the cache please make the value bigger than zero
+/// if the use the cache please make sure the value bigger than zero
 @property (nonatomic, assign) NSInteger cacheTimeInSeconds;
 
 /// is the response is use the cache data,default is NO
@@ -166,8 +166,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 ///after request failure before successBlock callback,do this func
 - (void)requestFailurePreHandle;
 
-- (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                                    failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
+- (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 /// upload data
 /// @param data data
 /// @param uploadProgressBlock uploadProgressBlock
@@ -176,8 +176,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 - (void)uploadWithData:(nullable NSData *)data
               progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
          formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-               success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-               failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
+               success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+               failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 
 - (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header;
@@ -218,8 +218,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// @param successBlock successBlock
 /// @param failureBlock failureBlock
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock;
+                     success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 /// get the md5 string of the target sting
 + (NSString *)MD5String:(NSString *)string;

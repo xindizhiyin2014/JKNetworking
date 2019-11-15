@@ -24,11 +24,20 @@
 /// the request success block
 @property (nonatomic, copy, nullable) void(^successCompletionBlock)(__kindof JKBaseRequest *request);
 
-@property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request); ///< the request failure block progress block
-@property (nonatomic, assign) BOOL isDownload;                 ///< is a download request or not
-@property (nonatomic, assign) BOOL isUpload;                   ///< is a upload request or not
-@property (nonatomic, strong) NSData *uploadData;              ///< the data need to upload
-@property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);   ///< when upload data cofig the formData
+/// the request failure block progress block
+@property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request);
+/// is a download request or not
+@property (nonatomic, assign) BOOL isDownload;
+
+/// is a upload request or not
+@property (nonatomic, assign) BOOL isUpload;
+
+/// the data need to upload
+@property (nonatomic, strong) NSData *uploadData;
+
+/// when upload data cofig the formData
+@property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
+
 @end
 
 @implementation JKBaseRequest(Private)
@@ -148,9 +157,6 @@
 
 - (void)cancelAllRequests
 {
-    NSArray *allKeys = nil;
-    [self.lock lock];
-    allKeys = [self.requestDic allKeys];
     if (self.priprityFirstRequest) {
         if ([self.priprityFirstRequest isKindOfClass:[JKBaseRequest class]]) {
             JKBaseRequest *request = (JKBaseRequest *)self.priprityFirstRequest;
@@ -163,7 +169,11 @@
             [request stop];
         }
     }
+    
+    NSArray *allKeys = nil;
+    [self.lock lock];
     [self.bufferRequests removeAllObjects];
+    allKeys = [self.requestDic allKeys];
     [self.lock unlock];
     
     if (allKeys && allKeys.count > 0) {
@@ -287,7 +297,7 @@
     // Make sure downloadTargetPath is always a file, not directory.
     if (isDirectory) {
         NSString *fileName = [JKBaseDownloadRequest MD5String:urlRequest.URL.absoluteString];
-        fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension];
+        fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension]?:@"";
         downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
     } else {
         return nil;
@@ -465,8 +475,8 @@
                 [request.requestAccessory requestDidStop:request];
             }
         }
+        [self judgeToStartBufferRequestsWithRequest:request];
     });
-    [self judgeToStartBufferRequestsWithRequest:request];
     
 }
 
@@ -490,8 +500,8 @@
                 [request.requestAccessory requestDidStop:request];
             }
         }
+        [self judgeToStartBufferRequestsWithRequest:request];
     });
-    [self judgeToStartBufferRequestsWithRequest:request];
     
 }
 

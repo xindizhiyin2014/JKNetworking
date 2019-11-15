@@ -23,6 +23,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
 //    [JKNetworkConfig sharedConfig].baseUrl = @"https://123.com";
 //    [self singleGetRequest];
+//    [[JKNetworkAgent sharedAgent] cancelAllRequests];
 //    [self singlePostRequest];
 //    [self batchRequest];
 //    [self chainRequest];
@@ -32,7 +33,7 @@
 //        [self priorityFirstRequest2];
 //    [self priorityFirstRequest3];
 //    [self mockRequest];
-    [self mockRequest1];
+//    [self mockRequest1];
 
     
 }
@@ -57,7 +58,7 @@
             request.responseSerializerType = JKResponseSerializerTypeJSON;
             request.requestArgument = @{@"name":@"jack"};
             [request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
-                       NSLog(@"AAA %@",request.responseJSONObject);
+                       NSLog(@"BBB %@",request.responseJSONObject);
 
             } failure:^(__kindof JKBaseRequest * request) {
                 

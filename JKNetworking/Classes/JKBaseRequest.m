@@ -121,7 +121,9 @@
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
 {
     if (self.isDownload || self.isUpload) {
+#if DEBUG
         NSAssert(NO, @"request is upload request of download request,please use the specified func");
+#endif
         return;
     }
     self.successCompletionBlock = successBlock;
@@ -248,8 +250,11 @@
 
 @interface JKBaseDownloadRequest()
 
-@property (nonatomic, copy, readwrite) NSString *absoluteString;       ///< the url of the download file resoure
-@property (nonatomic, copy, readwrite) NSString *downloadedFilePath;   ///< the filePath of the downloaded file
+/// the url of the download file resoure
+@property (nonatomic, copy, readwrite) NSString *absoluteString;
+
+/// the filePath of the downloaded file
+@property (nonatomic, copy, readwrite) NSString *downloadedFilePath;
 @end
 
 @implementation JKBaseDownloadRequest
@@ -272,8 +277,8 @@
 }
 
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                     success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
+                     success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
     self.successCompletionBlock = successBlock;
     self.failureCompletionBlock = failureBlock;
@@ -304,24 +309,12 @@
     if (!jk_safeStr(urlString)) {
         return nil;
     }
-    
-        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-        BOOL isDirectory;
-        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
-            isDirectory = NO;
-    #if DEBUG
-            NSAssert(isDirectory, @"please makse sure the [JKNetworkConfig sharedConfig].downloadFolderPath is a directory");
-    #endif
-        }
-        // If targetPath is a directory, use the file name we got from the urlRequest.
-        // Make sure downloadTargetPath is always a file, not directory.
-        if (isDirectory) {
-            NSString *fileName = [JKBaseDownloadRequest MD5String:urlString];
-            fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]];
-           NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
-            return downloadTargetPath;
-        }
-    return nil;
+
+   NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+    NSString *fileName = [JKBaseDownloadRequest MD5String:urlString];
+   fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]]?:@"";
+   NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
+    return downloadTargetPath;
 }
 
 

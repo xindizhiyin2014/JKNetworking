@@ -36,8 +36,8 @@
 
 @interface JKBatchRequest()
 
-@property (nonatomic, copy, nullable) void (^successCompletionBlock)(JKBatchRequest *);
-@property (nonatomic, copy, nullable) void (^failureCompletionBlock)(JKBatchRequest *);
+@property (nonatomic, copy, nullable) void (^successCompletionBlock)(JKBatchRequest *request);
+@property (nonatomic, copy, nullable) void (^failureCompletionBlock)(JKBatchRequest *request);
 @property (nonatomic, strong, readwrite) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
 @property (nonatomic, strong , readwrite, nullable) __kindof JKBaseRequest *failedRequest;
 @property (nonatomic, assign) NSInteger finishedCount;
@@ -72,7 +72,7 @@
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
 {
 #if DEBUG
-    NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only supportJKBaseDownloadRequest");
+    NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only support JKBaseDownloadRequest");
 #endif
         request.progressBlock = downloadProgressBlock;
 }
@@ -232,7 +232,7 @@
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
 {
     #if DEBUG
-        NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only supportJKBaseDownloadRequest");
+        NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only support JKBaseDownloadRequest");
     #endif
         request.progressBlock = downloadProgressBlock;
 }
@@ -280,7 +280,7 @@
         [request clearCompletionBlock];
         [request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
             NSString *key = [NSString stringWithFormat:@"%p",request];
-            void(^successBlock)(__kindof JKBaseRequest *) = self.successBlocksDic[key];
+            void(^successBlock)(__kindof JKBaseRequest *request) = self.successBlocksDic[key];
             if (successBlock) {
                 successBlock(request);
             }

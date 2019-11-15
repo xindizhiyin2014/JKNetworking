@@ -44,13 +44,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedConfig;
 
-/// the host of request,default is @""
+/// the request baseurl, it can contain host,port,and some path
 @property (nonatomic, copy, nullable) NSString *baseUrl;
 
-/// the cdnHost of the resource,default is @""
+/// the request baseurl of cdn it can contain host,port,and some path
 @property (nonatomic, copy, nullable) NSString *cdnBaseUrl;
 
-/// the mock host of the request
+/// the baseUrl of the mockRequest
 @property (nonatomic, copy, nullable) NSString *mockBaseUrl;
 
 /// the status of the mock,default is NO
