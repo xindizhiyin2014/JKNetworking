@@ -520,21 +520,17 @@
             if (request.cdnBaseUrl.length > 0) {
                 baseUrl = request.cdnBaseUrl;
             }else{
-                if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(hostOfRequest:)]) {
-                     baseUrl = [[JKNetworkConfig sharedConfig].requestHelper hostOfRequest:request];
+                if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(baseUrlOfRequest:)]) {
+                     baseUrl = [[JKNetworkConfig sharedConfig].requestHelper baseUrlOfRequest:request];
                 }else {
                     baseUrl = [JKNetworkConfig sharedConfig].cdnBaseUrl;
                 }
             }
         }else{
-          if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(hostOfRequest:)]) {
-               baseUrl = [[JKNetworkConfig sharedConfig].requestHelper hostOfRequest:request];
+          if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(baseUrlOfRequest:)]) {
+               baseUrl = [[JKNetworkConfig sharedConfig].requestHelper baseUrlOfRequest:request];
           }else {
-              if (request.useCDN) {
-                  baseUrl = [JKNetworkConfig sharedConfig].cdnBaseUrl;
-              } else {
-                  baseUrl = [JKNetworkConfig sharedConfig].baseUrl;
-              }
+                baseUrl = [JKNetworkConfig sharedConfig].baseUrl;
               
           }
         }
