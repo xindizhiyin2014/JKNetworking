@@ -47,7 +47,15 @@ static AFHTTPSessionManager *_jkSessionManager = nil;
     NSMutableURLRequest *newRequest = [request mutableCopy];
     NSString *host = newRequest.URL.host;
     NSString *url = newRequest.URL.absoluteString;
-    url = [url stringByReplacingOccurrencesOfString:host withString:[JKNetworkConfig sharedConfig].mockBaseUrl];
+    NSNumber *port = newRequest.URL.port;
+    NSString *scheme = newRequest.URL.scheme;
+    NSString *baseUrl = nil;
+    if (port) {
+        baseUrl = [NSString stringWithFormat:@"%@://%@:%@",scheme,host,port];
+    } else {
+        baseUrl = [NSString stringWithFormat:@"%@://%@",scheme,host];
+    }
+    url = [url stringByReplacingOccurrencesOfString:baseUrl withString:[JKNetworkConfig sharedConfig].mockBaseUrl];
     NSURL *mockUrl = [NSURL URLWithString:url];
     [newRequest setURL:mockUrl];
     return newRequest;
@@ -169,9 +177,7 @@ static AFHTTPSessionManager *_jkSessionManager = nil;
 + (NSString *)getAPINameWithRequest:(NSURLRequest *)request
 {
     NSString *path = [request.URL path];
-    NSArray *components = [path componentsSeparatedByString:@"/"];
-    NSString *language = [NSString stringWithFormat:@"/%@",[components jk_stringWithIndex:1]];
-    NSString *apiName = [path stringByReplacingOccurrencesOfString:language withString:@""];
+    NSString *apiName = path;
     return apiName;
 }
 
