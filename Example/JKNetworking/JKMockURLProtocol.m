@@ -65,9 +65,6 @@ static AFHTTPSessionManager *_jkSessionManager = nil;
 {
    NSURLSessionTask *dataTask = [[self sessionManager] dataTaskWithRequest:self.request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
         [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-        if ([responseObject isKindOfClass:[NSData class]]) {
-           [self.client URLProtocol:self didLoadData:responseObject];
-        }
         [self.client URLProtocolDidFinishLoading:self];
         [self.client URLProtocol:self didFailWithError:error];
 
