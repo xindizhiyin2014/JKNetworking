@@ -16,8 +16,8 @@
 @property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
 /// when upload data cofig the formData
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
-/// is a upload request or not
-@property (nonatomic, assign) BOOL isUpload;
+/// is a default/download/upload request
+@property (nonatomic, assign) JKRequestType requestType;
 /// the data need to upload
 @property (nonatomic, strong) NSData *uploadData;
 
@@ -27,7 +27,7 @@
 
 @implementation JKBaseRequest(JKGroupRequest)
 
-@dynamic progressBlock,formDataBlock,isUpload,uploadData,isIndependentRequest;
+@dynamic progressBlock,formDataBlock,requestType,uploadData,isIndependentRequest;
 
 @end
 
@@ -63,7 +63,7 @@
                    progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
               formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
 {
-    request.isUpload = YES;
+    request.requestType = JKRequestTypeUpload;
     request.uploadData = data;
     request.progressBlock = uploadProgressBlock;
     request.formDataBlock = formDataBlock;
@@ -223,7 +223,7 @@
                    progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
               formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
 {
-    request.isUpload = YES;
+    request.requestType = JKRequestTypeUpload;
     request.uploadData = data;
     request.progressBlock = uploadProgressBlock;
     request.formDataBlock = formDataBlock;

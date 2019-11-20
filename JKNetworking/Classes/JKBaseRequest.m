@@ -32,10 +32,8 @@
 @property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request);
 /// the download/upload request progress block
 @property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
-/// is a download request or not
-@property (nonatomic, assign) BOOL isDownload;
-/// is a upload request or not
-@property (nonatomic, assign) BOOL isUpload;
+/// is a default/download/upload request
+@property (nonatomic, assign) JKRequestType requestType;
 /// the data need to upload
 @property (nonatomic, strong) NSData *uploadData;
 /// when upload data cofig the formData
@@ -69,7 +67,10 @@
 
 - (void)start
 {
-    if (self.isDownload || self.isUpload) {
+    if (self.requestType != JKRequestTypeDefault) {
+    #if DEBUG
+            NSAssert(NO, @" request is upload request or download request,please use the specified func");
+    #endif
         return;
     }
     
@@ -78,7 +79,7 @@
             [self.requestAccessory requestWillStart:self];
         }
     }
-    if (!self.ignoreCache) {
+    if (self.ignoreCache) {
         self.isDataFromCache = NO;
         [[JKNetworkAgent sharedAgent] addRequest:self];
         return;
@@ -120,10 +121,10 @@
 - (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
 {
-    if (self.isDownload || self.isUpload) {
-#if DEBUG
-        NSAssert(NO, @"request is upload request of download request,please use the specified func");
-#endif
+    if (self.requestType != JKRequestTypeDefault) {
+    #if DEBUG
+            NSAssert(NO, @" request is upload request or download request,please use the specified func");
+    #endif
         return;
     }
     self.successCompletionBlock = successBlock;
@@ -134,14 +135,14 @@
 - (void)uploadWithData:(nullable NSData *)data
               progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
          formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-               success:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-               failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
+               success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+               failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
     self.successCompletionBlock = successBlock;
     self.failureCompletionBlock = failureBlock;
     self.progressBlock = uploadProgressBlock;
     self.formDataBlock = formDataBlock;
-    self.isUpload = YES;
+    self.requestType = JKRequestTypeUpload;
     self.uploadData = data;
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
@@ -265,7 +266,7 @@
     JKBaseDownloadRequest *request = [[self alloc] init];
     if (request) {
         request.absoluteString = url;
-        request.isDownload = YES;
+        request.requestType = JKRequestTypeDownload;
         request.downloadedFilePath = [self downloadFilePathWithUrlString:url];
     }
     return request;

@@ -26,11 +26,8 @@
 
 /// the request failure block progress block
 @property (nonatomic, copy, nullable) void(^failureCompletionBlock)(__kindof JKBaseRequest *request);
-/// is a download request or not
-@property (nonatomic, assign) BOOL isDownload;
-
-/// is a upload request or not
-@property (nonatomic, assign) BOOL isUpload;
+/// is a default/download/upload request
+@property (nonatomic, assign) JKRequestType requestType;
 
 /// the data need to upload
 @property (nonatomic, strong) NSData *uploadData;
@@ -41,7 +38,7 @@
 @end
 
 @implementation JKBaseRequest(Private)
-@dynamic requestTask,responseObject,responseJSONObject,error,progressBlock,successCompletionBlock,failureCompletionBlock,isDownload,isUpload,uploadData,formDataBlock;
+@dynamic requestTask,responseObject,responseJSONObject,error,progressBlock,successCompletionBlock,failureCompletionBlock,requestType,uploadData,formDataBlock;
 
 @end
 
@@ -236,9 +233,9 @@
     }
     
     AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
-    if (request.isDownload) {
+    if (request.requestType == JKRequestTypeDownload) {
         return [self downloadTaskWithRequestSerializer:requestSerializer URLString:url parameters:param progress:request.progressBlock error:error];
-    } else if (request.isUpload) {
+    } else if (request.requestType == JKRequestTypeUpload) {
         return [self uploadTaskWithRequestSerializer:requestSerializer URLString:url parameters:param data:request.uploadData progress:request.progressBlock formDataBlock:request.formDataBlock error:error];
     }
     
@@ -390,7 +387,7 @@
     NSError *requestError = nil;
     BOOL succeed = NO;
     
-    if (!request.isDownload) {
+    if (request.requestType != JKRequestTypeDownload) {
         request.responseObject = responseObject;
             NSData *responseData = nil;
             if ([request.responseObject isKindOfClass:[NSData class]]) {
@@ -444,7 +441,7 @@
 
 - (BOOL)validateResult:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
-    if (request.isDownload) {
+    if (request.requestType == JKRequestTypeDownload) {
         return YES;
     }
     BOOL result = YES;

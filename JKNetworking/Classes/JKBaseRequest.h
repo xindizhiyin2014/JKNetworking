@@ -33,6 +33,16 @@ typedef NS_ENUM(NSInteger,JKResponseSerializerType)
     JKResponseSerializerTypeXMLParser,
 };
 
+typedef NS_ENUM(NSInteger,JKRequestType)
+{
+    /// the default request
+    JKRequestTypeDefault = 0,
+    /// the download request
+    JKRequestTypeDownload,
+    /// the upload request
+    JKRequestTypeUpload
+};
+
 typedef NS_ENUM(NSInteger,JKNetworkErrorType) {
    /// the request not support signature
   JKNetworkErrorNotSupportSignature = 10000,
