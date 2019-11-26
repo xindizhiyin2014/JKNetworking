@@ -106,16 +106,17 @@
     [[JKNetworkAgent sharedAgent] cancelRequest:self];
 }
 
-- (void)requestSuccessPreHandle
+- (BOOL)requestSuccessPreHandle
 {
     if (!self.ignoreCache){
-     [self writeResponseToCacheFile];
+       [self writeResponseToCacheFile];
     }
+    return NO;
 }
 
-- (void)requestFailurePreHandle
+- (BOOL)requestFailurePreHandle
 {
-    
+    return NO;
 }
 
 - (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock

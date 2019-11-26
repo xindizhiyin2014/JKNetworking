@@ -170,11 +170,11 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 - (void)stop;
 
-/// after request success before successBlock callback,do this func
-- (void)requestSuccessPreHandle;
+/// after request success before successBlock callback,do this func,if you want extra handle,return YES,else return NO
+- (BOOL)requestSuccessPreHandle;
 
-///after request failure before successBlock callback,do this func
-- (void)requestFailurePreHandle;
+///after request failure before successBlock callback,do this func,if you want extra handle,return YES,else return NO
+- (BOOL)requestFailurePreHandle;
 
 - (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;

@@ -420,8 +420,10 @@
         succeed = NO;
         requestError = serializationError;
     } else {
-        succeed = [self validateResult:request error:&validationError];
-        requestError = validationError;
+        if (request.responseSerializerType == JKResponseSerializerTypeJSON) {
+            succeed = [self validateResult:request error:&validationError];
+            requestError = validationError;
+        }
     }
     
     if (succeed) {
@@ -449,6 +451,12 @@
     id validator = [request jsonValidator];
     if (json && validator) {
         result = [self validateJSON:json withValidator:validator];
+        if (!result) {
+            NSError *tmpError = [[NSError alloc] initWithDomain:JKNetworkErrorDomain code:JKNetworkErrorInvalidJSONFormat userInfo:@{NSLocalizedDescriptionKey:@"validateResult failed",@"extra":request.responseJSONObject?:@{}}];
+            if (error != NULL) {
+              *error = tmpError;
+            }
+        }
     }
     return result;
 }
@@ -456,7 +464,12 @@
 - (void)requestDidSucceedWithRequest:(__kindof JKBaseRequest *)request
 {
     @autoreleasepool {
-        [request requestSuccessPreHandle];
+        BOOL needExtraHandle = [request requestSuccessPreHandle];
+        if (needExtraHandle) {
+            if ([JKNetworkConfig sharedConfig].requestHelper && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(preHandleSuccessRequest:)]) {
+                [[JKNetworkConfig sharedConfig].requestHelper preHandleSuccessRequest:request];
+            }
+        }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (request.isIndependentRequest) {
@@ -481,7 +494,12 @@
 {
     request.error = error;
     @autoreleasepool {
-        [request requestFailurePreHandle];
+        BOOL needExtraHandle = [request requestFailurePreHandle];
+        if (needExtraHandle) {
+            if ([JKNetworkConfig sharedConfig].requestHelper && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(preHandleFailureRequest:)]) {
+                [[JKNetworkConfig sharedConfig].requestHelper preHandleFailureRequest:request];
+            }
+        }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (request.isIndependentRequest) {

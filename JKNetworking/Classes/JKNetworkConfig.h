@@ -35,6 +35,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param request request
 - (NSString *)baseUrlOfRequest:(__kindof JKBaseRequest *)request;
 
+/// do some action before the request success block
+/// @param request request
+- (void)preHandleSuccessRequest:(__kindof JKBaseRequest *)request;
+
+/// do some action before the request failure block
+/// @param request request
+- (void)preHandleFailureRequest:(__kindof JKBaseRequest *)request;
+
 @end
 
 @interface JKNetworkConfig : NSObject
