@@ -89,7 +89,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @interface JKBaseRequest : NSObject
 
-/// the request apiName
+/// the request apiName,fact is a path of url,it can contain path and query params
 @property (nonatomic, copy, nonnull) NSString *requestUrl;
 
 /// the request baseurl, it can contain host,port,and some path

@@ -167,6 +167,11 @@
         }
     }
     
+    [self.lock lock];
+    [self.batchRequests removeAllObjects];
+    [self.chainRequests removeAllObjects];
+    [self.lock unlock];
+    
     NSArray *allKeys = nil;
     [self.lock lock];
     [self.bufferRequests removeAllObjects];
@@ -630,6 +635,25 @@
     }
 #endif
     self.priprityFirstRequest = request;
+}
+
+- (NSArray <__kindof JKBaseRequest *>*)allRequests
+{
+    [self.lock lock];
+    NSMutableSet *requestSet = [NSMutableSet new];
+    NSArray *array1 = [self.requestDic allValues];
+    [requestSet addObjectsFromArray:array1];
+    for (__kindof JKBatchRequest *request in self.batchRequests) {
+        NSArray *tmpArray = request.requestArray;
+        [requestSet addObjectsFromArray:tmpArray];
+    }
+    
+    for (__kindof JKChainRequest *request in self.chainRequests) {
+        NSArray *tmpArray = request.requestArray;
+        [requestSet addObjectsFromArray:tmpArray];
+    }
+    [self.lock unlock];
+    return [requestSet allObjects];
 }
 
 - (void)judgeToStartBufferRequestsWithRequest:(id)request

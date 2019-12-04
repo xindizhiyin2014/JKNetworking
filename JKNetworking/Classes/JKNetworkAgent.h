@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cancelAllRequests;
 
-- (NSString *)buildRequestUrl:(__kindof JKBaseRequest *)request;
-
 - (void)addBatchRequest:(__kindof JKBatchRequest *)request;
 
 - (void)removeBatchRequest:(__kindof JKBatchRequest *)request;
@@ -39,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// add the priority request,all the request will start until the prority request is finished
 /// @param request the request can ba a JKBaseRequest/JKBatchRequest/JKChainRequest
 - (void)addPriorityFirstRequest:(id)request;
+
+- (NSArray <__kindof JKBaseRequest *>*)allRequests;
+
 
 @end
 NS_ASSUME_NONNULL_END
