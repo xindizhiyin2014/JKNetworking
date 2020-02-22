@@ -772,6 +772,7 @@
     if (!_jsonResponseSerializer) {
         _jsonResponseSerializer = [AFJSONResponseSerializer serializer];
         _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
+        _jsonResponseSerializer.removesKeysWithNullValues = YES;
     }
     return _jsonResponseSerializer;
 }
