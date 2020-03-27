@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JKNetworking_'
-  s.version          = '0.1.7'
+  s.version          = '0.1.8'
   s.summary          = 'this is a network tool,it refrence YTKNetwork,and depend on AFNetworking'
 
 # This description is used to generate tags and improve search results.
@@ -38,6 +38,10 @@ this is a network tool,it refrence YTKNetwork,and depend on AFNetworking,it will
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'AFNetworking'
+#  s.dependency 'AFNetworking'
+  s.dependency 'AFNetworking/Reachability'        #, '3.2.1'
+  s.dependency 'AFNetworking/Serialization'        #, '3.2.1'
+  s.dependency 'AFNetworking/Security'        #, '3.2.1'
+  s.dependency 'AFNetworking/NSURLSession'
   s.dependency 'JKDataHelper'
 end

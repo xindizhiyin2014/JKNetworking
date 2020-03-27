@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
 NS_ASSUME_NONNULL_BEGIN
 @class JKBaseRequest;
 
@@ -42,6 +42,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// do some action before the request failure block
 /// @param request request
 - (void)preHandleFailureRequest:(__kindof JKBaseRequest *)request;
+
+/// before all requests, you can use this func do something
+/// this func can only excute once in app lifetime
+- (void)beforeAllRequests;
+
+/// before each request,you can use this func do something
+/// this func invoked after - (void)beforeAllRequests
+/// @param request request
+- (void)beforeEachRequest:(__kindof JKBaseRequest *)request;
 
 @end
 
