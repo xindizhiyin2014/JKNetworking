@@ -8,7 +8,7 @@
 #import "JKMockURLProtocol.h"
 #import <JKNetworking_/JKNetworkConfig.h>
 #import <JKNetworking_/JKMockManager.h>
-#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import <JKDataHelper/JKDataHelper.h>
 
 @interface JKMockURLProtocol()

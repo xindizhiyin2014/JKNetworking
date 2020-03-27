@@ -6,7 +6,7 @@
 //
 
 #import "JKNetworkAgent.h"
-#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import "JKBaseRequest.h"
 #import "JKGroupRequest.h"
 #import "JKNetworkConfig.h"

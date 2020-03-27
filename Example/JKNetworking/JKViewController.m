@@ -9,7 +9,7 @@
 #import "JKViewController.h"
 #import "JKBaseRequest.h"
 #import "JKNetworking.h"
-#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFHTTPSessionManager.h>
 #import "JKMockURLProtocol.h"
 @interface JKViewController ()
 
