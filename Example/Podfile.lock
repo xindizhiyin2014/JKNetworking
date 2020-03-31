@@ -1,17 +1,22 @@
 PODS:
-  - AFNetworking/NSURLSession (3.2.1):
+  - AFNetworking (4.0.0):
+    - AFNetworking/NSURLSession (= 4.0.0)
+    - AFNetworking/Reachability (= 4.0.0)
+    - AFNetworking/Security (= 4.0.0)
+    - AFNetworking/Serialization (= 4.0.0)
+    - AFNetworking/UIKit (= 4.0.0)
+  - AFNetworking/NSURLSession (4.0.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.2.1)
-  - AFNetworking/Security (3.2.1)
-  - AFNetworking/Serialization (3.2.1)
-  - JKDataHelper (0.1.18)
-  - JKNetworking_ (0.1.8):
+  - AFNetworking/Reachability (4.0.0)
+  - AFNetworking/Security (4.0.0)
+  - AFNetworking/Serialization (4.0.0)
+  - AFNetworking/UIKit (4.0.0):
     - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
+  - JKDataHelper (0.1.23)
+  - JKNetworking_ (0.1.9):
+    - AFNetworking (= 4.0.0)
     - JKDataHelper
   - Kiwi (3.0.0)
 
@@ -30,11 +35,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
-  JKDataHelper: 1b73891270accdbb10498909f8daf13bd891a32f
-  JKNetworking_: c519084276e19b7c091fe3096a38220590435a00
+  AFNetworking: d9fdf484a3c723ec3c558a41cc5754c7e845ee77
+  JKDataHelper: b30fcfa50b345140ad55f3868e3b5a9e9e39283c
+  JKNetworking_: 4dfeac62e46a6a6a78c2afe1e44ead19d6e6f695
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
 
-PODFILE CHECKSUM: 4cff109182264745c8d3cb9b08ed9f957dbe833e
+PODFILE CHECKSUM: 1129336e50b5cd4d7024d64f024efcac1b65fc80
 
 COCOAPODS: 1.8.4

@@ -10,8 +10,8 @@
 
 @implementation NSArray (JKDataHelper)
 
-
--(id)jk_objectWithIndex:(NSInteger)index{
+- (nullable id)jk_objectWithIndex:(NSInteger)index
+{
     
     if (index < 0) {
         return nil;
@@ -22,10 +22,30 @@
     return nil;
 }
 
-- (NSString*)jk_stringWithIndex:(NSInteger)index{
+- (nullable id)jk_objectWithIndex:(NSInteger)index
+                      verifyClass:(nullable Class)theClass
+{
+    if (!theClass) {
+        return [self jk_objectWithIndex:index];
+    }
+ if (![theClass isSubclassOfClass:[NSObject class]]) {
+#if DEBUG
+        NSAssert(NO, @"theClass must be subClass of NSObject");
+#endif
+        return nil;
+    }
+    id object = [self jk_objectWithIndex:index];
+    if ([object isKindOfClass: theClass]) {
+        return object;
+    }
+    return nil;
+}
+
+- (nullable NSString*)jk_stringWithIndex:(NSInteger)index
+{
     
     id value = [self jk_objectWithIndex:index];
-    if (value == nil || value == [NSNull null] || [[value description] isEqualToString:@"<null>"] || [[value description] isEqualToString:@"(null)"])
+    if (value == nil || value == [NSNull null])
     {
         return nil;
     }
@@ -38,7 +58,7 @@
     return nil;
 }
 
-- (NSNumber*)jk_numberWithIndex:(NSInteger)index{
+- (nullable NSNumber*)jk_numberWithIndex:(NSInteger)index{
     
     id value = [self jk_objectWithIndex:index];
     if ([value isKindOfClass:[NSNumber class]]) {
@@ -52,7 +72,7 @@
     return nil;
 }
 
-- (NSDecimalNumber *)jk_decimalNumberWithIndex:(NSInteger)index{
+- (nullable NSDecimalNumber *)jk_decimalNumberWithIndex:(NSInteger)index{
     
     id value = [self jk_objectWithIndex:index];
     if ([value isKindOfClass:[NSDecimalNumber class]]) {
@@ -69,7 +89,7 @@
     return nil;
 }
 
-- (NSArray*)jk_arrayWithIndex:(NSInteger)index{
+- (nullable NSArray*)jk_arrayWithIndex:(NSInteger)index{
     
     id value = [self jk_objectWithIndex:index];
     if (value == nil || value == [NSNull null])
@@ -83,7 +103,7 @@
     return nil;
 }
 
-- (NSDictionary*)jk_dictionaryWithIndex:(NSInteger)index{
+- (nullable NSDictionary*)jk_dictionaryWithIndex:(NSInteger)index{
     
     id value = [self jk_objectWithIndex:index];
     if (value == nil || value == [NSNull null])
@@ -254,7 +274,8 @@
     return 0;
 }
 
-- (NSDate *)jk_dateWithIndex:(NSInteger)index dateFormat:(NSString *)dateFormat {
+- (nullable NSDate *)jk_dateWithIndex:(NSInteger)index
+                           dateFormat:(nonnull NSString *)dateFormat {
     
     id value = [self jk_objectWithIndex:index];
     if (value == nil || value == [NSNull null])
@@ -269,22 +290,66 @@
     return nil;
 }
 
-- (NSMutableArray *)jk_valueArrayWithKey:(NSString *)key{
+- (nonnull NSMutableArray *)jk_valueArrayWithKey:(nonnull NSString *)key
+{
     if (!key) {
+#if DEBUG
         NSAssert(NO, @"key can not be nil");
+#endif
+        return nil;
     }
     NSMutableArray *values = [NSMutableArray new];
-    for (NSDictionary *dic in self) {
-        if (![dic isKindOfClass:[NSDictionary class]]) {
-           NSAssert(NO, @"value must be an instance of NSDictionary");
+    for (NSObject *obj in self) {
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dic = (NSDictionary *)obj;
+            id value = [dic objectForKey:key];
+            if (value) {
+                [values addObject:value];
+            }
+        } else {
+            SEL selector = NSSelectorFromString(key);
+            if ([obj respondsToSelector:selector]) {
+                id value = [obj valueForKey:key];
+                if (value) {
+                    [values addObject:value];
+                }
+            }
         }
-        id value =  [dic objectForKey:key];
-        [values addObject:value];
     }
     return values;
 }
 
-- (NSMutableArray *)jk_ascSort{
+- (nonnull NSArray *)jk_uniqueValuesWithKey:(nonnull NSString *)key
+{
+    if (!key) {
+#if DEBUG
+        NSAssert(NO, @"key can't be nil");
+#endif
+        return nil;
+    }
+    NSMutableSet *set = [NSMutableSet new];
+    for (NSObject *obj in self) {
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dic = (NSDictionary *)obj;
+            id value = [dic objectForKey:key];
+            if (value) {
+                [set addObject:value];
+            }
+        } else {
+            SEL selector = NSSelectorFromString(key);
+            if ([obj respondsToSelector:selector]) {
+                id value = [obj valueForKey:key];
+                if (value) {
+                    [set addObject:value];
+                }
+            }
+        }
+        
+    }
+    return [set allObjects];
+}
+
+- (nonnull NSMutableArray *)jk_ascSort{
     NSMutableArray *array = (NSMutableArray *)self;
     if (![self isKindOfClass:[NSMutableArray class]]) {
         array = [NSMutableArray arrayWithArray:self];
@@ -295,7 +360,7 @@
     return array;
 }
 
-- (NSMutableArray *)jk_descSort{
+- (nonnull NSMutableArray *)jk_descSort{
     NSMutableArray *array = (NSMutableArray *)self;
     if (![self isKindOfClass:[NSMutableArray class]]) {
         array = [NSMutableArray arrayWithArray:self];

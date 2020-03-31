@@ -1,6 +1,6 @@
 {
   "name": "JKNetworking_",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "summary": "this is a network tool,it refrence YTKNetwork,and depend on AFNetworking",
   "description": "this is a network tool,it refrence YTKNetwork,and depend on AFNetworking,it will udpate with the need.",
   "homepage": "https://github.com/xindizhiyin2014/JKNetworking",
@@ -13,24 +13,15 @@
   },
   "source": {
     "git": "https://github.com/xindizhiyin2014/JKNetworking.git",
-    "tag": "0.1.8"
+    "tag": "0.1.9"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "source_files": "JKNetworking/Classes/**/*",
   "dependencies": {
-    "AFNetworking/Reachability": [
-
-    ],
-    "AFNetworking/Serialization": [
-
-    ],
-    "AFNetworking/Security": [
-
-    ],
-    "AFNetworking/NSURLSession": [
-
+    "AFNetworking": [
+      "4.0.0"
     ],
     "JKDataHelper": [
 
