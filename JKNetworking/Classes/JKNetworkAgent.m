@@ -70,9 +70,6 @@
 /// the requests need after it fininsed,if the priority first request is not nil,
 @property (nonatomic, strong, nonnull) NSMutableArray *bufferRequests;
 
-/// the beforeAll action has invoked;
-@property (nonatomic, assign) BOOL beforeAllInvoked;
-
 @end
 
 
@@ -110,12 +107,12 @@
 
 - (void)addRequest:(__kindof JKBaseRequest *)request
 {
-    if (!self.beforeAllInvoked) {
-        if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(beforeAllRequests)]) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(beforeAllRequests)]) {
             [[JKNetworkConfig sharedConfig].requestHelper beforeAllRequests];
         }
-        self.beforeAllInvoked = YES;
-    }
+    });
     if (self.priprityFirstRequest) {
         if (([self.priprityFirstRequest isKindOfClass:[JKBaseRequest class]] && ![self.priprityFirstRequest isEqual:request])
             || ([self.priprityFirstRequest isKindOfClass:[JKBatchRequest class]] && ![[(JKBatchRequest *)self.priprityFirstRequest requestArray] containsObject:request])
