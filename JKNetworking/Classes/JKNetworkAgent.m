@@ -101,6 +101,8 @@
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         _sessionManager.completionQueue = _processingQueue;
         _sessionManager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
+        _jsonResponseSerializer = [self config_jsonResponseSerializer];
+        _xmlParserResponseSerialzier = [self config_xmlParserResponseSerialzier];
     }
     return self;
 }
@@ -775,26 +777,22 @@
     return YES;
 }
 
-#pragma mark - getter -
-
-- (AFJSONResponseSerializer *)jsonResponseSerializer {
-    if (!_jsonResponseSerializer) {
-        _jsonResponseSerializer = [AFJSONResponseSerializer serializer];
-        _jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
-        _jsonResponseSerializer.removesKeysWithNullValues = YES;
-    }
-    return _jsonResponseSerializer;
-}
-
-- (AFXMLParserResponseSerializer *)xmlParserResponseSerialzier {
-    if (!_xmlParserResponseSerialzier) {
-        _xmlParserResponseSerialzier = [AFXMLParserResponseSerializer serializer];
-        _xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
-    }
-    return _xmlParserResponseSerialzier;
-}
-
 #pragma mark - private -
+- (AFJSONResponseSerializer *)config_jsonResponseSerializer
+{
+    AFJSONResponseSerializer *jsonResponseSerializer = [AFJSONResponseSerializer serializer];
+    jsonResponseSerializer.acceptableStatusCodes = _allStatusCodes;
+    jsonResponseSerializer.removesKeysWithNullValues = YES;
+    return jsonResponseSerializer;
+}
+
+- (AFXMLParserResponseSerializer *)config_xmlParserResponseSerialzier
+{
+    AFXMLParserResponseSerializer *xmlParserResponseSerialzier = [AFXMLParserResponseSerializer serializer];
+    xmlParserResponseSerialzier.acceptableStatusCodes = _allStatusCodes;
+    return xmlParserResponseSerialzier;
+}
+
 - (BOOL)validateJSON:(id)json withValidator:(id)jsonValidator {
     if ([json isKindOfClass:[NSDictionary class]] &&
         [jsonValidator isKindOfClass:[NSDictionary class]]) {
