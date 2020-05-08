@@ -448,6 +448,10 @@
         [self requestDidFailWithRequest:request error:requestError];
     }
     
+    if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(afterEachRequest:)]) {
+        [[JKNetworkConfig sharedConfig].requestHelper afterEachRequest:request];
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.lock lock];
         [self.requestDic removeObjectForKey:@(task.taskIdentifier)];

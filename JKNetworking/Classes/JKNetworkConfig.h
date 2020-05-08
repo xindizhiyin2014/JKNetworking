@@ -52,6 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param request request
 - (void)beforeEachRequest:(__kindof JKBaseRequest *)request;
 
+/// after each request,you can use this func do something
+/// @param request request
+- (void)afterEachRequest:(__kindof JKBaseRequest *)request;
+
 @end
 
 @interface JKNetworkConfig : NSObject
