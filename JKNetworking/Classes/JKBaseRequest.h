@@ -64,28 +64,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @end
 
-@class JKBaseRequest,JKBaseDownloadRequest;
-
-@protocol JKRequestConfigProtocol <NSObject>
-
-/// config the upload request if the request in JKBatchRequest or JKChainRequest
-/// @param request request
-/// @param data the data need to upload
-/// @param uploadProgressBlock the upload progress block
-/// @param formDataBlock the formData config block
-- (void)configUploadRequest:(__kindof JKBaseRequest *)request
-                       data:(nullable NSData *)data
-                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock;
-
-/// config the download request if the request in JKBatchRequest or JKChainRequest
-/// @param request request
-/// @param downloadProgressBlock the download progress block
-- (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
-                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock;
-
-@end
-
 
 @interface JKBaseRequest : NSObject
 
@@ -131,7 +109,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the status of the requestTask is cancelled or not
 @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
 
-/// the status of the requestTask is executing of not
+/// the status of the requestTask is executing or not
 @property (nonatomic, assign, readonly, getter=isExecuting) BOOL executing;
 
 /// the request header dic
@@ -156,10 +134,10 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, assign) BOOL useSignature;
 
 /// the url has signatured
-@property (nonatomic, copy, nullable) NSString *signaturedUrl;
+@property (nonatomic, copy, readonly, nullable) NSString *signaturedUrl;
 
 /// the params has signatured
-@property (nonatomic, strong, nullable) id signaturedParams;
+@property (nonatomic, strong, readonly, nullable) id signaturedParams;
 
 /// the network status handle class
 @property (nonatomic,strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
@@ -176,19 +154,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 ///after request failure before successBlock callback,do this func,if you want extra handle,return YES,else return NO
 - (BOOL)requestFailurePreHandle;
 
-- (void)startWithCompletionBlockWithSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-/// upload data
-/// @param data data
-/// @param uploadProgressBlock uploadProgressBlock
-/// @param successBlock successBlock
-/// @param failureBlock failureBlock
-- (void)uploadWithData:(nullable NSData *)data
-              progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-         formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-               success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-               failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-
+- (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 - (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header;
 
@@ -210,6 +176,26 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @end
 
 
+@interface JKBaseUploadRequest : JKBaseRequest
+/// the data need to upload
+@property (nonatomic, strong) NSData *uploadData;
+
++ (instancetype)new NS_UNAVAILABLE;
+
++ (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)initWitData:(nonnull NSData *)data;
+
+/// upload data
+/// @param uploadProgressBlock uploadProgressBlock
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+             formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                   success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                   failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+@end
+
 @interface JKBaseDownloadRequest :JKBaseRequest
 
 /// the url of the download file resoure
@@ -230,10 +216,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
                      success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
                      failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-
-/// get the md5 string of the target sting
-+ (NSString *)MD5String:(NSString *)string;
-
 
 @end
 

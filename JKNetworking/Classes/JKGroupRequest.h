@@ -10,67 +10,65 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - - JKBatchRequest - -
-
-@interface JKBatchRequest : NSObject<JKRequestConfigProtocol>
-
+@interface JKGroupRequest : NSObject
 /// the array of the JKBaseRequest
 @property (nonatomic, strong, readonly) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
-
-/// the failed request in the chainRequest
-@property (nonatomic, strong , readonly, nullable) __kindof JKBaseRequest *failedRequest;
-
 /// the class to handle the request indicator
 @property (nonatomic, strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
 
-+ (instancetype)new NS_UNAVAILABLE;
+- (void)addRequest:(__kindof JKBaseRequest *)request;
 
-- (instancetype)init NS_UNAVAILABLE;
+- (void)addRequestsWithArray:(NSArray<__kindof JKBaseRequest *> *)requestArray;
 
-/// init with the array of the JKBaseRequest or subclass of  JKBaseRequest
-/// @param requestArray requestArray
-- (instancetype)initWithRequestArray:(NSArray<__kindof JKBaseRequest *> *)requestArray;
-
-/// start the chainRequest
-/// @param successBlock the block of success
-/// @param failureBlock the block of failure
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
-                                    failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock;
 - (void)start;
 
 - (void)stop;
 
++ (void)configNormalRequest:(__kindof JKBaseRequest *)request
+                    success:(void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
+
++ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
+                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+
++ (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
+                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                      success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 @end
 
-#pragma mark - - JKChainRequest - - 
-@interface JKChainRequest : NSObject<JKRequestConfigProtocol>
+#pragma mark - - JKBatchRequest - -
 
-/// the array of the JKBaseRequest
-@property (nonatomic, strong, readonly) NSMutableArray <__kindof JKBaseRequest *>*requestArray;
+@interface JKBatchRequest : JKGroupRequest
+
+/// the failed requests
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
+
+/*
+ config the require success requests
+ if not config,or the config requests has no elment, only one request success, the batchRequest success block will be called;only all requests in batchRequest failed,the batchRequest fail block will be called.
+ if config the requests,only the requests in the config requests all success,then the batchRequest success block will be called,if one of request in config request failed,the batchRequest fail block will be called.
+ this method should invoke after you add the request in the batchRequest.
+ */
+- (void)configRequireSuccessRequests:(nullable NSArray <__kindof JKBaseRequest *> *)requests;
+
+- (void)startWithCompletionSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
+                           failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock;
+
+@end
+
+#pragma mark - - JKChainRequest - -
+@interface JKChainRequest : JKGroupRequest
 
 /// the failed request in the chainRequest
 @property (nonatomic, strong, readonly, nullable) __kindof JKBaseRequest *failedRequest;
 
-/// the class to handle the request indicator
-@property (nonatomic, strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
-
-
-/// add the request in the chainRequest
-/// @param request request
-/// @param success the successBlock of the single request
-- (void)addRequest:(__kindof JKBaseRequest *)request
-           success:(nullable void(^)(__kindof JKBaseRequest *))success;
-
-/// start chainRequest
-/// @param successBlock the block of success
-/// @param failureBlock the block of failure
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
-                                    failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
-- (void)start;
-
-/// stop the chain request
-- (void)stop;
+- (void)startWithCompletionSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
+                           failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
 
 @end
 

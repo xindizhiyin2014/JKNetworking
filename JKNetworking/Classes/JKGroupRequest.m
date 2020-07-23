@@ -20,14 +20,154 @@
 @property (nonatomic, assign) JKRequestType requestType;
 /// the data need to upload
 @property (nonatomic, strong) NSData *uploadData;
-
+/// the request is independent request or not
 @property (nonatomic, assign, readwrite) BOOL isIndependentRequest;
+/// the request success block
+@property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
+/// the request failure block
+@property (nonatomic, copy, nullable) void(^groupFailureBlock)(__kindof JKBaseRequest *request);
 
 @end
 
 @implementation JKBaseRequest(JKGroupRequest)
 
-@dynamic progressBlock,formDataBlock,requestType,uploadData,isIndependentRequest;
+@dynamic progressBlock;
+@dynamic formDataBlock;
+@dynamic requestType;
+@dynamic uploadData;
+@dynamic isIndependentRequest;
+@dynamic groupSuccessBlock;
+@dynamic groupFailureBlock;
+
+@end
+
+@interface JKGroupRequest()
+
+/// the array of the JKBaseRequest
+@property (nonatomic, strong, readwrite) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
+/// the block of success
+@property (nonatomic, copy, nullable) void (^successBlock)(__kindof JKGroupRequest *request);
+/// the block of failure
+@property (nonatomic, copy, nullable) void (^failureBlock)(__kindof JKGroupRequest *request);
+/// the count of finished requests
+@property (nonatomic, assign) NSInteger finishedCount;
+/// the status of the JKGroupRequest is executing or not
+@property (nonatomic, assign) BOOL executing;
+
+
+@end
+
+@implementation JKGroupRequest
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _requestArray = [NSMutableArray new];
+        _finishedCount = 0;
+    }
+    return self;
+}
+
+- (void)addRequest:(__kindof JKBaseRequest *)request
+{
+    if (![request isKindOfClass:[JKBaseRequest class]]) {
+#if DEBUG
+        NSAssert(NO, @"makesure [request isKindOfClass:[JKBaseRequest class]] be YES");
+#endif
+        return;
+    }
+    if ([self.requestArray containsObject:request]) {
+#if DEBUG
+        NSAssert(NO, @"request was added");
+#endif
+        return;
+    }
+    request.isIndependentRequest = NO;
+    [self.requestArray addObject:request];
+}
+
+- (void)addRequestsWithArray:(NSArray<__kindof JKBaseRequest *> *)requestArray
+{
+    NSMutableSet *tmpSet = [NSMutableSet setWithArray:requestArray];
+    if (tmpSet.count != requestArray.count) {
+#if DEBUG
+        NSAssert(NO, @"requestArray has duplicated requests");
+#endif
+        return;
+    }
+    NSMutableSet *requestSet = [NSMutableSet setWithArray:self.requestArray];
+    BOOL hasCommonRequest = [requestSet intersectsSet:tmpSet];
+    if (hasCommonRequest) {
+#if DEBUG
+        NSAssert(NO, @"requestArray has common request with the added requests");
+#endif
+        return;
+    }
+    for (JKBaseRequest *request in requestArray) {
+        if (![request isKindOfClass:[JKBaseRequest class]]) {
+#if DEBUG
+            NSAssert(NO, @"makesure [request isKindOfClass:[JKBaseRequest class]] be YES");
+#endif
+            return;
+        }
+        request.isIndependentRequest = NO;
+    }
+    [self.requestArray addObjectsFromArray:requestArray];
+}
+
+- (void)start
+{
+    
+}
+
+- (void)stop
+{
+    
+}
+
++ (void)configNormalRequest:(__kindof JKBaseRequest *)request
+                    success:(void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
+{
+    NSAssert(request.requestType == JKRequestTypeDefault, @"make sure request.requestType == JKRequestTypeDefault be YES");
+    request.groupSuccessBlock = successBlock;
+    request.groupFailureBlock = failureBlock;
+}
+
++ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
+                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+{
+    NSAssert(request.requestType == JKRequestTypeUpload, @"make sure request.requestType == JKRequestTypeUpload be YES");
+    request.progressBlock = uploadProgressBlock;
+    request.formDataBlock = formDataBlock;
+    request.groupSuccessBlock = successBlock;
+    request.groupFailureBlock = failureBlock;
+}
+
++ (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
+                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                      success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+{
+    NSAssert(request.requestType == JKRequestTypeDownload, @"make sure request.requestType == JKRequestTypeDownload be YES");
+    request.progressBlock = downloadProgressBlock;
+    request.groupSuccessBlock = successBlock;
+    request.groupFailureBlock = failureBlock;
+}
+
+- (void)clearCompletionBlock
+{
+    if (self.successBlock) {
+        self.successBlock = nil;
+    }
+    if (self.failureBlock) {
+        self.failureBlock = nil;
+    }
+}
 
 @end
 
@@ -36,224 +176,167 @@
 
 @interface JKBatchRequest()
 
-@property (nonatomic, copy, nullable) void (^successCompletionBlock)(JKBatchRequest *request);
-@property (nonatomic, copy, nullable) void (^failureCompletionBlock)(JKBatchRequest *request);
-@property (nonatomic, strong, readwrite) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
-@property (nonatomic, strong , readwrite, nullable) __kindof JKBaseRequest *failedRequest;
-@property (nonatomic, assign) NSInteger finishedCount;
+@property (nonatomic, strong, readwrite, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
+@property (nonatomic, strong, nullable) NSMutableArray<__kindof JKBaseRequest *> *requireSuccessRequests;
+
 
 @end
 
 @implementation JKBatchRequest
 
-- (instancetype)initWithRequestArray:(NSArray<__kindof JKBaseRequest *> *)requestArray
-{
-    self = [super init];
-    if (self) {
-        _requestArray = [requestArray mutableCopy];
-        for (JKBaseRequest *request in requestArray) {
-            request.isIndependentRequest = NO;
-        }
-    }
-    return self;
-}
-
-- (void)configUploadRequest:(__kindof JKBaseRequest *)request
-                       data:(nullable NSData *)data
-                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-{
-    request.requestType = JKRequestTypeUpload;
-    request.uploadData = data;
-    request.progressBlock = uploadProgressBlock;
-    request.formDataBlock = formDataBlock;
-}
-- (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
-                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-{
-#if DEBUG
-    NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only support JKBaseDownloadRequest");
-#endif
-        request.progressBlock = downloadProgressBlock;
-}
-
 - (void)start
 {
-    if (self.finishedCount > 0) {
+    if (self.requestArray.count == 0) {
 #if DEBUG
-        NSLog(@"Error:batch request has already start");
+        NSAssert(NO, @"please makesure self.requestArray.count > 0");
 #endif
         return;
     }
-    if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
+    if (self.executing) {
+        return;
+    }
+    self.executing = YES;
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
         [self.requestAccessory requestWillStart:self];
     }
-    self.failedRequest = nil;
     for (__kindof JKBaseRequest *request in self.requestArray) {
         @weakify(self);
-        [request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
             @strongify(self);
             self.finishedCount++;
+            if (request.groupSuccessBlock) {
+                request.groupSuccessBlock(request);
+            }
+            
             if (self.finishedCount == self.requestArray.count) {
-                if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-                    [self.requestAccessory requestWillStop:self];
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.successCompletionBlock) {
-                        self.successCompletionBlock(self);
-                    }
-                     [self clearRequests];
-                     [self clearCompletionBlock];
-                     self.finishedCount = 0;
-                    [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
-
-                });
-                if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-                    [self.requestAccessory requestDidStop:self];
-                }
+                [self finishAllRequestsWithBlock];
             }
         } failure:^(__kindof JKBaseRequest * _Nonnull request) {
             @strongify(self);
-            [self stopRequests];
-            self.failedRequest = request;
-            if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-                [self.requestAccessory requestWillStop:self];
+            if (!self.failedRequests) {
+                self.failedRequests = [NSMutableArray new];
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.failureCompletionBlock) {
-                    self.failureCompletionBlock(self);
+            if ([self.requireSuccessRequests containsObject:request]) {
+                [self.failedRequests addObject:request];
+                if (request.groupFailureBlock) {
+                    request.groupFailureBlock(request);
                 }
-               [self clearRequests];
-               [self clearCompletionBlock];
-               self.finishedCount = 0;
-               [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
-            });
-            if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-                [self.requestAccessory requestDidStop:self];
+                for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+                    [tmpRequest stop];
+                }
+                if (self.requestAccessory
+                    && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+                    [self.requestAccessory requestWillStop:self];
+                }
+                if (self.failureBlock) {
+                    self.failureBlock(self);
+                }
+                if (self.requestAccessory
+                    && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+                    [self.requestAccessory requestDidStop:self];
+                }
+                [self stop];
+            } else {
+                self.finishedCount++;
+                [self.failedRequests addObject:request];
+                if (request.groupFailureBlock) {
+                    request.groupFailureBlock(request);
+                }
+                if (self.finishedCount == self.requestArray.count) {
+                    [self finishAllRequestsWithBlock];
+                }
             }
         }];
     }
 }
 
-- (void)stop
+- (void)finishAllRequestsWithBlock
 {
-    [self stopRequests];
-    [self clearRequests];
-    [self clearCompletionBlock];
-    self.finishedCount = 0;
-    [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
+    if (self.failedRequests.count != self.requestArray.count) {
+           if (self.requestAccessory
+               && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+               [self.requestAccessory requestWillStop:self];
+           }
+           if (self.successBlock) {
+               self.successBlock(self);
+           }
+           if (self.requestAccessory
+               && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+               [self.requestAccessory requestDidStop:self];
+           }
+           [self stop];
+    }else {
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+            [self.requestAccessory requestWillStop:self];
+        }
+        if (self.failureBlock) {
+            self.failureBlock(self);
+        }
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+            [self.requestAccessory requestDidStop:self];
+        }
+        [self stop];
+    }
 }
 
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
-                                    failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock
+- (void)stop
 {
-    self.successCompletionBlock = successBlock;
-    self.failureCompletionBlock = failureBlock;
+    [self clearCompletionBlock];
+    self.finishedCount = 0;
+    self.failedRequests = nil;
+    [[JKNetworkAgent sharedAgent] removeBatchRequest:self];
+    self.executing = NO;
+}
+
+- (void)configRequireSuccessRequests:(nullable NSArray <__kindof JKBaseRequest *> *)requests
+{
+
+    for (__kindof JKBaseRequest *request in requests) {
+        if (![request isKindOfClass:[JKBaseRequest class]]) {
+#if DEBUG
+            NSAssert(NO, @"please make sure [request isKindOfClass:[JKBaseRequest class]] be YES");
+#endif
+            return;
+        }
+    }
+    self.requireSuccessRequests = [NSMutableArray arrayWithArray:requests];
+}
+
+- (void)startWithCompletionSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
+                           failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock
+{
+    self.successBlock = successBlock;
+    self.failureBlock = failureBlock;
     [[JKNetworkAgent sharedAgent] addBatchRequest:self];
 }
 
-- (void)stopRequests
-{
-  for (__kindof JKBaseRequest *request in self.requestArray) {
-        [request stop];
-    }
-}
-
-- (void)clearRequests
-{
-    [self.requestArray removeAllObjects];
-}
-
-- (void)clearCompletionBlock
-{
-    if (self.successCompletionBlock) {
-        self.successCompletionBlock = nil;
-    }
-    
-    if (self.failureCompletionBlock) {
-        self.failureCompletionBlock = nil;
-    }
-}
-
-
 @end
 
-#pragma mark - - JKChainRequest - - 
+#pragma mark - - JKChainRequest - -
 
 @interface JKChainRequest()
 
-@property (nonatomic, strong, nonnull) NSMutableArray <__kindof JKBaseRequest *>*requestArray;
-
-@property (nonatomic, copy, nullable) void(^successBlock)(JKChainRequest *chainRequest);
-
-@property (nonatomic, copy, nullable) void(^failureBlock)(JKChainRequest *chainRequest);
-
 @property (nonatomic, strong, readwrite, nullable) __kindof JKBaseRequest *failedRequest;
-
-@property (nonatomic ,assign) NSUInteger nextRequestIndex;
-/// the single request success block dictionary
-@property (nonatomic, strong, nonnull) NSMutableDictionary *successBlocksDic;
 
 @end
 
 @implementation JKChainRequest
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        _nextRequestIndex = 0;
-        _requestArray = [NSMutableArray new];
-        _successBlocksDic = [NSMutableDictionary new];
-    }
-    return self;
-}
-
-- (void)addRequest:(__kindof JKBaseRequest *)request
-           success:(nullable void(^)(__kindof JKBaseRequest *))success
-{
-    [self.requestArray addObject:request];
-    request.isIndependentRequest = NO;
-    NSString *key = [NSString stringWithFormat:@"%p",request];
-    [self.successBlocksDic setValue:success forKey:key];
-}
-
-- (void)configUploadRequest:(__kindof JKBaseRequest *)request
-                       data:(nullable NSData *)data
-                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-{
-    request.requestType = JKRequestTypeUpload;
-    request.uploadData = data;
-    request.progressBlock = uploadProgressBlock;
-    request.formDataBlock = formDataBlock;
-}
-- (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
-                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-{
-    #if DEBUG
-        NSAssert([request isKindOfClass:[JKBaseDownloadRequest class]], @"configDownloadRequest only support JKBaseDownloadRequest");
-    #endif
-        request.progressBlock = downloadProgressBlock;
-}
-
-- (void)startWithCompletionBlockWithSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
-                                    failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock
-{
-    self.successBlock = successBlock;
-    self.failureBlock = failureBlock;
-    [[JKNetworkAgent sharedAgent] addChainRequest:self];
-
-}
-
 - (void)start
 {
-    if (self.nextRequestIndex >0) {
+    if (self.requestArray.count == 0) {
 #if DEBUG
-        NSLog(@"Error! chain request has already started");
+        NSAssert(NO, @"please makesure self.requestArray.count > 0");
 #endif
         return;
     }
+    if (self.executing) {
+        return;
+    }
+    self.executing = YES;
     self.failedRequest = nil;
     if ([self.requestArray count] > 0) {
         if (self.requestAccessory  && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
@@ -265,91 +348,65 @@
 
 - (void)stop
 {
-    [self stopRequests];
-    [self clearRequests];
-    [self clearBlock];
-    self.nextRequestIndex = 0;
+    [self clearCompletionBlock];
+    self.finishedCount = 0;
+    self.failedRequest = nil;
     [[JKNetworkAgent sharedAgent] removeChainRequest:self];
+    self.executing = NO;
+}
+
+- (void)startWithCompletionSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
+                           failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock
+{
+    self.successBlock = successBlock;
+    self.failureBlock = failureBlock;
+    [[JKNetworkAgent sharedAgent] addChainRequest:self];
 }
 
 - (BOOL)startNextRequest
 {
-    if (self.nextRequestIndex < [self.requestArray count]) {
-        JKBaseRequest *request = self.requestArray[self.nextRequestIndex];
-        self.nextRequestIndex++;
-        [request clearCompletionBlock];
-        [request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
-            NSString *key = [NSString stringWithFormat:@"%p",request];
-            void(^successBlock)(__kindof JKBaseRequest *request) = self.successBlocksDic[key];
-            if (successBlock) {
-                successBlock(request);
+    if (self.finishedCount < [self.requestArray count]) {
+        JKBaseRequest *request = self.requestArray[self.finishedCount];
+        self.finishedCount++;
+        [request startWithCompletionSuccess:^(__kindof JKBaseRequest * request) {
+            if (request.groupSuccessBlock) {
+                request.groupSuccessBlock(request);
             }
-            BOOL status = [self startNextRequest];
-            if (!status) {
+            BOOL canStartNextRequest = [self startNextRequest];
+            if (!canStartNextRequest) {
                 if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                     [self.requestAccessory requestWillStop:self];
                 }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.successBlock) {
-                        self.successBlock(self);
-                    }
-                    [self clearRequests];
-                    [self clearBlock];
-                    self.nextRequestIndex = 0;
-                    [[JKNetworkAgent sharedAgent] removeChainRequest:self];
-                });
+                if (self.successBlock) {
+                    self.successBlock(self);
+                }
                 if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                     [self.requestAccessory requestDidStop:self];
                 }
-
+                [self stop];
             }
         } failure:^(__kindof JKBaseRequest * request) {
-            [self stopRequests];
             self.failedRequest = request;
+            if (request.groupFailureBlock) {
+                request.groupFailureBlock(request);
+            }
+            for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+                [tmpRequest stop];
+            }
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [self.requestAccessory requestWillStop:self];
             }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.failureBlock) {
-                    self.failureBlock(self);
-                }
-                [self clearRequests];
-                [self clearBlock];
-                self.nextRequestIndex = 0;
-                [[JKNetworkAgent sharedAgent] removeChainRequest:self];
-            });
+            if (self.failureBlock) {
+                self.failureBlock(self);
+            }
             if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [self.requestAccessory requestDidStop:self];
             }
+            [self stop];
         }];
         return YES;
     }
     return NO;
-}
-
-- (void)stopRequests
-{
-    for (JKBaseRequest *request in self.requestArray) {
-      [request stop];
-    }
-}
-
-- (void)clearRequests
-{
-    [self.requestArray removeAllObjects];
-    [self.successBlocksDic removeAllObjects];
-}
-
-- (void)clearBlock
-{
-    if (self.successBlock) {
-        self.successBlock = nil;
-    }
-    
-    if (self.failureBlock) {
-        self.failureBlock = nil;
-    }
-
 }
 
 @end
