@@ -208,9 +208,9 @@
             if (request.groupSuccessBlock) {
                 request.groupSuccessBlock(request);
             }
-            
             if (self.finishedCount == self.requestArray.count) {
-                [self finishAllRequestsWithBlock];
+                //the last request success, the batchRequest should call success block
+                [self finishAllRequestsWithSuccessBlock];
             }
         } failure:^(__kindof JKBaseRequest * _Nonnull request) {
             @strongify(self);
@@ -225,18 +225,7 @@
                 for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
                     [tmpRequest stop];
                 }
-                if (self.requestAccessory
-                    && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-                    [self.requestAccessory requestWillStop:self];
-                }
-                if (self.failureBlock) {
-                    self.failureBlock(self);
-                }
-                if (self.requestAccessory
-                    && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-                    [self.requestAccessory requestDidStop:self];
-                }
-                [self stop];
+                [self finishAllRequestsWithFailureBlock];
             } else {
                 self.finishedCount++;
                 [self.failedRequests addObject:request];
@@ -244,42 +233,49 @@
                     request.groupFailureBlock(request);
                 }
                 if (self.finishedCount == self.requestArray.count) {
-                    [self finishAllRequestsWithBlock];
+                    if (self.failedRequests.count != self.requestArray.count) {
+                        // not all requests failed ,the batchRequest should call success block
+                        [self finishAllRequestsWithSuccessBlock];
+                    }else {
+                        // all requests failed,the batchRequests should call fail block
+                        [self finishAllRequestsWithFailureBlock];
+                    }
                 }
             }
         }];
     }
 }
 
-- (void)finishAllRequestsWithBlock
+- (void)finishAllRequestsWithSuccessBlock
 {
-    if (self.failedRequests.count != self.requestArray.count) {
-           if (self.requestAccessory
-               && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-               [self.requestAccessory requestWillStop:self];
-           }
-           if (self.successBlock) {
-               self.successBlock(self);
-           }
-           if (self.requestAccessory
-               && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-               [self.requestAccessory requestDidStop:self];
-           }
-           [self stop];
-    }else {
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-            [self.requestAccessory requestWillStop:self];
-        }
-        if (self.failureBlock) {
-            self.failureBlock(self);
-        }
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-            [self.requestAccessory requestDidStop:self];
-        }
-        [self stop];
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+        [self.requestAccessory requestWillStop:self];
     }
+    if (self.successBlock) {
+        self.successBlock(self);
+    }
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+        [self.requestAccessory requestDidStop:self];
+    }
+    [self stop];
+}
+
+- (void)finishAllRequestsWithFailureBlock
+{
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+        [self.requestAccessory requestWillStop:self];
+    }
+    if (self.failureBlock) {
+        self.failureBlock(self);
+    }
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+        [self.requestAccessory requestDidStop:self];
+    }
+    [self stop];
 }
 
 - (void)stop
