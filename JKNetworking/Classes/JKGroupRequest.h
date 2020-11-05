@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// the class to handle the request indicator
 @property (nonatomic, strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
 
+/// the failed requests
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
+
 - (void)addRequest:(__kindof JKBaseRequest *)request;
 
 - (void)addRequestsWithArray:(NSArray<__kindof JKBaseRequest *> *)requestArray;
@@ -45,9 +48,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface JKBatchRequest : JKGroupRequest
 
-/// the failed requests
-@property (nonatomic, strong, readonly, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
-
 /*
  config the require success requests
  if not config,or the config requests has no elment, only one request success, the batchRequest success block will be called;only all requests in batchRequest failed,the batchRequest fail block will be called.
@@ -64,11 +64,13 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - - JKChainRequest - -
 @interface JKChainRequest : JKGroupRequest
 
-/// the failed request in the chainRequest
-@property (nonatomic, strong, readonly, nullable) __kindof JKBaseRequest *failedRequest;
+/// config the request is manual start the next request,deafult is NO,must config before the chainRequest start.
+- (void)configRequest:(__kindof JKBaseRequest *)request manualStartNextRequest:(BOOL)manualStartNextRequest;
 
 - (void)startWithCompletionSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
                            failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
+/// manual start the next request
+- (void)manualStartNextRequest;
 
 @end
 

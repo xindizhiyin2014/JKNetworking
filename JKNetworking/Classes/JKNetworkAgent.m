@@ -126,7 +126,7 @@
         _processingQueue =dispatch_queue_create("com.jk.networkAgent.processing", DISPATCH_QUEUE_CONCURRENT);
         _sessionManager = [[AFHTTPSessionManager alloc] initWithSessionConfiguration:[JKNetworkConfig sharedConfig].sessionConfiguration];
         _sessionManager.securityPolicy = [JKNetworkConfig sharedConfig].securityPolicy;
-        _sessionManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        _sessionManager.responseSerializer = [AFJSONResponseSerializer serializer];
         _allStatusCodes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(100, 500)];
         _sessionManager.completionQueue = _processingQueue;
         _sessionManager.responseSerializer.acceptableStatusCodes = _allStatusCodes;

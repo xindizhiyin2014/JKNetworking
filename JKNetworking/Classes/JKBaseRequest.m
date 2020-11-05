@@ -41,6 +41,8 @@
 @property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
 /// the request failure block progress block
 @property (nonatomic, copy, nullable) void(^groupFailureBlock)(__kindof JKBaseRequest *request);
+/// only in chainRequest,can use this property
+@property (nonatomic, assign) BOOL manualStartNextRequest;
 
 @end
 
