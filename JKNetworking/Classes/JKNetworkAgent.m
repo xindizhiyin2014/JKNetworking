@@ -496,7 +496,8 @@
         succeed = NO;
         requestError = serializationError;
     } else {
-        if (request.responseSerializerType == JKResponseSerializerTypeJSON) {
+        if (request.responseSerializerType == JKResponseSerializerTypeJSON
+            || request.responseSerializerType == JKResponseSerializerTypeHTTP) {
             succeed = [self validateResult:request error:&validationError];
             requestError = validationError;
         }
