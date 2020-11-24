@@ -117,7 +117,7 @@
 
 - (BOOL)requestSuccessPreHandle
 {
-    if (!self.ignoreCache){
+    if (self.cacheTimeInSeconds > 0){
        [self writeResponseToCacheFile];
     }
     return NO;
