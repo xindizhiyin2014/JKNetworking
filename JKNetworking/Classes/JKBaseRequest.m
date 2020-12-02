@@ -190,7 +190,7 @@
 
 - (NSString *)buildCustomRequestUrl
 {
-    return nil;
+    return self.customRequestUrl;
 }
 
 - (BOOL)customSignature

@@ -142,6 +142,9 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the network status handle class
 @property (nonatomic,strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
 
+/// the customUrl of the request,it contain domain,path,query, and so on.
+@property (nonatomic, copy, nullable) NSString *customRequestUrl;
+
 - (void)clearCompletionBlock;
 
 - (void)start;
