@@ -215,7 +215,16 @@
         || request.requestTask.state == NSURLSessionTaskStateCompleted) {
         return;
     }
-    [request.requestTask cancel];
+    if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
+        JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
+        NSURLSessionDownloadTask *requestTask = (NSURLSessionDownloadTask *)request.requestTask;
+        [requestTask cancelByProducingResumeData:^(NSData *resumeData) {
+            NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:downloadRequest.absoluteString];
+            [resumeData writeToURL:tempFileUrl atomically:YES];
+        }];
+    } else {
+        [request.requestTask cancel];
+    }
     [self.lock lock];
     [self.requestDic removeObjectForKey:@(request.requestTask.taskIdentifier)];
     [self.lock unlock];
@@ -384,9 +393,10 @@
         [[NSFileManager defaultManager] removeItemAtPath:downloadTargetPath error:nil];
     }
 
-    NSString *tempFilePath = [self incompleteDownloadTempPathForDownloadPath:downloadTargetPath].path;
+    NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:URLString];
+    NSString *tempFilePath = tempFileUrl.path;
     BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
-    NSData *data = [NSData dataWithContentsOfURL:[self incompleteDownloadTempPathForDownloadPath:downloadTargetPath]];
+    NSData *data = [NSData dataWithContentsOfURL:tempFileUrl];
     BOOL resumeDataIsValid = [JKNetworkAgent validateResumeData:data];
 
     BOOL canBeResumed = resumeDataFileExists && resumeDataIsValid;
@@ -397,14 +407,13 @@
     if (canBeResumed) {
         @try {
             downloadTask = [self.sessionManager downloadTaskWithResumeData:data progress:downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                return [NSURL fileURLWithPath:tempFilePath isDirectory:NO];
-            } completionHandler:
-                            ^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                if (!error) {
-                    [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:downloadTargetPath error:&error];
+                return [NSURL fileURLWithPath:downloadTargetPath isDirectory:NO];
+            } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
                 }
                 [self handleRequestResult:downloadTask responseObject:filePath error:error];
-                            }];
+            }];
             resumeSucceeded = YES;
         } @catch (NSException *exception) {
 #if DEBUG
@@ -415,14 +424,13 @@
     }
     if (!resumeSucceeded) {
         downloadTask = [self.sessionManager downloadTaskWithRequest:urlRequest progress:downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-            return [NSURL fileURLWithPath:tempFilePath isDirectory:NO];
-        } completionHandler:
-                        ^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                        if (!error) {
-                            [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:downloadTargetPath error:&error];
-                        }
-                        [self handleRequestResult:downloadTask responseObject:filePath error:error];
-                        }];
+            return [NSURL fileURLWithPath:downloadTargetPath isDirectory:NO];
+        } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+            if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath]) {
+                [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
+            }
+            [self handleRequestResult:downloadTask responseObject:filePath error:error];
+        }];
     }
     return downloadTask;
 }
@@ -903,9 +911,10 @@
     return cacheFolder;
 }
 
-- (NSURL *)incompleteDownloadTempPathForDownloadPath:(NSString *)downloadPath {
+- (NSURL *)incompleteTmpFileURLForDownloadURLString:(NSString *)urlString
+{
     NSString *tempPath = nil;
-    NSString *md5URLStr = [JKNetworkAgent MD5String:downloadPath];
+    NSString *md5URLStr = [JKNetworkAgent MD5String:urlString];
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLStr];
     return [NSURL fileURLWithPath:tempPath];
 }
