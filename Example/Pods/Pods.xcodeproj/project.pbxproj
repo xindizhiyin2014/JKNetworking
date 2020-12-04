@@ -200,6 +200,8 @@
 		B9161BFE6F0299FDF02F097ED8EC904E /* KWInequalityMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = ADF132C222CF179C81F2EDE3C7920FB6 /* KWInequalityMatcher.m */; };
 		BB035E1FE93185F9259EF1DD9CC16F8A /* KWBeTrueMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 779EDAA5CA77715FEDD047974A6E451B /* KWBeTrueMatcher.m */; };
 		BC947B8BE47D3AD0B2D25F8A779E73C2 /* KWUserDefinedMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 02953ADE1782722711A1D00A9D11E8BE /* KWUserDefinedMatcher.m */; };
+		BD26602C257A5A5500F7929D /* JKNetworkTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = BD26602A257A5A5500F7929D /* JKNetworkTaskDelegate.h */; };
+		BD26602D257A5A5500F7929D /* JKNetworkTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD26602B257A5A5500F7929D /* JKNetworkTaskDelegate.m */; };
 		BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */; };
 		BE678BBFEF6576AF4BB72AF2C4FB673B /* KWLetNode.m in Sources */ = {isa = PBXBuildFile; fileRef = B315FF5F52821271C4522D8C4F58E61F /* KWLetNode.m */; };
 		BEBC2EBDFF85C2F9F172A66EF85E9A2F /* Pods-JKNetworking_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 08172BF092048B76C3A3F7343CA988BB /* Pods-JKNetworking_Example-dummy.m */; };
@@ -550,6 +552,8 @@
 		B8D2ED18B6D48830E78A1E3667CD0898 /* KWBeZeroMatcher.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWBeZeroMatcher.m; path = Classes/Matchers/KWBeZeroMatcher.m; sourceTree = "<group>"; };
 		B9ABE15F1C312598715EB73616B082AC /* KWEqualMatcher.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWEqualMatcher.h; path = Classes/Matchers/KWEqualMatcher.h; sourceTree = "<group>"; };
 		B9F44C7C4B924D23E5768D5D86381AB4 /* WKWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "WKWebView+AFNetworking.h"; path = "UIKit+AFNetworking/WKWebView+AFNetworking.h"; sourceTree = "<group>"; };
+		BD26602A257A5A5500F7929D /* JKNetworkTaskDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JKNetworkTaskDelegate.h; path = JKNetworking/Classes/JKNetworkTaskDelegate.h; sourceTree = "<group>"; };
+		BD26602B257A5A5500F7929D /* JKNetworkTaskDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = JKNetworkTaskDelegate.m; path = JKNetworking/Classes/JKNetworkTaskDelegate.m; sourceTree = "<group>"; };
 		BE431806EA4ED36693C6C355C3E8265E /* KWMatcherFactory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMatcherFactory.h; path = Classes/Core/KWMatcherFactory.h; sourceTree = "<group>"; };
 		C0BD25AFD56DCA0368FC7C852DD194F1 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		C37F377673FFDAD5A9DA645D1B74AFAE /* KWPendingNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWPendingNode.m; path = Classes/Nodes/KWPendingNode.m; sourceTree = "<group>"; };
@@ -940,6 +944,8 @@
 				5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */,
 				602AD8E4779A32FCBCAA19EEBF9FE268 /* JKNetworking.h */,
 				C3CBDA1A041316226F4F938171438D9F /* JKNetworkingMacro.h */,
+				BD26602A257A5A5500F7929D /* JKNetworkTaskDelegate.h */,
+				BD26602B257A5A5500F7929D /* JKNetworkTaskDelegate.m */,
 				070C0C1027A1B5F9626CA366AECF9299 /* Pod */,
 				3EE85D6906D2DF36AF6E0409D6561EF6 /* Support Files */,
 			);
@@ -1203,6 +1209,7 @@
 				8CE5D8E338DC9BB824B1293ED84C19BD /* JKNetworking.h in Headers */,
 				64B2496460D80C4A6E372EB9CD29FB96 /* JKNetworking_-umbrella.h in Headers */,
 				032EEB0C04A2AD2898688F0AB048F46F /* JKNetworkingMacro.h in Headers */,
+				BD26602C257A5A5500F7929D /* JKNetworkTaskDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1659,6 +1666,7 @@
 			files = (
 				80EA601987A70C9AD03D2B445C2FCD5C /* JKBaseRequest.m in Sources */,
 				8C5682303E7D55EBFB88A86DD0E5559D /* JKGroupRequest.m in Sources */,
+				BD26602D257A5A5500F7929D /* JKNetworkTaskDelegate.m in Sources */,
 				CCECBBA6F32AC866A9918B54886997A2 /* JKMockManager.m in Sources */,
 				0A2D3898B82BD6987E2FFACCCE70682F /* JKNetworkAgent.m in Sources */,
 				BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */,

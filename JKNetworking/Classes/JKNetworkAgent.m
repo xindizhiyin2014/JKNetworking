@@ -14,6 +14,14 @@
 #import <JKDataHelper/JKDataHelper.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
+#import "JKNetworkTaskDelegate.h"
+#import "JKNetworkingMacro.h"
+
+@interface AFURLSessionManager (VVNetworkAgent)
+- (void)setDelegate:(JKNetworkTaskDelegate *)delegate
+            forTask:(NSURLSessionTask *)task;
+- (JKNetworkTaskDelegate *)delegateForTask:(NSURLSessionTask *)task;
+@end
 
 @interface JKBaseRequest(JKNetworkAgent)
 
@@ -132,8 +140,27 @@
         _sessionManager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _jsonResponseSerializer = [self config_jsonResponseSerializer];
         _xmlParserResponseSerialzier = [self config_xmlParserResponseSerialzier];
+        [self configSessionManagerBlock];
     }
     return self;
+}
+
+- (void)configSessionManagerBlock
+{
+    @weakify(self);
+    [_sessionManager setDataTaskDidReceiveResponseBlock:^NSURLSessionResponseDisposition(NSURLSession * _Nonnull session, NSURLSessionDataTask * _Nonnull dataTask, NSURLResponse * _Nonnull response) {
+        @strongify(self);
+        __block NSURLSessionResponseDisposition current_disposition = NSURLSessionResponseCancel;
+        if ([self->_sessionManager respondsToSelector:@selector(delegateForTask:)]) {
+            NSObject<NSURLSessionTaskDelegate,NSURLSessionDataDelegate,NSURLSessionDownloadDelegate> *delegate = [self->_sessionManager delegateForTask:dataTask];
+            if ([delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveResponse:completionHandler:)]) {
+                [delegate URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:^(NSURLSessionResponseDisposition disposition) {
+                    current_disposition = disposition;
+                }];
+            }
+        }
+        return current_disposition;
+     }];
 }
 
 - (void)addRequest:(__kindof JKBaseRequest *)request
@@ -215,16 +242,7 @@
         || request.requestTask.state == NSURLSessionTaskStateCompleted) {
         return;
     }
-    if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
-        JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
-        NSURLSessionDownloadTask *requestTask = (NSURLSessionDownloadTask *)request.requestTask;
-        [requestTask cancelByProducingResumeData:^(NSData *resumeData) {
-            NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:downloadRequest.absoluteString];
-            [resumeData writeToURL:tempFileUrl atomically:YES];
-        }];
-    } else {
-        [request.requestTask cancel];
-    }
+    [request.requestTask cancel];
     [self.lock lock];
     [self.requestDic removeObjectForKey:@(request.requestTask.taskIdentifier)];
     [self.lock unlock];
@@ -319,7 +337,7 @@
     
     AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
     if (request.requestType == JKRequestTypeDownload) {
-        return [self downloadTaskWithRequestSerializer:requestSerializer URLString:url parameters:param progress:request.progressBlock error:error];
+        return [self downloadTaskWithRequest:(JKBaseDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param progress:request.progressBlock error:error];
     } else if (request.requestType == JKRequestTypeUpload) {
         return [self uploadTaskWithRequestSerializer:requestSerializer URLString:url parameters:param data:request.uploadData progress:request.progressBlock formDataBlock:request.formDataBlock error:error];
     }
@@ -361,78 +379,86 @@
     return nil;
 }
 
-- (NSURLSessionDownloadTask *)downloadTaskWithRequestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                                                 URLString:(NSString *)URLString
-                                                parameters:(id)parameters
-                                                  progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
-                                                     error:(NSError * _Nullable __autoreleasing *)error {
+- (NSURLSessionDataTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)downloadRequest
+                                    requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                                                      URLString:(NSString *)URLString
+                                                     parameters:(id)parameters
+                                                       progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
+                                                          error:(NSError * _Nullable __autoreleasing *)error {
     // add parameters to URL;
     NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"GET" URLString:URLString parameters:parameters error:error];
-
     NSString *downloadTargetPath;
-    NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-    BOOL isDirectory;
-    if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
-       isDirectory = [[NSFileManager defaultManager] createDirectoryAtPath:downloadFolderPath withIntermediateDirectories:YES attributes:nil error:nil];
-    }
-    // If targetPath is a directory, use the file name we got from the urlRequest.
-    // Make sure downloadTargetPath is always a file, not directory.
-    if (isDirectory) {
-        NSString *fileName = [JKNetworkAgent MD5String:urlRequest.URL.absoluteString];
-        fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension]?:@"";
-        downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
-    } else {
-        return nil;
-    }
-
-    // AFN use `moveItemAtURL` to move downloaded file to target path,
-    // this method aborts the move attempt if a file already exist at the path.
-    // So we remove the exist file before we start the download task.
-    // https://github.com/AFNetworking/AFNetworking/issues/3775
-    if ([[NSFileManager defaultManager] fileExistsAtPath:downloadTargetPath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:downloadTargetPath error:nil];
-    }
-
-    NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:URLString];
-    NSString *tempFilePath = tempFileUrl.path;
-    BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
-    NSData *data = [NSData dataWithContentsOfURL:tempFileUrl];
-    BOOL resumeDataIsValid = [JKNetworkAgent validateResumeData:data];
-
-    BOOL canBeResumed = resumeDataFileExists && resumeDataIsValid;
-    BOOL resumeSucceeded = NO;
-    __block NSURLSessionDownloadTask *downloadTask = nil;
-    // Try to resume with resumeData.
-    // Even though we try to validate the resumeData, this may still fail and raise excecption.
-    if (canBeResumed) {
-        @try {
-            downloadTask = [self.sessionManager downloadTaskWithResumeData:data progress:downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-                return [NSURL fileURLWithPath:downloadTargetPath isDirectory:NO];
-            } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-                if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath]) {
-                    [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
-                }
-                [self handleRequestResult:downloadTask responseObject:filePath error:error];
-            }];
-            resumeSucceeded = YES;
-        } @catch (NSException *exception) {
-#if DEBUG
-  NSLog(@"Resume download failed, reason = %@", exception.reason);
-#endif
-            resumeSucceeded = NO;
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+        BOOL isDirectory;
+        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
+           isDirectory = [[NSFileManager defaultManager] createDirectoryAtPath:downloadFolderPath withIntermediateDirectories:YES attributes:nil error:nil];
         }
+       
+        if (isDirectory) {
+            NSString *fileName = [JKNetworkAgent MD5String:urlRequest.URL.absoluteString];
+            fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension]?:@"";
+            downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
+        } else {
+            return nil;
+        }
+        if ([[NSFileManager defaultManager] fileExistsAtPath:downloadTargetPath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:downloadTargetPath error:nil];
+        }
+
+        NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:URLString];
+        NSString *tempFilePath = tempFileUrl.path;
+#if DEBUG
+        NSLog(@"tempFilePath:%@",tempFilePath);
+        NSLog(@"downloadTargetPath:%@",downloadTargetPath);
+#endif
+        BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
+        NSData *resumeData = [NSData dataWithContentsOfURL:tempFileUrl];
+
+    BOOL canBeResumed = resumeDataFileExists && resumeData;
+    NSURLSessionDataTask *dataTask = nil;
+    [self.lock lock];
+    if (canBeResumed) {
+#if DEBUG
+        NSLog(@"AAA:*******************");
+#endif
+        NSString *rangeStr = [NSString stringWithFormat:@"bytes=%zd-", resumeData.length];
+        [urlRequest setValue:rangeStr forHTTPHeaderField:@"Range"];
+        dataTask = [self.sessionManager.session dataTaskWithRequest:urlRequest];
+    } else {
+#if DEBUG
+        NSLog(@"BBB:*******************");
+#endif
     }
-    if (!resumeSucceeded) {
-        downloadTask = [self.sessionManager downloadTaskWithRequest:urlRequest progress:downloadProgressBlock destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-            return [NSURL fileURLWithPath:downloadTargetPath isDirectory:NO];
-        } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-            if ([[NSFileManager defaultManager] fileExistsAtPath:tempFilePath]) {
-                [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
-            }
-            [self handleRequestResult:downloadTask responseObject:filePath error:error];
-        }];
+    dataTask = [self.sessionManager.session dataTaskWithRequest:urlRequest];
+
+    downloadRequest.requestTask = dataTask;
+    [self.lock unlock];
+    JKNetworkTaskDelegate *taskDelegate = [[JKNetworkTaskDelegate alloc] initWithRequest:downloadRequest];
+    taskDelegate.tempPath = tempFilePath;
+    taskDelegate.downloadTargetPath = downloadTargetPath;
+    taskDelegate.resumeDataLength = resumeData.length;
+    taskDelegate.downloadProgressBlock = ^(NSProgress * _Nonnull downloadProgress) {
+#if DEBUG
+        NSLog(@"progress:%@",downloadProgress);
+#endif
+        if (downloadProgressBlock) {
+            downloadProgressBlock(downloadProgress);
+        }
+    };
+    taskDelegate.completionHandler = ^(NSURLResponse *response, id responseObject, NSError *error) {
+        if (!error) {
+            [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:downloadTargetPath error:nil];
+        }
+        [self handleRequestResult:dataTask responseObject:response error:error];
+    };
+    if ([self.sessionManager respondsToSelector:@selector(setDelegate:forTask:)]) {
+        [self.sessionManager setDelegate:taskDelegate forTask:dataTask];
+    } else {
+#if DEBUG
+        NSAssert(NO, @"please check AFNetworking version!");
+#endif
     }
-    return downloadTask;
+    return dataTask;
 }
 
 - (NSURLSessionUploadTask *)uploadTaskWithRequestSerializer:(AFHTTPRequestSerializer *)requestSerializer
@@ -911,34 +937,14 @@
     return cacheFolder;
 }
 
-- (NSURL *)incompleteTmpFileURLForDownloadURLString:(NSString *)urlString
-{
+- (NSURL *)incompleteTmpFileURLForDownloadURLString:(NSString *)downloadPath {
     NSString *tempPath = nil;
-    NSString *md5URLStr = [JKNetworkAgent MD5String:urlString];
+    NSString *md5URLStr = [JKNetworkAgent MD5String:downloadPath];
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLStr];
     return [NSURL fileURLWithPath:tempPath];
 }
 
-+ (BOOL)validateResumeData:(NSData *)data {
-    // From http://stackoverflow.com/a/22137510/3562486
-    if (!data || [data length] < 1) return NO;
 
-    NSError *error;
-    NSDictionary *resumeDictionary = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
-    if (!resumeDictionary || error) return NO;
-
-    // Before iOS 9 & Mac OS X 10.11
-#if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED < 90000)\
-|| (defined(__MAC_OS_X_VERSION_MAX_ALLOWED) && __MAC_OS_X_VERSION_MAX_ALLOWED < 101100)
-    NSString *localFilePath = [resumeDictionary objectForKey:@"NSURLSessionResumeInfoLocalPath"];
-    if ([localFilePath length] < 1) return NO;
-    return [[NSFileManager defaultManager] fileExistsAtPath:localFilePath];
-#endif
-    // After iOS 9 we can not actually detects if the cache file exists. This plist file has a somehow
-    // complicated structue. Besides, the plist structure is different between iOS 9 and iOS 10.
-    // We can only assume that the plist being successfully parsed means the resume data is valid.
-    return YES;
-}
 
 #pragma mark - private -
 - (AFJSONResponseSerializer *)config_jsonResponseSerializer
