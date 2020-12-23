@@ -40,6 +40,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray <__kindof JKBaseRequest *>*)allRequests;
 
+/// app complete the background download task,handle the completeHandler.
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
+                                                                   completionHandler:(void (^)(void))completionHandler;
 
 @end
 NS_ASSUME_NONNULL_END

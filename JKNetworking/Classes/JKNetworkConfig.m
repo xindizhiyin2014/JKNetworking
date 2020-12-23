@@ -10,6 +10,8 @@
 @interface JKNetworkConfig()
 
 @property (nonatomic, strong, readwrite, nullable) id<JKRequestHelperProtocol> requestHelper;
+@property (nonatomic, copy, readwrite) NSString *incompleteCacheFolder;
+
 
 @end
 
@@ -32,8 +34,6 @@
     if (self) {
         _securityPolicy = [AFSecurityPolicy defaultPolicy];
         _sessionConfiguration = [NSURLSessionConfiguration defaultSessionConfiguration];
-        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        _downloadFolderPath = [documentPath stringByAppendingPathComponent:@"JKNetworking_download"];
         _mockModelTimeoutInterval = 300;
     }
     return self;
@@ -43,5 +43,42 @@
 {
     self.requestHelper = requestHelper;
 }
+#pragma mark - - getter - -
+- (NSString *)incompleteCacheFolder
+{
+    if (!_incompleteCacheFolder) {
+        NSString *cacheDir = NSTemporaryDirectory();
+        NSString *cacheFolder = [cacheDir stringByAppendingPathComponent:@"JKIncomplete"];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error = nil;
+        if(![fileManager createDirectoryAtPath:cacheFolder withIntermediateDirectories:YES attributes:nil error:&error]) {
+    #if DEBUG
+            NSLog(@"Failed to create cache directory at %@", cacheFolder);
+    #endif
+            return nil;
+        }
+        _incompleteCacheFolder = cacheFolder;
+    }
+    return _incompleteCacheFolder;
+}
+
+- (NSString *)downloadFolderPath
+{
+    if (!_downloadFolderPath) {
+        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+       NSString *downloadFolder = [documentPath stringByAppendingPathComponent:@"JKNetworking_download"];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSError *error = nil;
+        if(![fileManager createDirectoryAtPath:downloadFolder withIntermediateDirectories:YES attributes:nil error:&error]) {
+    #if DEBUG
+            NSLog(@"Failed to create download directory at %@", downloadFolder);
+    #endif
+            return nil;
+        }
+        _downloadFolderPath = downloadFolder;
+    }
+    return _downloadFolderPath;
+}
+
 
 @end

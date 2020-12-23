@@ -50,6 +50,15 @@ typedef NS_ENUM(NSInteger,JKNetworkErrorType) {
   JKNetworkErrorInvalidJSONFormat,
 };
 
+typedef NS_ENUM(NSInteger,JKDownloadBackgroundPolicy) {
+ // if the download task not complete, it will apply to some minutes to download
+  JKDownloadBackgroundDefault = 0,
+  // if the download task not complete,it forbidden to download at background
+  JKDownloadBackgroundForbidden,
+  // if the download task not complete,it apply download at background until complete
+  JKDownloadBackgroundRequire,
+};
+
 static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @protocol JKRequestAccessoryProtocol <NSObject>
@@ -205,6 +214,10 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, copy, readonly) NSString *absoluteString;
 /// the filePath of the downloaded file
 @property (nonatomic, copy, readonly) NSString *downloadedFilePath;
+/// the temp filepath of the download file
+@property (nonatomic, copy, readonly) NSString *tempFilePath;
+/// the background policy of the downloadRequest
+@property (nonatomic, assign) JKDownloadBackgroundPolicy backgroundPolicy;
 
 + (instancetype)new NS_UNAVAILABLE;
 

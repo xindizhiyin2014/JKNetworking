@@ -88,6 +88,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// the folder filePath of the download file,the defalut is under doment /JKNetworking_download
 @property (nonatomic, copy, nonnull) NSString *downloadFolderPath;
 
+/// the uncompleted folder of the download requests
+@property (nonatomic, copy, readonly) NSString *incompleteCacheFolder;
+
 @property (nonatomic, strong, readonly, nullable) id<JKRequestHelperProtocol> requestHelper;
 
 - (void)configRequestHelper:(id<JKRequestHelperProtocol>)requestHelper;

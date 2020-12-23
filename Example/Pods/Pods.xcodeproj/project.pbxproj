@@ -202,6 +202,8 @@
 		BC947B8BE47D3AD0B2D25F8A779E73C2 /* KWUserDefinedMatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 02953ADE1782722711A1D00A9D11E8BE /* KWUserDefinedMatcher.m */; };
 		BD26602C257A5A5500F7929D /* JKNetworkTaskDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = BD26602A257A5A5500F7929D /* JKNetworkTaskDelegate.h */; };
 		BD26602D257A5A5500F7929D /* JKNetworkTaskDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD26602B257A5A5500F7929D /* JKNetworkTaskDelegate.m */; };
+		BD5539D92593481B002F5BAC /* JKBackgroundSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = BD5539D72593481B002F5BAC /* JKBackgroundSessionManager.h */; };
+		BD5539DA2593481B002F5BAC /* JKBackgroundSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BD5539D82593481B002F5BAC /* JKBackgroundSessionManager.m */; };
 		BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5902C517EABED6F18B2D560BAA121D01 /* JKNetworkConfig.m */; };
 		BE678BBFEF6576AF4BB72AF2C4FB673B /* KWLetNode.m in Sources */ = {isa = PBXBuildFile; fileRef = B315FF5F52821271C4522D8C4F58E61F /* KWLetNode.m */; };
 		BEBC2EBDFF85C2F9F172A66EF85E9A2F /* Pods-JKNetworking_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 08172BF092048B76C3A3F7343CA988BB /* Pods-JKNetworking_Example-dummy.m */; };
@@ -554,6 +556,8 @@
 		B9F44C7C4B924D23E5768D5D86381AB4 /* WKWebView+AFNetworking.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "WKWebView+AFNetworking.h"; path = "UIKit+AFNetworking/WKWebView+AFNetworking.h"; sourceTree = "<group>"; };
 		BD26602A257A5A5500F7929D /* JKNetworkTaskDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JKNetworkTaskDelegate.h; path = JKNetworking/Classes/JKNetworkTaskDelegate.h; sourceTree = "<group>"; };
 		BD26602B257A5A5500F7929D /* JKNetworkTaskDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = JKNetworkTaskDelegate.m; path = JKNetworking/Classes/JKNetworkTaskDelegate.m; sourceTree = "<group>"; };
+		BD5539D72593481B002F5BAC /* JKBackgroundSessionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JKBackgroundSessionManager.h; path = JKNetworking/Classes/JKBackgroundSessionManager.h; sourceTree = "<group>"; };
+		BD5539D82593481B002F5BAC /* JKBackgroundSessionManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = JKBackgroundSessionManager.m; path = JKNetworking/Classes/JKBackgroundSessionManager.m; sourceTree = "<group>"; };
 		BE431806EA4ED36693C6C355C3E8265E /* KWMatcherFactory.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = KWMatcherFactory.h; path = Classes/Core/KWMatcherFactory.h; sourceTree = "<group>"; };
 		C0BD25AFD56DCA0368FC7C852DD194F1 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		C37F377673FFDAD5A9DA645D1B74AFAE /* KWPendingNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = KWPendingNode.m; path = Classes/Nodes/KWPendingNode.m; sourceTree = "<group>"; };
@@ -932,6 +936,8 @@
 		2BF3650B054A2CB5127C9A924C8D0B84 /* JKNetworking_ */ = {
 			isa = PBXGroup;
 			children = (
+				BD5539D72593481B002F5BAC /* JKBackgroundSessionManager.h */,
+				BD5539D82593481B002F5BAC /* JKBackgroundSessionManager.m */,
 				01A07D97EACB351110DC4045B4948DDC /* JKBaseRequest.h */,
 				DB14F9CB375DE4882393659C549F8492 /* JKBaseRequest.m */,
 				050107EDF7C5A8BB394E858ED7E6551B /* JKGroupRequest.h */,
@@ -1205,6 +1211,7 @@
 				0E5A5B2E594DEF57980F8F0FCF9F33CE /* JKGroupRequest.h in Headers */,
 				D7F95FA41B9BDFB07FF37D5279252D2D /* JKMockManager.h in Headers */,
 				D94636654621FFB16E62836EF0DBCA6F /* JKNetworkAgent.h in Headers */,
+				BD5539D92593481B002F5BAC /* JKBackgroundSessionManager.h in Headers */,
 				73DC578AAAC496188754AF97022ADF3B /* JKNetworkConfig.h in Headers */,
 				8CE5D8E338DC9BB824B1293ED84C19BD /* JKNetworking.h in Headers */,
 				64B2496460D80C4A6E372EB9CD29FB96 /* JKNetworking_-umbrella.h in Headers */,
@@ -1667,6 +1674,7 @@
 				80EA601987A70C9AD03D2B445C2FCD5C /* JKBaseRequest.m in Sources */,
 				8C5682303E7D55EBFB88A86DD0E5559D /* JKGroupRequest.m in Sources */,
 				BD26602D257A5A5500F7929D /* JKNetworkTaskDelegate.m in Sources */,
+				BD5539DA2593481B002F5BAC /* JKBackgroundSessionManager.m in Sources */,
 				CCECBBA6F32AC866A9918B54886997A2 /* JKMockManager.m in Sources */,
 				0A2D3898B82BD6987E2FFACCCE70682F /* JKNetworkAgent.m in Sources */,
 				BD72B2EA945871812924134F8B42E5A7 /* JKNetworkConfig.m in Sources */,

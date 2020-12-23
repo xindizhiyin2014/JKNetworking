@@ -14,14 +14,9 @@
 #import <JKDataHelper/JKDataHelper.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
-#import "JKNetworkTaskDelegate.h"
 #import "JKNetworkingMacro.h"
+#import "JKBackgroundSessionManager.h"
 
-@interface AFURLSessionManager (VVNetworkAgent)
-- (void)setDelegate:(JKNetworkTaskDelegate *)delegate
-            forTask:(NSURLSessionTask *)task;
-- (JKNetworkTaskDelegate *)delegateForTask:(NSURLSessionTask *)task;
-@end
 
 @interface JKBaseRequest(JKNetworkAgent)
 
@@ -86,7 +81,8 @@
 {
     dispatch_queue_t _processingQueue;
 }
-@property (nonatomic, strong) NSMutableDictionary <NSNumber *,__kindof JKBaseRequest *>*requestDic;
+//@property (nonatomic, strong) NSMutableDictionary <NSNumber *, __kindof JKBaseRequest *>*requestDic;
+@property (nonatomic, strong) NSMutableArray <__kindof JKBaseRequest *>*allStartedRequests;
 @property (nonatomic, strong) NSLock *lock;
 @property (nonatomic, strong) AFHTTPSessionManager *sessionManager;
 @property (nonatomic, strong) AFJSONResponseSerializer *jsonResponseSerializer;
@@ -107,6 +103,9 @@
 /// the requests need after it fininsed,if the priority first request is not nil,
 @property (nonatomic, strong, nonnull) NSMutableArray *bufferRequests;
 
+@property (nonatomic, strong,nonnull) JKBackgroundSessionManager *backgroundSessionMananger;
+
+
 @end
 
 
@@ -126,7 +125,7 @@
 {
     self = [super init];
     if (self) {
-        _requestDic = [NSMutableDictionary dictionary];
+        _allStartedRequests = [NSMutableArray new];
         _batchRequests = [NSMutableArray new];
         _chainRequests = [NSMutableArray new];
         _bufferRequests = [NSMutableArray new];
@@ -140,27 +139,9 @@
         _sessionManager.responseSerializer.acceptableStatusCodes = _allStatusCodes;
         _jsonResponseSerializer = [self config_jsonResponseSerializer];
         _xmlParserResponseSerialzier = [self config_xmlParserResponseSerialzier];
-        [self configSessionManagerBlock];
+        _backgroundSessionMananger = [JKBackgroundSessionManager new];
     }
     return self;
-}
-
-- (void)configSessionManagerBlock
-{
-    @weakify(self);
-    [_sessionManager setDataTaskDidReceiveResponseBlock:^NSURLSessionResponseDisposition(NSURLSession * _Nonnull session, NSURLSessionDataTask * _Nonnull dataTask, NSURLResponse * _Nonnull response) {
-        @strongify(self);
-        __block NSURLSessionResponseDisposition current_disposition = NSURLSessionResponseCancel;
-        if ([self->_sessionManager respondsToSelector:@selector(delegateForTask:)]) {
-            NSObject<NSURLSessionTaskDelegate,NSURLSessionDataDelegate,NSURLSessionDownloadDelegate> *delegate = [self->_sessionManager delegateForTask:dataTask];
-            if ([delegate respondsToSelector:@selector(URLSession:dataTask:didReceiveResponse:completionHandler:)]) {
-                [delegate URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:^(NSURLSessionResponseDisposition disposition) {
-                    current_disposition = disposition;
-                }];
-            }
-        }
-        return current_disposition;
-     }];
 }
 
 - (void)addRequest:(__kindof JKBaseRequest *)request
@@ -212,7 +193,7 @@
     }
     [self.lock lock];
     if (request) {
-        [self.requestDic addEntriesFromDictionary:@{@(request.requestTask.taskIdentifier):request}];
+        [self.allStartedRequests addObject:request];
     }
     
     [self.lock unlock];
@@ -234,8 +215,8 @@
     #endif
             return;
     }
-    JKBaseRequest *tmpRequest = self.requestDic[@(request.requestTask.taskIdentifier)];
-    if (!tmpRequest) {
+    if (![self.allStartedRequests containsObject:request]) {
+        [request clearCompletionBlock];
         return;
     }
     if (request.isCancelled
@@ -244,7 +225,7 @@
     }
     [request.requestTask cancel];
     [self.lock lock];
-    [self.requestDic removeObjectForKey:@(request.requestTask.taskIdentifier)];
+    [self.allStartedRequests removeObject:request];
     [self.lock unlock];
     
     [request clearCompletionBlock];
@@ -268,33 +249,21 @@
     [self.lock lock];
     [self.batchRequests removeAllObjects];
     [self.chainRequests removeAllObjects];
-    [self.lock unlock];
-    
-    NSArray *allKeys = nil;
-    [self.lock lock];
     [self.bufferRequests removeAllObjects];
-    allKeys = [self.requestDic allKeys];
     [self.lock unlock];
     
-    if (allKeys && allKeys.count > 0) {
-        JKBaseRequest *reuqest = nil;
-        NSArray *copiedKeys = [allKeys copy];
-        for (NSNumber *key in copiedKeys) {
-            [self.lock lock];
-            reuqest = self.requestDic[key];
-            [self.lock unlock];
-            
-            if (reuqest) {
-                [reuqest stop];
-            }
-        }
+    [self.lock lock];
+    NSArray *allStartedRequests = [self.allStartedRequests copy];
+    [self.lock unlock];
+    
+    for (__kindof JKBaseRequest *request in allStartedRequests) {
+        [request stop];
     }
 }
 
+
 - (NSURLSessionTask *)sessionTaskForRequest:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
-    
-    JKRequestMethod method = [request requestMethod];
     NSString *url = nil;
     id param = nil;
     if (request.useSignature) {
@@ -311,9 +280,8 @@
                 signatureError = *error;
                 return nil;
             }
-            
         }
-    }else {
+    } else {
         url = [self buildRequestUrl:request];
         param = request.requestArgument;
     }
@@ -329,7 +297,7 @@
             if (port) {
                 domain = [NSString stringWithFormat:@"%@://%@:%@",scheme,host,port];
             } else {
-               domain = [NSString stringWithFormat:@"%@://%@",scheme,host];
+                domain = [NSString stringWithFormat:@"%@://%@",scheme,host];
             }
            url = [url stringByReplacingOccurrencesOfString:domain withString:[JKNetworkConfig sharedConfig].mockBaseUrl];
         }
@@ -339,188 +307,129 @@
     if (request.requestType == JKRequestTypeDownload) {
         return [self downloadTaskWithRequest:(JKBaseDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param progress:request.progressBlock error:error];
     } else if (request.requestType == JKRequestTypeUpload) {
-        return [self uploadTaskWithRequestSerializer:requestSerializer URLString:url parameters:param data:request.uploadData progress:request.progressBlock formDataBlock:request.formDataBlock error:error];
+        return [self uploadTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param data:request.uploadData progress:request.progressBlock formDataBlock:request.formDataBlock error:error];
     }
-    
-    switch (method) {
-        case JKRequestMethodGET:
-        {
-            return [self dataTaskWithHTTPMethod:@"GET" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        case JKRequestMethodPOST:
-        {
-            return [self dataTaskWithHTTPMethod:@"POST" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        case JKRequestMethodHEAD:
-        {
-            return [self dataTaskWithHTTPMethod:@"HEAD" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        case JKRequestMethodPUT:
-        {
-            return [self dataTaskWithHTTPMethod:@"PUT" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        case JKRequestMethodDELETE:
-        {
-           return [self dataTaskWithHTTPMethod:@"DELETE" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        case JKRequestMethodPATCH:
-        {
-           return [self dataTaskWithHTTPMethod:@"PATCH" requestSerializer:requestSerializer URLString:url parameters:param error:error];
-        }
-            break;
-        default:
-            break;
-    }
-    return nil;
+    return [self dataTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
 }
 
-- (NSURLSessionDataTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)downloadRequest
+
+- (NSURLSessionTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)downloadRequest
                                     requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                                       URLString:(NSString *)URLString
                                                      parameters:(id)parameters
                                                        progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
                                                           error:(NSError * _Nullable __autoreleasing *)error {
-    // add parameters to URL;
-    NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"GET" URLString:URLString parameters:parameters error:error];
-    NSString *downloadTargetPath;
-        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-        BOOL isDirectory;
-        if(![[NSFileManager defaultManager] fileExistsAtPath:downloadFolderPath isDirectory:&isDirectory]) {
-           isDirectory = [[NSFileManager defaultManager] createDirectoryAtPath:downloadFolderPath withIntermediateDirectories:YES attributes:nil error:nil];
-        }
-       
-        if (isDirectory) {
-            NSString *fileName = [JKNetworkAgent MD5String:urlRequest.URL.absoluteString];
-            fileName = [fileName stringByAppendingPathExtension:urlRequest.URL.pathExtension]?:@"";
-            downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
-        } else {
-            return nil;
-        }
-        if ([[NSFileManager defaultManager] fileExistsAtPath:downloadTargetPath]) {
-            [[NSFileManager defaultManager] removeItemAtPath:downloadTargetPath error:nil];
-        }
-
-        NSURL *tempFileUrl = [self incompleteTmpFileURLForDownloadURLString:URLString];
-        NSString *tempFilePath = tempFileUrl.path;
-#if DEBUG
-        NSLog(@"tempFilePath:%@",tempFilePath);
-        NSLog(@"downloadTargetPath:%@",downloadTargetPath);
-#endif
-        BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
-        NSData *resumeData = [NSData dataWithContentsOfURL:tempFileUrl];
-
-    BOOL canBeResumed = resumeDataFileExists && resumeData;
-    NSURLSessionDataTask *dataTask = nil;
-    [self.lock lock];
-    if (canBeResumed) {
-#if DEBUG
-        NSLog(@"AAA:*******************");
-#endif
-        NSString *rangeStr = [NSString stringWithFormat:@"bytes=%zd-", resumeData.length];
-        [urlRequest setValue:rangeStr forHTTPHeaderField:@"Range"];
-        dataTask = [self.sessionManager.session dataTaskWithRequest:urlRequest];
-    } else {
-#if DEBUG
-        NSLog(@"BBB:*******************");
-#endif
-    }
-    dataTask = [self.sessionManager.session dataTaskWithRequest:urlRequest];
-
-    downloadRequest.requestTask = dataTask;
-    [self.lock unlock];
-    JKNetworkTaskDelegate *taskDelegate = [[JKNetworkTaskDelegate alloc] initWithRequest:downloadRequest];
-    taskDelegate.tempPath = tempFilePath;
-    taskDelegate.downloadTargetPath = downloadTargetPath;
-    taskDelegate.resumeDataLength = resumeData.length;
-    taskDelegate.downloadProgressBlock = ^(NSProgress * _Nonnull downloadProgress) {
-#if DEBUG
-        NSLog(@"progress:%@",downloadProgress);
-#endif
-        if (downloadProgressBlock) {
-            downloadProgressBlock(downloadProgress);
-        }
-    };
-    taskDelegate.completionHandler = ^(NSURLResponse *response, id responseObject, NSError *error) {
-        if (!error) {
-            [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:downloadTargetPath error:nil];
-        }
-        [self handleRequestResult:dataTask responseObject:response error:error];
-    };
-    if ([self.sessionManager respondsToSelector:@selector(setDelegate:forTask:)]) {
-        [self.sessionManager setDelegate:taskDelegate forTask:dataTask];
-    } else {
-#if DEBUG
-        NSAssert(NO, @"please check AFNetworking version!");
-#endif
-    }
+   __block NSURLSessionTask *dataTask = [self.backgroundSessionMananger dataTaskWithDownloadRequest:downloadRequest requestSerializer:requestSerializer URLString:URLString parameters:parameters progress:downloadProgressBlock completionHandler:^(NSURLResponse * _Nonnull response, NSError * _Nullable error) {
+        [self handleResultWithRequest:downloadRequest error:error];
+    } error:error];
     return dataTask;
 }
 
-- (NSURLSessionUploadTask *)uploadTaskWithRequestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                                                    URLString:(NSString *)URLString
-                                                   parameters:(id)parameters
-                                                         data:(NSData *)data
-                                                     progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
-                                                formDataBlock:(nullable void (^)(id <AFMultipartFormData> formData))formDataBlock
-                                                        error:(NSError * _Nullable __autoreleasing *)error
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)uploadRequest
+                                requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                                        URLString:(NSString *)URLString
+                                       parameters:(id)parameters
+                                             data:(NSData *)data
+                                         progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
+                                    formDataBlock:(nullable void (^)(id <AFMultipartFormData> formData))formDataBlock
+                                            error:(NSError * _Nullable __autoreleasing *)error
 {
-
- NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:formDataBlock error:error];
+    NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:formDataBlock error:error];
     __block NSURLSessionUploadTask *uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromData:data progress:^(NSProgress * _Nonnull uploadProgress) {
         if (uploadProgressBlock) {
             uploadProgressBlock(uploadProgress);
         }
     } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        [self handleRequestResult:uploadTask responseObject:responseObject error:error];
+        uploadRequest.responseObject = responseObject;
+        [self handleResultWithRequest:uploadRequest error:error];
     }];
+    uploadRequest.requestTask = uploadTask;
     return uploadTask;
 }
 
-- (void)handleRequestResult:(NSURLSessionTask *)task responseObject:(id)responseObject error:(NSError *)error
+- (NSURLSessionDataTask *)dataTaskWithRequest:(__kindof JKBaseRequest *)request
+                            requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                                    URLString:(NSString *)URLString
+                                   parameters:(id)parameters
+                                        error:(NSError * _Nullable __autoreleasing *)error
 {
-    JKBaseRequest *request = nil;
-    [self.lock lock];
-    request = self.requestDic[@(task.taskIdentifier)];
-    [self.lock unlock];
-    
+    NSString *method = nil;
+    switch (request.requestMethod) {
+        case JKRequestMethodGET:
+        {
+            method = @"GET";
+        }
+            break;
+        case JKRequestMethodPOST:
+        {
+            method = @"POST";
+        }
+            break;
+        case JKRequestMethodHEAD:
+        {
+            method = @"HEAD";
+        }
+            break;
+        case JKRequestMethodPUT:
+        {
+            method = @"PUT";
+        }
+            break;
+        case JKRequestMethodDELETE:
+        {
+            method = @"DELETE";
+        }
+            break;
+        case JKRequestMethodPATCH:
+        {
+            method = @"PATCH";
+        }
+            break;
+        default:
+            break;
+    }
+    NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:error];
+    __block NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:urlRequest uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        request.responseObject = responseObject;
+        [self handleResultWithRequest:request error:error];
+    }];
+    return dataTask;
+}
+
+- (void)handleResultWithRequest:(__kindof JKBaseRequest *)request error:(NSError *)error
+{
     if (!request) {
         return;
     }
-    
     NSError *__autoreleasing serializationError = nil;
     NSError *__autoreleasing validationError = nil;
     NSError *requestError = nil;
     BOOL succeed = NO;
     
     if (request.requestType != JKRequestTypeDownload) {
-        request.responseObject = responseObject;
-            NSData *responseData = nil;
-            if ([request.responseObject isKindOfClass:[NSData class]]) {
-                responseData = (NSData *)responseObject;
+        NSData *responseData = nil;
+        if ([request.responseObject isKindOfClass:[NSData class]]) {
+            responseData = (NSData *)request.responseObject;
+        }
+        switch (request.responseSerializerType) {
+            case JKResponseSerializerTypeHTTP:
+    //            defalut serializer. do nothing
+                break;
+                
+            case JKResponseSerializerTypeJSON: {
+                request.responseObject = [self.jsonResponseSerializer responseObjectForResponse:request.requestTask.response data:responseData error:&serializationError];
+                request.responseJSONObject = request.responseObject;
             }
-            switch (request.responseSerializerType) {
-                case JKResponseSerializerTypeHTTP:
-        //            defalut serializer. do nothing
-                    break;
-                    case JKResponseSerializerTypeJSON:
-                {
-                    request.responseObject = [self.jsonResponseSerializer responseObjectForResponse:task.response data:responseData error:&serializationError];
-                    request.responseJSONObject = request.responseObject;
-                }
-                    break;
-                    case JKResponseSerializerTypeXMLParser:
-                {
-                    request.responseObject = [self.xmlParserResponseSerialzier responseObjectForResponse:task.response data:responseData error:&serializationError];
-                }
-                    break;
-                default:
-                    break;
+                break;
+            
+            case JKResponseSerializerTypeXMLParser: {
+                request.responseObject = [self.xmlParserResponseSerialzier responseObjectForResponse:request.requestTask.response data:responseData error:&serializationError];
             }
+                break;
+                
+            default:
+                break;
+        }
     }
     
     if (error) {
@@ -530,28 +439,26 @@
         succeed = NO;
         requestError = serializationError;
     } else {
-        if (request.responseSerializerType == JKResponseSerializerTypeJSON
-            || request.responseSerializerType == JKResponseSerializerTypeHTTP) {
+        if (request.responseSerializerType == JKResponseSerializerTypeHTTP
+            || request.responseSerializerType == JKResponseSerializerTypeJSON) {
             succeed = [self validateResult:request error:&validationError];
             requestError = validationError;
         }
     }
-    
+
     if (succeed) {
         [self requestDidSucceedWithRequest:request];
     } else {
         [self requestDidFailWithRequest:request error:requestError];
     }
-    
     if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(afterEachRequest:)]) {
         [[JKNetworkConfig sharedConfig].requestHelper afterEachRequest:request];
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.lock lock];
-        [self.requestDic removeObjectForKey:@(task.taskIdentifier)];
+        [self.allStartedRequests removeObject:request];
         [self.lock unlock];
-        
         [request clearCompletionBlock];
     });
 }
@@ -814,7 +721,7 @@
         return;
     }
     
-    if (self.requestDic.count > 0) {
+    if (self.allStartedRequests.count > 0) {
 #if DEBUG
        NSAssert(NO, @"addPriorityFirstRequest func must use before any request started");
 #endif
@@ -827,13 +734,13 @@
 {
     [self.lock lock];
     NSMutableSet *requestSet = [NSMutableSet new];
-    NSArray *array1 = [self.requestDic allValues];
+    NSArray *array1 = [self.allStartedRequests copy];
     [requestSet addObjectsFromArray:array1];
     for (__kindof JKBatchRequest *request in self.batchRequests) {
         NSArray *tmpArray = request.requestArray;
         [requestSet addObjectsFromArray:tmpArray];
     }
-    
+
     for (__kindof JKChainRequest *request in self.chainRequests) {
         NSArray *tmpArray = request.requestArray;
         [requestSet addObjectsFromArray:tmpArray];
@@ -853,6 +760,14 @@
     }
     [self.lock unlock];
     return [requestSet allObjects];
+}
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
+                                                                   completionHandler:(void (^)(void))completionHandler
+{
+    if ([self.backgroundSessionMananger.backgroundTaskIdentifier isEqualToString:identifier]) {
+        self.backgroundSessionMananger.completionHandler = completionHandler;
+    }
 }
 
 - (void)judgeToStartBufferRequestsWithRequest:(id)request
@@ -894,28 +809,6 @@
         }
     }
     return requestSerializer;
-}
-
-- (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
-                               requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                                       URLString:(NSString *)URLString
-                                      parameters:(id)parameters
-                                           error:(NSError * _Nullable __autoreleasing *)error {
-    return [self dataTaskWithHTTPMethod:method requestSerializer:requestSerializer URLString:URLString parameters:parameters constructingBodyWithBlock:nil error:error];
-}
-
-- (NSURLSessionDataTask *)dataTaskWithHTTPMethod:(NSString *)method
-                               requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                                       URLString:(NSString *)URLString
-                                      parameters:(id)parameters
-                       constructingBodyWithBlock:(nullable void (^)(id <AFMultipartFormData> formData))block
-                                           error:(NSError * _Nullable __autoreleasing *)error {
-    NSMutableURLRequest *request = [requestSerializer requestWithMethod:method URLString:URLString parameters:parameters error:error];
-    __block NSURLSessionDataTask *dataTask = nil;
-    dataTask = [self.sessionManager dataTaskWithRequest:request uploadProgress:nil downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        [self handleRequestResult:dataTask responseObject:responseObject error:error];
-    }];
-    return dataTask;
 }
 
 - (NSString *)incompleteDownloadTempCacheFolder {

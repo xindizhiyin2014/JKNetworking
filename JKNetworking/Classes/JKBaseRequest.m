@@ -294,6 +294,9 @@
 
 /// the filePath of the downloaded file
 @property (nonatomic, copy, readwrite) NSString *downloadedFilePath;
+
+@property (nonatomic, copy, readwrite) NSString *tempFilePath;
+
 @end
 
 @implementation JKBaseDownloadRequest
@@ -307,7 +310,6 @@
         NSAssert(url, @"url can't be nil");
 #endif
         request.absoluteString = url;
-        request.downloadedFilePath = [self downloadFilePathWithUrlString:url];
     }
     return request;
 }
@@ -337,7 +339,7 @@
 }
 
 
-+ (NSString *)MD5String:(NSString *)string
+- (NSString *)MD5String:(NSString *)string
 {
    if (!jk_safeStr(string)) {
         return nil;
@@ -354,18 +356,32 @@
     return  output?:@"";
 }
 
-+ (NSString *)downloadFilePathWithUrlString:(NSString *)urlString
+#pragma mark - - getter - -
+- (NSString *)downloadedFilePath
 {
-    if (!jk_safeStr(urlString)) {
-        return nil;
+    if (!_downloadedFilePath) {
+        if (!jk_safeStr(self.absoluteString)) {
+            return nil;
+        }
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+        NSString *fileName = [self MD5String:self.absoluteString];
+        fileName = [fileName stringByAppendingPathExtension:[self.absoluteString pathExtension]]?:@"";
+        _downloadedFilePath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
     }
-
-   NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-    NSString *fileName = [JKBaseDownloadRequest MD5String:urlString];
-   fileName = [fileName stringByAppendingPathExtension:[urlString pathExtension]]?:@"";
-   NSString *downloadTargetPath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
-    return downloadTargetPath;
+    return _downloadedFilePath;
 }
 
+- (NSString *)tempFilePath
+{
+    if (!_tempFilePath) {
+        if (!jk_safeStr(self.absoluteString)) {
+            return nil;
+        }
+        NSString *str = [NSString stringWithFormat:@"backgroundPolicy_%@_%@",@(self.backgroundPolicy),self.absoluteString];
+        NSString *md5URLStr = [self MD5String:str];
+        _tempFilePath = [[JKNetworkConfig sharedConfig].incompleteCacheFolder stringByAppendingPathComponent:md5URLStr];
+    }
+    return _tempFilePath;
+}
 
 @end

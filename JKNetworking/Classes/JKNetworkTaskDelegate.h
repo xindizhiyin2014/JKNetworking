@@ -6,25 +6,35 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "JKBaseRequest.h"
 NS_ASSUME_NONNULL_BEGIN
+@interface JKNetworkBaseDownloadTaskDelegate : NSObject
+@property (nonatomic, weak, readonly) __kindof JKBaseDownloadRequest *request;
+@property (nonatomic, copy) void(^downloadProgressBlock)(NSProgress *downloadProgress);
+@property (nonatomic, copy) void(^completionHandler)(NSURLResponse *response, NSError *error);
 
-@class JKBaseRequest;
-@interface JKNetworkTaskDelegate : NSObject
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithRequest:(__kindof JKBaseDownloadRequest *)request;
+
+- (void)URLSession:(NSURLSession *)session task:(__kindof NSURLSessionTask *)task
+                      didBecomeInvalidWithError:(NSError *)error;
+
+@end
+
+@interface JKNetworkDownloadTaskDelegate : JKNetworkBaseDownloadTaskDelegate
 <
-NSURLSessionTaskDelegate,
-NSURLSessionDataDelegate,
-NSURLSessionDownloadDelegate
+NSURLSessionDataDelegate
 >
 
-@property (nonatomic, copy) NSString *downloadTargetPath;
-@property (nonatomic, copy) NSString *tempPath;
-@property (nonatomic, assign) int64_t resumeDataLength;
-@property (nonatomic, copy) void(^uploadProgressBlock)(NSProgress *uploadProgress);
-@property (nonatomic, copy) void(^downloadProgressBlock)(NSProgress *downloadProgress);
-@property (nonatomic, copy) void(^completionHandler)(NSURLResponse *response, id responseObject, NSError *error);
-@property (nonatomic, copy) NSURL * (^downloadTaskDidFinishDownloading)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location);
-- (instancetype)initWithRequest:(__kindof JKBaseRequest *)request;
+@end
+
+
+@interface JKNetworkBackgroundDownloadTaskDelegate : JKNetworkBaseDownloadTaskDelegate
+<
+NSURLSessionDownloadDelegate
+>
 
 @end
 
