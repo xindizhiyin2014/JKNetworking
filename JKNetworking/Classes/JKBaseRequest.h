@@ -190,7 +190,9 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @interface JKBaseUploadRequest : JKBaseRequest
 /// the data need to upload
-@property (nonatomic, strong) NSData *uploadData;
+@property (nonatomic, strong, readonly, nullable) NSData *uploadData;
+/// the filepath need to upload
+@property (nonatomic, copy, readonly, nullable) NSString *uploadFilePath;
 
 + (instancetype)new NS_UNAVAILABLE;
 
@@ -198,14 +200,23 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 + (instancetype)initWitData:(nonnull NSData *)data;
 
++ (instancetype)initWithFilePath:(nonnull NSString *)filePath;
+
 /// upload data
 /// @param uploadProgressBlock uploadProgressBlock
 /// @param successBlock successBlock
 /// @param failureBlock failureBlock
-- (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-             formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                   success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                   failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+- (void)uploadDataWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+                 formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                       success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                       failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+/// upload file
+/// @param uploadProgressBlock uploadProgressBlock
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)uploadFileWithProgress:(void (^)(NSProgress * _Nonnull))uploadProgressBlock
+                       success:(void (^)(__kindof JKBaseRequest * _Nonnull))successBlock
+                       failure:(void (^)(__kindof JKBaseRequest * _Nonnull))failureBlock;
 @end
 
 @interface JKBaseDownloadRequest :JKBaseRequest

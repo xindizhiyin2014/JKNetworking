@@ -33,8 +33,6 @@
 @property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
 /// is a default/download/upload request
 @property (nonatomic, assign) JKRequestType requestType;
-/// the data need to upload
-@property (nonatomic, strong) NSData *uploadData;
 /// when upload data cofig the formData
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
 /// the request success block
@@ -245,20 +243,42 @@
 @end
 
 @interface JKBaseUploadRequest()
-
+/// the data need to upload
+@property (nonatomic, strong, readwrite, nullable) NSData *uploadData;
+/// the filepath need to upload
+@property (nonatomic, copy, readwrite, nullable) NSString *uploadFilePath;
 @end
 
 @implementation JKBaseUploadRequest
-@dynamic uploadData;
 
 + (instancetype)initWitData:(nonnull NSData *)data
 {
+    if (!data) {
+#if DEBUG
+    NSAssert(data, @"data can't be nil");
+#endif
+        return nil;
+    }
     JKBaseUploadRequest *request = [[self alloc] init];
     if (request) {
-#if DEBUG
-        NSAssert(data, @"data can't be nil");
-#endif
         request.uploadData = data;
+    }
+    return request;
+}
+
++ (instancetype)initWithFilePath:(NSString *)filePath
+{
+    if (!filePath
+        || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+#if DEBUG
+        NSAssert(filePath, @"filePath can't be nil");
+        NSAssert([[NSFileManager defaultManager] fileExistsAtPath:filePath], @"the file at the filePath is not exist");
+#endif
+        return nil;
+    }
+    JKBaseUploadRequest *request = [[self alloc] init];
+    if (request) {
+        request.uploadFilePath = filePath;
     }
     return request;
 }
@@ -272,15 +292,37 @@
     return self;
 }
 
-- (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-             formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                   success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                   failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+- (void)uploadDataWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+                 formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                       success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                       failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
+    if (!self.uploadData) {
+#if DEBUG
+        NSAssert(NO, @"self.uploadData can't be nil");
+#endif
+        return;
+    }
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
     self.progressBlock = uploadProgressBlock;
     self.formDataBlock = formDataBlock;
+    [[JKNetworkAgent sharedAgent] addRequest:self];
+}
+
+- (void)uploadFileWithProgress:(void (^)(NSProgress * _Nonnull))uploadProgressBlock
+                       success:(void (^)(__kindof JKBaseRequest * _Nonnull))successBlock
+                       failure:(void (^)(__kindof JKBaseRequest * _Nonnull))failureBlock
+{
+    if (!self.uploadFilePath) {
+#if DEBUG
+        NSAssert(NO, @"self.uploadFilePath can't be nil");
+#endif
+        return;
+    }
+    self.progressBlock = uploadProgressBlock;
+    self.successBlock = successBlock;
+    self.failureBlock = failureBlock;
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
 

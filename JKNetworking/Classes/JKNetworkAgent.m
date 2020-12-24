@@ -33,8 +33,6 @@
 
 /// is a default/download/upload request
 @property (nonatomic, assign) JKRequestType requestType;
-/// the data need to upload
-@property (nonatomic, strong) NSData *uploadData;
 /// when upload data cofig the formData
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
 /// the url has signatured
@@ -57,7 +55,6 @@
 @dynamic successBlock;
 @dynamic failureBlock;
 @dynamic requestType;
-@dynamic uploadData;
 @dynamic formDataBlock;
 @dynamic signaturedUrl;
 @dynamic signaturedParams;
@@ -305,47 +302,51 @@
     
     AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
     if (request.requestType == JKRequestTypeDownload) {
-        return [self downloadTaskWithRequest:(JKBaseDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param progress:request.progressBlock error:error];
+        return [self downloadTaskWithRequest:(JKBaseDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param error:error];
     } else if (request.requestType == JKRequestTypeUpload) {
-        return [self uploadTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param data:request.uploadData progress:request.progressBlock formDataBlock:request.formDataBlock error:error];
+        return [self uploadTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
     }
     return [self dataTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
 }
 
 
-- (NSURLSessionTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)downloadRequest
-                                    requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
-                                                      URLString:(NSString *)URLString
-                                                     parameters:(id)parameters
-                                                       progress:(nullable void (^)(NSProgress *downloadProgress))downloadProgressBlock
-                                                          error:(NSError * _Nullable __autoreleasing *)error {
-   __block NSURLSessionTask *dataTask = [self.backgroundSessionMananger dataTaskWithDownloadRequest:downloadRequest requestSerializer:requestSerializer URLString:URLString parameters:parameters progress:downloadProgressBlock completionHandler:^(NSURLResponse * _Nonnull response, NSError * _Nullable error) {
-        [self handleResultWithRequest:downloadRequest error:error];
+
+- (NSURLSessionTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)request
+                            requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
+                                    URLString:(NSString *)URLString
+                                    parameters:(id)parameters
+                                         error:(NSError * _Nullable __autoreleasing *)error
+{
+   __block NSURLSessionTask *dataTask = [self.backgroundSessionMananger dataTaskWithDownloadRequest:request requestSerializer:requestSerializer URLString:URLString parameters:parameters progress:request.progressBlock completionHandler:^(NSURLResponse * _Nonnull response, NSError * _Nullable error) {
+        [self handleResultWithRequest:request error:error];
     } error:error];
     return dataTask;
 }
 
-- (NSURLSessionUploadTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)uploadRequest
+- (NSURLSessionUploadTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                         URLString:(NSString *)URLString
                                        parameters:(id)parameters
-                                             data:(NSData *)data
-                                         progress:(nullable void (^)(NSProgress *uploadProgress))uploadProgressBlock
-                                    formDataBlock:(nullable void (^)(id <AFMultipartFormData> formData))formDataBlock
                                             error:(NSError * _Nullable __autoreleasing *)error
 {
-    NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:formDataBlock error:error];
-    __block NSURLSessionUploadTask *uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromData:data progress:^(NSProgress * _Nonnull uploadProgress) {
-        if (uploadProgressBlock) {
-            uploadProgressBlock(uploadProgress);
-        }
-    } completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-        uploadRequest.responseObject = responseObject;
-        [self handleResultWithRequest:uploadRequest error:error];
-    }];
-    uploadRequest.requestTask = uploadTask;
+    __block NSURLSessionUploadTask *uploadTask = nil;
+    if (request.uploadData) {
+        NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:request.formDataBlock error:error];
+        uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromData:request.uploadData progress:request.progressBlock completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+            request.responseObject = responseObject;
+            [self handleResultWithRequest:request error:error];
+        }];
+        request.requestTask = uploadTask;
+    } else if (request.uploadFilePath) {
+        NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"POST" URLString:URLString parameters:parameters error:error];
+        uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromFile:[NSURL fileURLWithPath:request.uploadFilePath] progress:request.progressBlock completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+            request.responseObject = responseObject;
+            [self handleResultWithRequest:request error:error];
+        }];
+    }
     return uploadTask;
 }
+
 
 - (NSURLSessionDataTask *)dataTaskWithRequest:(__kindof JKBaseRequest *)request
                             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
