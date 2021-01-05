@@ -233,6 +233,7 @@ didCompleteWithError:(NSError *)error
                    forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
 }
@@ -240,8 +241,15 @@ didCompleteWithError:(NSError *)error
 - (void)dealloc
 {
     [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
+- (void)applicationDidBecomeActive:(NSNotification *)notif
+{
+    if (self.request.requestTask.state == NSURLSessionTaskStateRunning) {
+        [self.request.requestTask resume];
+    }
+}
 #pragma mark - NSProgress Tracking
 
 - (void)observeValueForKeyPath:(NSString *)keyPath

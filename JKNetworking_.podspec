@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'JKNetworking_'
-  s.version          = '0.2.8.1'
+  s.version          = '0.2.8.2'
   s.summary          = 'this is a network tool,it refrence YTKNetwork,and depend on AFNetworking'
 
 # This description is used to generate tags and improve search results.
