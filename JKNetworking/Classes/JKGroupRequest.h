@@ -31,16 +31,11 @@ NS_ASSUME_NONNULL_BEGIN
                     success:(void(^)(__kindof JKBaseRequest *request))successBlock
                     failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
 
-+ (void)configUploadDataRequest:(__kindof JKBaseUploadRequest *)request
-                       progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-                  formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                        success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                        failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-
-+ (void)configUploadFileRequest:(__kindof JKBaseUploadRequest *)request
-                       progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-                        success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                        failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
++ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
+                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 + (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock

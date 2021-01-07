@@ -143,38 +143,15 @@
     request.groupFailureBlock = failureBlock;
 }
 
-+ (void)configUploadDataRequest:(__kindof JKBaseUploadRequest *)request
-                       progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-                  formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                        success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                        failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
++ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
+                   progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
+              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
+                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
     NSAssert(request.requestType == JKRequestTypeUpload, @"make sure request.requestType == JKRequestTypeUpload be YES");
-    if (!request.uploadData) {
-#if DEBUG
-        NSAssert(NO, @"request.uploadData can't be nil");
-#endif
-        return;
-    }
     request.progressBlock = uploadProgressBlock;
     request.formDataBlock = formDataBlock;
-    request.groupSuccessBlock = successBlock;
-    request.groupFailureBlock = failureBlock;
-}
-
-+ (void)configUploadFileRequest:(__kindof JKBaseUploadRequest *)request
-                       progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
-                        success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                        failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
-{
-    NSAssert(request.requestType == JKRequestTypeUpload, @"make sure request.requestType == JKRequestTypeUpload be YES");
-    if (!request.uploadFilePath) {
-#if DEBUG
-        NSAssert(request.uploadFilePath, @"request.uploadFilePath can't nil");
-#endif
-        return;
-    }
-    request.progressBlock = uploadProgressBlock;
     request.groupSuccessBlock = successBlock;
     request.groupFailureBlock = failureBlock;
 }

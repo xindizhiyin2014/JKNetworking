@@ -323,28 +323,19 @@
     return dataTask;
 }
 
-- (NSURLSessionUploadTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)request
+- (NSURLSessionDataTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                         URLString:(NSString *)URLString
                                        parameters:(id)parameters
                                             error:(NSError * _Nullable __autoreleasing *)error
 {
-    __block NSURLSessionUploadTask *uploadTask = nil;
-    if (request.uploadData) {
-        NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:request.formDataBlock error:error];
-        uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromData:request.uploadData progress:request.progressBlock completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-            request.responseObject = responseObject;
-            [self handleResultWithRequest:request error:error];
-        }];
-        request.requestTask = uploadTask;
-    } else if (request.uploadFilePath) {
-        NSMutableURLRequest *urlRequest = [requestSerializer requestWithMethod:@"POST" URLString:URLString parameters:parameters error:error];
-        uploadTask = [self.sessionManager uploadTaskWithRequest:urlRequest fromFile:[NSURL fileURLWithPath:request.uploadFilePath] progress:request.progressBlock completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
-            request.responseObject = responseObject;
-            [self handleResultWithRequest:request error:error];
-        }];
-    }
-    return uploadTask;
+    NSMutableURLRequest *urlRequest = [requestSerializer multipartFormRequestWithMethod:@"POST" URLString:URLString parameters:parameters constructingBodyWithBlock:request.formDataBlock error:error];
+    __block NSURLSessionDataTask *dataTask = [self.sessionManager dataTaskWithRequest:urlRequest uploadProgress:request.progressBlock downloadProgress:nil completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+        request.responseObject = responseObject;
+        [self handleResultWithRequest:request error:error];
+    }];
+    request.requestTask = dataTask;
+    return dataTask;
 }
 
 
