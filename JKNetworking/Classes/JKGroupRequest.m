@@ -208,48 +208,83 @@
         [self.requestAccessory requestWillStart:self];
     }
     for (__kindof JKBaseRequest *request in self.requestArray) {
-        @weakify(self);
-        [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
-            @strongify(self);
-            self.finishedCount++;
-            if (request.groupSuccessBlock) {
-                request.groupSuccessBlock(request);
-            }
-            if (self.finishedCount == self.requestArray.count) {
-                //the last request success, the batchRequest should call success block
+        
+        if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
+            JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
+            @weakify(self);
+            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
+            JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
+            @weakify(self);
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else {
+            @weakify(self);
+            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        }
+        
+    }
+}
+
+- (void)handleSuccessOfRequest:(__kindof JKBaseRequest *)request
+{
+    self.finishedCount++;
+    if (request.groupSuccessBlock) {
+        request.groupSuccessBlock(request);
+    }
+    
+    if (self.finishedCount == self.requestArray.count) {
+        //the last request success, the batchRequest should call success block
+        [self finishAllRequestsWithSuccessBlock];
+    }
+}
+
+- (void)handleFailureOfRequest:(__kindof JKBaseRequest *)request
+{
+    if (!self.failedRequests) {
+        self.failedRequests = [NSMutableArray new];
+    }
+    if ([self.requireSuccessRequests containsObject:request]) {
+        [self.failedRequests addObject:request];
+        if (request.groupFailureBlock) {
+            request.groupFailureBlock(request);
+        }
+        for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+            [tmpRequest stop];
+        }
+        [self finishAllRequestsWithFailureBlock];
+    } else {
+        self.finishedCount++;
+        [self.failedRequests addObject:request];
+        if (request.groupFailureBlock) {
+            request.groupFailureBlock(request);
+        }
+        if (self.finishedCount == self.requestArray.count) {
+            if (self.failedRequests.count != self.requestArray.count) {
+                // not all requests failed ,the batchRequest should call success block
                 [self finishAllRequestsWithSuccessBlock];
-            }
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
-            @strongify(self);
-            if (!self.failedRequests) {
-                self.failedRequests = [NSMutableArray new];
-            }
-            if ([self.requireSuccessRequests containsObject:request]) {
-                [self.failedRequests addObject:request];
-                if (request.groupFailureBlock) {
-                    request.groupFailureBlock(request);
-                }
-                for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
-                    [tmpRequest stop];
-                }
+            }else {
+                // all requests failed,the batchRequests should call fail block
                 [self finishAllRequestsWithFailureBlock];
-            } else {
-                self.finishedCount++;
-                [self.failedRequests addObject:request];
-                if (request.groupFailureBlock) {
-                    request.groupFailureBlock(request);
-                }
-                if (self.finishedCount == self.requestArray.count) {
-                    if (self.failedRequests.count != self.requestArray.count) {
-                        // not all requests failed ,the batchRequest should call success block
-                        [self finishAllRequestsWithSuccessBlock];
-                    }else {
-                        // all requests failed,the batchRequests should call fail block
-                        [self finishAllRequestsWithFailureBlock];
-                    }
-                }
             }
-        }];
+        }
     }
 }
 
@@ -398,60 +433,93 @@
     if (self.finishedCount < [self.requestArray count]) {
         JKBaseRequest *request = self.requestArray[self.finishedCount];
         self.finishedCount++;
-        [request startWithCompletionSuccess:^(__kindof JKBaseRequest * request) {
-            self.lastRequest = request;
-            BOOL canStartNextRequest = self.finishedCount < [self.requestArray count];
-            if (request.groupSuccessBlock) {
-                request.groupSuccessBlock(request);
-            }
-            if (canStartNextRequest) {
-                if (!request.manualStartNextRequest) {
-                    [self startNextRequest];
-                }
-            } else {
-                if (!canStartNextRequest) {
-                    if (self.requestAccessory
-                        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-                        [self.requestAccessory requestWillStop:self];
-                    }
-                    if (self.successBlock) {
-                        self.successBlock(self);
-                    }
-                    if (self.requestAccessory
-                        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-                        [self.requestAccessory requestDidStop:self];
-                    }
-                    [self stop];
-                }
-            }
-            
-            
-        } failure:^(__kindof JKBaseRequest * request) {
-            if (!self.failedRequests) {
-                self.failedRequests = [NSMutableArray new];
-            }
-            [self.failedRequests addObject:request];
-            self.lastRequest = request;
-            if (request.groupFailureBlock) {
-                request.groupFailureBlock(request);
-            }
-            for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
-                [tmpRequest stop];
-            }
+        if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
+            JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
+            @weakify(self);
+            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
+            JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
+            @weakify(self);
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else {
+            @weakify(self);
+            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        }
+    }
+}
+
+- (void)handleSuccessOfRequest:(__kindof JKBaseRequest *)request
+{
+    self.lastRequest = request;
+    BOOL canStartNextRequest = self.finishedCount < [self.requestArray count];
+    if (request.groupSuccessBlock) {
+        request.groupSuccessBlock(request);
+    }
+    if (canStartNextRequest) {
+        if (!request.manualStartNextRequest) {
+            [self startNextRequest];
+        }
+    } else {
+        if (!canStartNextRequest) {
             if (self.requestAccessory
                 && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
                 [self.requestAccessory requestWillStop:self];
             }
-            if (self.failureBlock) {
-                self.failureBlock(self);
+            if (self.successBlock) {
+                self.successBlock(self);
             }
             if (self.requestAccessory
                 && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
                 [self.requestAccessory requestDidStop:self];
             }
             [self stop];
-        }];
+        }
     }
+}
+
+- (void)handleFailureOfRequest:(__kindof JKBaseRequest *)request
+{
+    if (!self.failedRequests) {
+        self.failedRequests = [NSMutableArray new];
+    }
+    [self.failedRequests addObject:request];
+    self.lastRequest = request;
+    if (request.groupFailureBlock) {
+        request.groupFailureBlock(request);
+    }
+    for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+        [tmpRequest stop];
+    }
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+        [self.requestAccessory requestWillStop:self];
+    }
+    if (self.failureBlock) {
+        self.failureBlock(self);
+    }
+    if (self.requestAccessory
+        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+        [self.requestAccessory requestDidStop:self];
+    }
+    [self stop];
 }
 
 @end
