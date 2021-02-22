@@ -42,6 +42,9 @@
 /// only in chainRequest,can use this property
 @property (nonatomic, assign) BOOL manualStartNextRequest;
 
+@property (nonatomic, copy, readwrite, nullable) NSString *signaturedUrl;
+
+
 @end
 
 @implementation JKBaseRequest
