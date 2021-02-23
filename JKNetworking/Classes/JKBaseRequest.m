@@ -44,6 +44,9 @@
 
 @property (nonatomic, copy, readwrite, nullable) NSString *signaturedUrl;
 
+/// the params has signatured
+@property (nonatomic, strong, readwrite, nullable) id signaturedParams;
+
 
 @end
 
