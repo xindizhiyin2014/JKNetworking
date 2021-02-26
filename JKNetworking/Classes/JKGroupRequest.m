@@ -478,20 +478,18 @@
             [self startNextRequest];
         }
     } else {
-        if (!canStartNextRequest) {
-            if (self.requestAccessory
-                && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-                [self.requestAccessory requestWillStop:self];
-            }
-            if (self.successBlock) {
-                self.successBlock(self);
-            }
-            if (self.requestAccessory
-                && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-                [self.requestAccessory requestDidStop:self];
-            }
-            [self stop];
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+            [self.requestAccessory requestWillStop:self];
         }
+        if (self.successBlock) {
+            self.successBlock(self);
+        }
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+            [self.requestAccessory requestDidStop:self];
+        }
+        [self stop];
     }
 }
 
