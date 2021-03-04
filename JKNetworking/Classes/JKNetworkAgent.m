@@ -223,9 +223,9 @@
     [request.requestTask cancel];
     [self.lock lock];
     [self.allStartedRequests removeObject:request];
-    [request clearCompletionBlock];
     [self.lock unlock];
     
+    [request clearCompletionBlock];
 }
 
 - (void)cancelAllRequests
@@ -447,10 +447,12 @@
         [[JKNetworkConfig sharedConfig].requestHelper afterEachRequest:request];
     }
     
-    [self.lock lock];
-    [self.allStartedRequests removeObject:request];
-    [request clearCompletionBlock];
-    [self.lock unlock];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.lock lock];
+        [self.allStartedRequests removeObject:request];
+        [self.lock unlock];
+        [request clearCompletionBlock];
+    });
 }
 
 - (BOOL)validateResult:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error
@@ -826,6 +828,8 @@
     tempPath = [[self incompleteDownloadTempCacheFolder] stringByAppendingPathComponent:md5URLStr];
     return [NSURL fileURLWithPath:tempPath];
 }
+
+
 
 #pragma mark - private -
 - (AFJSONResponseSerializer *)config_jsonResponseSerializer
