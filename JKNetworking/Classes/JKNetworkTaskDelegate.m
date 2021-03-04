@@ -262,6 +262,12 @@ didCompleteWithError:(NSError *)error
 }
 
 #pragma mark - NSURLSessionTaskDelegate
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+    if (self.completionHandler) {
+        self.completionHandler(task.response, error);
+    }
+}
 - (void)URLSession:(NSURLSession *)session task:(__kindof NSURLSessionTask *)task
                       didBecomeInvalidWithError:(NSError *)error
 {

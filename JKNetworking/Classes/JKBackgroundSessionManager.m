@@ -23,7 +23,7 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
 
 @end
 
-@interface JKBackgroundSessionManager()<NSURLSessionDataDelegate>
+@interface JKBackgroundSessionManager()<NSURLSessionDataDelegate,NSURLSessionDownloadDelegate>
 /// the background url task identifer
 @property (nonatomic, copy, readwrite, nonnull) NSString *backgroundTaskIdentifier;
 /// the background urlSessionDataTask
