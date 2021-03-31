@@ -348,13 +348,13 @@
 }
 
 #pragma mark - - getter - -
-- (NSString *)downloadedFilePath
+- (nullable NSString *)downloadedFilePath
 {
     if (!_downloadedFilePath) {
         if (!jk_safeStr(self.absoluteString)) {
             return nil;
         }
-        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath?:@"";
         NSString *fileName = [self MD5String:self.absoluteString];
         fileName = [fileName stringByAppendingPathExtension:[self.absoluteString pathExtension]]?:@"";
         _downloadedFilePath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
@@ -362,7 +362,7 @@
     return _downloadedFilePath;
 }
 
-- (NSString *)tempFilePath
+- (nullable NSString *)tempFilePath
 {
     if (!_tempFilePath) {
         if (!jk_safeStr(self.absoluteString)) {

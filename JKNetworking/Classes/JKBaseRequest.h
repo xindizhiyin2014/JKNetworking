@@ -205,9 +205,9 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the url of the download file resoure
 @property (nonatomic, copy, readonly) NSString *absoluteString;
 /// the filePath of the downloaded file
-@property (nonatomic, copy, readonly) NSString *downloadedFilePath;
+@property (nonatomic, copy, nullable, readonly) NSString *downloadedFilePath;
 /// the temp filepath of the download file
-@property (nonatomic, copy, readonly) NSString *tempFilePath;
+@property (nonatomic, copy, nullable, readonly) NSString *tempFilePath;
 /// the background policy of the downloadRequest
 @property (nonatomic, assign) JKDownloadBackgroundPolicy backgroundPolicy;
 

@@ -71,6 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
                            failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
 /// manual start the next request
 - (void)manualStartNextRequest;
+/// complete the chainRequest in advance,even if the ChainRequest has requests not complete.this function can only call when a manual request success
+- (void)inAdvanceCompleteChainRequest;
 
 @end
 

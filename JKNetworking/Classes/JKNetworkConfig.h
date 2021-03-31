@@ -92,6 +92,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *incompleteCacheFolder;
 
 @property (nonatomic, strong, readonly, nullable) id<JKRequestHelperProtocol> requestHelper;
+/// HTTP methods for which serialized requests will encode parameters as a query string. `GET`, `HEAD`, and `DELETE` by default.
+/// if not set,use the default config
+@property (nonatomic, strong, nullable) NSSet <NSString *> *HTTPMethodsEncodingParametersInURI;
 
 - (void)configRequestHelper:(id<JKRequestHelperProtocol>)requestHelper;
 

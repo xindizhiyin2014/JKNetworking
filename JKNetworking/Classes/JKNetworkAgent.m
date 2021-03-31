@@ -471,6 +471,10 @@
               *error = tmpError;
             }
         }
+    } else if (!json) {
+#if DEBUG
+        NSLog(@"JKNetworking validateResult responseJSONObject is nil");
+#endif
     }
     return result;
 }
@@ -785,6 +789,9 @@
         requestSerializer = [AFHTTPRequestSerializer serializer];
     } else if (request.requestSerializerType == JKRequestSerializerTypeJSON) {
         requestSerializer = [AFJSONRequestSerializer serializer];
+    }
+    if ([JKNetworkConfig sharedConfig].HTTPMethodsEncodingParametersInURI) {
+        requestSerializer.HTTPMethodsEncodingParametersInURI = [JKNetworkConfig sharedConfig].HTTPMethodsEncodingParametersInURI;
     }
     if ([JKNetworkConfig sharedConfig].isMock) {
      requestSerializer.timeoutInterval = [JKNetworkConfig sharedConfig].mockModelTimeoutInterval;

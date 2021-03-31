@@ -428,6 +428,34 @@
     }
 }
 
+- (void)inAdvanceCompleteChainRequest
+{
+    if (self.lastRequest.error) {
+#if DEBUG
+        NSAssert(NO, @"lastRequest has error,can't inAdvanceCompleteChainRequest!");
+#endif
+        return;
+    }
+    if (self.lastRequest.manualStartNextRequest) {
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+            [self.requestAccessory requestWillStop:self];
+        }
+        if (self.successBlock) {
+            self.successBlock(self);
+        }
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+            [self.requestAccessory requestDidStop:self];
+        }
+        [self stop];
+    } else {
+#if DEBUG
+        NSAssert(NO, @"can't invoke inAdvanceCompleteChainRequest now,please check");
+#endif
+    }
+}
+
 - (void)startNextRequest
 {
     if (self.finishedCount < [self.requestArray count]) {
