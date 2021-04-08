@@ -361,7 +361,7 @@
         if (!jk_safeStr(self.absoluteString)) {
             return nil;
         }
-        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath?:@"";
+        NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
         NSString *fileName = [self MD5String:self.absoluteString];
         fileName = [fileName stringByAppendingPathExtension:[self.absoluteString pathExtension]]?:@"";
         _downloadedFilePath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];

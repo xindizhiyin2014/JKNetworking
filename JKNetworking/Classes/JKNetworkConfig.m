@@ -12,7 +12,6 @@
 @property (nonatomic, strong, readwrite, nullable) id<JKRequestHelperProtocol> requestHelper;
 @property (nonatomic, copy, readwrite) NSString *incompleteCacheFolder;
 
-
 @end
 
 
@@ -55,7 +54,7 @@
     #if DEBUG
             NSLog(@"Failed to create cache directory at %@", cacheFolder);
     #endif
-            return nil;
+            return @"";
         }
         _incompleteCacheFolder = cacheFolder;
     }
@@ -73,7 +72,7 @@
     #if DEBUG
             NSLog(@"Failed to create download directory at %@", downloadFolder);
     #endif
-            return nil;
+            return @"";
         }
         _downloadFolderPath = downloadFolder;
     }

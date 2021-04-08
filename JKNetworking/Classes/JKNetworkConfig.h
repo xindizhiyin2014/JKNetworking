@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nonnull) NSURLSessionConfiguration *sessionConfiguration;
 
 /// the folder filePath of the download file,the defalut is under doment /JKNetworking_download
-@property (nonatomic, copy, nonnull) NSString *downloadFolderPath;
+@property (nonatomic, copy) NSString *downloadFolderPath;
 
 /// the uncompleted folder of the download requests
 @property (nonatomic, copy, readonly) NSString *incompleteCacheFolder;
