@@ -31,6 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param request request
 - (void)saveResponseToCacheOfRequest:(__kindof JKBaseRequest *)request;
 
+/// clear the the request's response from cache
+/// @param request request
+- (void)clearResponseFromCacheOfRequest:(__kindof JKBaseRequest *)request;
+
 /// get the baseUrl of the request
 /// @param request request
 - (NSString *)baseUrlOfRequest:(__kindof JKBaseRequest *)request;

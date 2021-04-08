@@ -225,6 +225,13 @@
     }
 }
 
+- (void)clearResponseFromCache
+{
+    if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(clearResponseFromCacheOfRequest:)]) {
+        [[JKNetworkConfig sharedConfig].requestHelper clearResponseFromCacheOfRequest:self];
+    }
+}
+
 #pragma mark - getter -
 
 - (BOOL)isCancelled {

@@ -185,6 +185,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 - (void)writeResponseToCacheFile;
 
+- (void)clearResponseFromCache;
+
 @end
 
 
