@@ -64,6 +64,9 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - - JKChainRequest - -
 @interface JKChainRequest : JKGroupRequest
 
+/// the chainRequest not really completed, user call inAdvanceCompleteChainRequest method,to complete the chainRequest inadvance.defalut is NO
+@property (nonatomic, assign, readonly) BOOL inAdvanceCompleted;
+
 /// config the request is manual start the next request,deafult is NO,must config before the chainRequest start.
 - (void)configRequest:(__kindof JKBaseRequest *)request manualStartNextRequest:(BOOL)manualStartNextRequest;
 
@@ -72,7 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// manual start the next request
 - (void)manualStartNextRequest;
 /// complete the chainRequest in advance,even if the ChainRequest has requests not complete.this function can only call when a manual request success
-- (void)inAdvanceCompleteChainRequest;
+- (void)inAdvanceCompleteChainRequestWithResult:(BOOL)isSuccess;
 
 @end
 

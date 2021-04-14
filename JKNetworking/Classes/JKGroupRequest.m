@@ -139,6 +139,15 @@
                     failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
 {
     NSAssert(request.requestType == JKRequestTypeDefault, @"make sure request.requestType == JKRequestTypeDefault be YES");
+    if (request.groupSuccessBlock
+        || request.groupFailureBlock) {
+#if DEBUG
+    NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
+    NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
+#else
+        return;
+#endif
+    }
     request.groupSuccessBlock = successBlock;
     request.groupFailureBlock = failureBlock;
 }
@@ -150,6 +159,19 @@
                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
     NSAssert(request.requestType == JKRequestTypeUpload, @"make sure request.requestType == JKRequestTypeUpload be YES");
+    if (request.progressBlock
+        || request.formDataBlock
+        || request.groupSuccessBlock
+        || request.groupFailureBlock) {
+#if DEBUG
+    NSAssert(!request.progressBlock, @"can't config the uploadProgressBlock");
+    NSAssert(!request.formDataBlock, @"can't config the formDataBlock");
+    NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
+    NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
+#else
+        return;
+#endif
+    }
     request.progressBlock = uploadProgressBlock;
     request.formDataBlock = formDataBlock;
     request.groupSuccessBlock = successBlock;
@@ -162,6 +184,17 @@
                       failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
 {
     NSAssert(request.requestType == JKRequestTypeDownload, @"make sure request.requestType == JKRequestTypeDownload be YES");
+    if (request.progressBlock
+        || request.groupSuccessBlock
+        || request.groupFailureBlock) {
+#if DEBUG
+    NSAssert(!request.progressBlock, @"can't config the downloadProgressBlock");
+    NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
+    NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
+#else
+        return;
+#endif
+    }
     request.progressBlock = downloadProgressBlock;
     request.groupSuccessBlock = successBlock;
     request.groupFailureBlock = failureBlock;
@@ -358,6 +391,7 @@
 @interface JKChainRequest()
 
 @property (nonatomic, strong, nullable) __kindof JKBaseRequest *lastRequest;
+@property (nonatomic, assign, readwrite) BOOL inAdvanceCompleted;
 
 @end
 
@@ -390,6 +424,7 @@
     self.failedRequests = nil;
     [[JKNetworkAgent sharedAgent] removeChainRequest:self];
     self.executing = NO;
+    self.inAdvanceCompleted = NO;
 }
 
 - (void)configRequest:(__kindof JKBaseRequest *)request manualStartNextRequest:(BOOL)manualStartNextRequest
@@ -428,7 +463,7 @@
     }
 }
 
-- (void)inAdvanceCompleteChainRequest
+- (void)inAdvanceCompleteChainRequestWithResult:(BOOL)isSuccess
 {
     if (self.lastRequest.error) {
 #if DEBUG
@@ -436,7 +471,8 @@
 #endif
         return;
     }
-    if (self.lastRequest.manualStartNextRequest) {
+    self.inAdvanceCompleted = YES;
+    if (isSuccess) {
         if (self.requestAccessory
             && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
             [self.requestAccessory requestWillStop:self];
@@ -448,12 +484,20 @@
             && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
             [self.requestAccessory requestDidStop:self];
         }
-        [self stop];
     } else {
-#if DEBUG
-        NSAssert(NO, @"can't invoke inAdvanceCompleteChainRequest now,please check");
-#endif
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+            [self.requestAccessory requestWillStop:self];
+        }
+        if (self.failureBlock) {
+            self.failureBlock(self);
+        }
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+            [self.requestAccessory requestDidStop:self];
+        }
     }
+    [self stop];
 }
 
 - (void)startNextRequest
