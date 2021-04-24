@@ -11,6 +11,7 @@
 #import <JKDataHelper/JKDataHelper.h>
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
+#import "JKGroupRequest.h"
 
 @interface JKBaseRequest()
 
@@ -23,8 +24,6 @@
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
 /// is the response frome cache
 @property (nonatomic, assign, readwrite) BOOL isDataFromCache;
-/// the status of the request is not in a batchRequest or not in a chainRequest,default is YES
-@property (nonatomic, assign, readwrite) BOOL isIndependentRequest;
 /// the request success block
 @property (nonatomic, copy, nullable) void(^successBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
@@ -35,10 +34,6 @@
 @property (nonatomic, assign) JKRequestType requestType;
 /// when upload data cofig the formData
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
-/// the request success block
-@property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
-/// the request failure block progress block
-@property (nonatomic, copy, nullable) void(^groupFailureBlock)(__kindof JKBaseRequest *request);
 /// only in chainRequest,can use this property
 @property (nonatomic, assign) BOOL manualStartNextRequest;
 
@@ -51,13 +46,16 @@
 @end
 
 @implementation JKBaseRequest
+@synthesize isIndependentRequest;
+@synthesize groupRequest;
+@synthesize groupSuccessBlock;
+@synthesize groupFailureBlock;
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _requestTimeoutInterval = 60;
-        _isIndependentRequest = YES;
     }
     return self;
 }
@@ -229,6 +227,23 @@
 {
     if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(clearResponseFromCacheOfRequest:)]) {
         [[JKNetworkConfig sharedConfig].requestHelper clearResponseFromCacheOfRequest:self];
+    }
+}
+
+#pragma mark - - JKRequestInGroupProtocol - -
+- (BOOL)isIndependentRequest
+{
+    return self.groupRequest?NO:YES;
+}
+
+- (void)inAdvanceCompleteGroupRequestWithResult:(BOOL)isSuccess
+{
+    if (self.groupRequest) {
+        [self.groupRequest inAdvanceCompleteWithResult:isSuccess];
+    }else {
+#if DEBUG
+        NSAssert(NO, @"self.groupRequest is nil");
+#endif
     }
 }
 

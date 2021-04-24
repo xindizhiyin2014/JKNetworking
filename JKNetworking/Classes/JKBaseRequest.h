@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking/AFHTTPSessionManager.h>
+#import "JKRequestInGroupProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -61,6 +62,7 @@ typedef NS_ENUM(NSInteger,JKDownloadBackgroundPolicy) {
 
 static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
+
 @protocol JKRequestAccessoryProtocol <NSObject>
 
 @optional
@@ -74,7 +76,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @end
 
 
-@interface JKBaseRequest : NSObject
+@interface JKBaseRequest : NSObject<JKRequestInGroupProtocol>
 
 /// the request apiName,fact is a path of url,it can contain path and query params
 @property (nonatomic, copy, nonnull) NSString *requestUrl;
@@ -135,9 +137,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 /// is the response is use the cache data,default is NO
 @property (nonatomic, assign, readonly) BOOL isDataFromCache;
-
-/// the status of the request is not in a batchRequest or not in a chainRequest,default is YES
-@property (nonatomic, assign, readonly) BOOL isIndependentRequest;
 
 /// is use the signature for the request
 @property (nonatomic, assign) BOOL useSignature;

@@ -20,14 +20,10 @@
 @property (nonatomic, assign) JKRequestType requestType;
 /// the data need to upload
 @property (nonatomic, strong) NSData *uploadData;
-/// the request is independent request or not
-@property (nonatomic, assign, readwrite) BOOL isIndependentRequest;
 /// the request success block
 @property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
 @property (nonatomic, copy, nullable) void(^groupFailureBlock)(__kindof JKBaseRequest *request);
-/// only in chainRequest,can use this property
-@property (nonatomic, assign) BOOL manualStartNextRequest;
 
 
 @end
@@ -38,17 +34,15 @@
 @dynamic formDataBlock;
 @dynamic requestType;
 @dynamic uploadData;
-@dynamic isIndependentRequest;
 @dynamic groupSuccessBlock;
 @dynamic groupFailureBlock;
-@dynamic manualStartNextRequest;
 
 @end
 
 @interface JKGroupRequest()
 
 /// the array of the JKBaseRequest
-@property (nonatomic, strong, readwrite) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
+@property (nonatomic, strong, readwrite) NSMutableArray<__kindof NSObject<JKRequestInGroupProtocol> *> *requestArray;
 /// the block of success
 @property (nonatomic, copy, nullable) void (^successBlock)(__kindof JKGroupRequest *request);
 /// the block of failure
@@ -57,15 +51,18 @@
 @property (nonatomic, assign) NSInteger finishedCount;
 /// the status of the JKGroupRequest is executing or not
 @property (nonatomic, assign) BOOL executing;
-
 /// the failed requests
-@property (nonatomic, strong, readwrite, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
-
-
+@property (nonatomic, strong, readwrite, nullable) NSMutableArray<__kindof NSObject<JKRequestInGroupProtocol> *> *failedRequests;
+/// the status of the groupRequest is complete inadvance
+@property (nonatomic, assign, readwrite) BOOL inAdvanceCompleted;
 
 @end
 
 @implementation JKGroupRequest
+@synthesize isIndependentRequest;
+@synthesize groupRequest;
+@synthesize groupSuccessBlock;
+@synthesize groupFailureBlock;
 
 - (instancetype)init
 {
@@ -77,11 +74,11 @@
     return self;
 }
 
-- (void)addRequest:(__kindof JKBaseRequest *)request
+- (void)addRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
-    if (![request isKindOfClass:[JKBaseRequest class]]) {
+    if (![request conformsToProtocol:@protocol(JKRequestInGroupProtocol)]) {
 #if DEBUG
-        NSAssert(NO, @"makesure [request isKindOfClass:[JKBaseRequest class]] be YES");
+        NSAssert(NO, @"makesure request is conforms to protocol JKRequestInGroupProtocol");
 #endif
         return;
     }
@@ -91,7 +88,7 @@
 #endif
         return;
     }
-    request.isIndependentRequest = NO;
+    request.groupRequest = self;
     [self.requestArray addObject:request];
 }
 
@@ -112,16 +109,9 @@
 #endif
         return;
     }
-    for (JKBaseRequest *request in requestArray) {
-        if (![request isKindOfClass:[JKBaseRequest class]]) {
-#if DEBUG
-            NSAssert(NO, @"makesure [request isKindOfClass:[JKBaseRequest class]] be YES");
-#endif
-            return;
-        }
-        request.isIndependentRequest = NO;
+    for (__kindof NSObject<JKRequestInGroupProtocol> *request  in requestArray) {
+        [self addRequest:request];
     }
-    [self.requestArray addObjectsFromArray:requestArray];
 }
 
 - (void)start
@@ -133,6 +123,28 @@
 {
     
 }
+- (void)inAdvanceCompleteWithResult:(BOOL)isSuccess
+{
+    
+}
+
+#pragma mark - - JKRequestInGroupProtocol - -
+- (BOOL)isIndependentRequest
+{
+    return self.groupRequest?NO:YES;
+}
+
+- (void)inAdvanceCompleteGroupRequestWithResult:(BOOL)isSuccess
+{
+    if (self.groupRequest) {
+        [self.groupRequest inAdvanceCompleteWithResult:isSuccess];
+    }else {
+#if DEBUG
+        NSAssert(NO, @"self.groupRequest is nil");
+#endif
+    }
+}
+
 
 + (void)configNormalRequest:(__kindof JKBaseRequest *)request
                     success:(void(^)(__kindof JKBaseRequest *request))successBlock
@@ -200,6 +212,53 @@
     request.groupFailureBlock = failureBlock;
 }
 
++ (void)configChildGroupRequest:(__kindof JKGroupRequest *)request
+                        success:(void(^)(__kindof JKGroupRequest *request))successBlock
+                        failure:(void(^)(__kindof JKGroupRequest *request))failureBlock
+{
+    NSAssert([request isKindOfClass:[JKGroupRequest class]], @"make sure [request isKindOfClass:[JKGroupRequest class]] be YES");
+    if (request.groupSuccessBlock
+        || request.groupFailureBlock) {
+#if DEBUG
+    NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
+    NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
+#else
+        return;
+#endif
+    }
+    request.groupSuccessBlock = ^(NSObject<JKRequestInGroupProtocol> * _Nonnull request) {
+        if (successBlock) {
+            successBlock((JKGroupRequest *)request);
+        }
+    };
+    request.groupFailureBlock = ^(NSObject<JKRequestInGroupProtocol> * _Nonnull request) {
+        if (failureBlock) {
+            failureBlock((JKGroupRequest *)request);
+        }
+    };
+    
+}
+
+
+- (void)handleAccessoryWithBlock:(void(^)(void))block
+{
+    if (self.isIndependentRequest) {
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
+            [self.requestAccessory requestWillStop:self];
+        }
+    }
+    if (block) {
+        block();
+    }
+    if (self.isIndependentRequest) {
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
+            [self.requestAccessory requestDidStop:self];
+        }
+    }
+}
+
 - (void)clearCompletionBlock
 {
     if (self.successBlock) {
@@ -207,6 +266,12 @@
     }
     if (self.failureBlock) {
         self.failureBlock = nil;
+    }
+    if (self.groupSuccessBlock) {
+        self.groupSuccessBlock = nil;
+    }
+    if (self.groupFailureBlock) {
+        self.groupFailureBlock = nil;
     }
 }
 
@@ -217,8 +282,7 @@
 
 @interface JKBatchRequest()
 
-@property (nonatomic, strong, nullable) NSMutableArray<__kindof JKBaseRequest *> *requireSuccessRequests;
-
+@property (nonatomic, strong, nullable) NSMutableArray<__kindof NSObject<JKRequestInGroupProtocol> *> *requireSuccessRequests;
 
 @end
 
@@ -236,11 +300,13 @@
         return;
     }
     self.executing = YES;
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
-        [self.requestAccessory requestWillStart:self];
+    if (self.isIndependentRequest) {
+        if (self.requestAccessory
+            && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
+            [self.requestAccessory requestWillStart:self];
+        }
     }
-    for (__kindof JKBaseRequest *request in self.requestArray) {
+    for (__kindof NSObject<JKRequestInGroupProtocol> *request in self.requestArray) {
         
         if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
             JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
@@ -262,12 +328,33 @@
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
-        } else {
+        } else  if ([request isKindOfClass:[JKBaseRequest class]]) {
             @weakify(self);
-            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            JKBaseRequest *baseRequest = (JKBaseRequest *)request;
+            [baseRequest startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
             } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else if ([request isKindOfClass:[JKBatchRequest class]]) {
+            JKBatchRequest *batchRequest = (JKBatchRequest *)request;
+            @weakify(self);
+            [batchRequest startWithCompletionSuccess:^(JKBatchRequest * _Nonnull batchRequest) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(JKBatchRequest * _Nonnull batchRequest) {
+                @strongify(self);
+                [self handleFailureOfRequest:request];
+            }];
+        } else if ([request isKindOfClass:[JKChainRequest class]]) {
+            JKChainRequest *chainRequest = (JKChainRequest *)request;
+            @weakify(self);
+            [chainRequest startWithCompletionSuccess:^(JKChainRequest * _Nonnull chainRequest) {
+                @strongify(self);
+                [self handleSuccessOfRequest:request];
+            } failure:^(JKChainRequest * _Nonnull chainRequest) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
@@ -276,7 +363,7 @@
     }
 }
 
-- (void)handleSuccessOfRequest:(__kindof JKBaseRequest *)request
+- (void)handleSuccessOfRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
     self.finishedCount++;
     if (request.groupSuccessBlock) {
@@ -289,7 +376,7 @@
     }
 }
 
-- (void)handleFailureOfRequest:(__kindof JKBaseRequest *)request
+- (void)handleFailureOfRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
     if (!self.failedRequests) {
         self.failedRequests = [NSMutableArray new];
@@ -299,7 +386,7 @@
         if (request.groupFailureBlock) {
             request.groupFailureBlock(request);
         }
-        for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+        for (__kindof NSObject<JKRequestInGroupProtocol> *tmpRequest in [self.requestArray copy]) {
             [tmpRequest stop];
         }
         [self finishAllRequestsWithFailureBlock];
@@ -323,34 +410,23 @@
 
 - (void)finishAllRequestsWithSuccessBlock
 {
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-        [self.requestAccessory requestWillStop:self];
-    }
-    if (self.successBlock) {
-        self.successBlock(self);
-    }
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-        [self.requestAccessory requestDidStop:self];
-    }
+    [self handleAccessoryWithBlock:^{
+        if (self.successBlock) {
+            self.successBlock(self);
+        }
+    }];
     [self stop];
 }
 
 - (void)finishAllRequestsWithFailureBlock
 {
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-        [self.requestAccessory requestWillStop:self];
-    }
-    if (self.failureBlock) {
-        self.failureBlock(self);
-    }
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-        [self.requestAccessory requestDidStop:self];
-    }
+    [self handleAccessoryWithBlock:^{
+        if (self.failureBlock) {
+            self.failureBlock(self);
+        }
+    }];
     [self stop];
+
 }
 
 - (void)stop
@@ -362,13 +438,20 @@
     self.executing = NO;
 }
 
-- (void)configRequireSuccessRequests:(nullable NSArray <__kindof JKBaseRequest *> *)requests
+- (void)inAdvanceCompleteWithResult:(BOOL)isSuccess
 {
-
-    for (__kindof JKBaseRequest *request in requests) {
-        if (![request isKindOfClass:[JKBaseRequest class]]) {
 #if DEBUG
-            NSAssert(NO, @"please make sure [request isKindOfClass:[JKBaseRequest class]] be YES");
+    NSAssert(NO, @"not support now");
+#endif
+}
+
+- (void)configRequireSuccessRequests:(nullable NSArray <__kindof NSObject<JKRequestInGroupProtocol> *> *)requests
+{
+ 
+    for (__kindof JKBaseRequest *request in requests) {
+        if (![request conformsToProtocol:@protocol(JKRequestInGroupProtocol)]) {
+#if DEBUG
+            NSAssert(NO, @"please make sure request conforms protocol JKRequestInGroupProtocol");
 #endif
             return;
         }
@@ -390,8 +473,8 @@
 
 @interface JKChainRequest()
 
-@property (nonatomic, strong, nullable) __kindof JKBaseRequest *lastRequest;
-@property (nonatomic, assign, readwrite) BOOL inAdvanceCompleted;
+@property (nonatomic, strong, nullable) __kindof NSObject<JKRequestInGroupProtocol> *lastRequest;
+@property (nonatomic, assign, readonly) BOOL canStartNextRequest;
 
 @end
 
@@ -399,6 +482,7 @@
 
 - (void)start
 {
+    self.inAdvanceCompleted = NO;
     if (self.requestArray.count == 0) {
 #if DEBUG
         NSAssert(NO, @"please makesure self.requestArray.count > 0");
@@ -422,20 +506,9 @@
     [self clearCompletionBlock];
     self.finishedCount = 0;
     self.failedRequests = nil;
+    self.lastRequest = nil;
     [[JKNetworkAgent sharedAgent] removeChainRequest:self];
     self.executing = NO;
-    self.inAdvanceCompleted = NO;
-}
-
-- (void)configRequest:(__kindof JKBaseRequest *)request manualStartNextRequest:(BOOL)manualStartNextRequest
-{
-    if (self.executing) {
-#if DEBUG
-        NSAssert(NO, @"please config before the chainRequest start!");
-#endif
-        return;
-    }
-    request.manualStartNextRequest = manualStartNextRequest;
 }
 
 - (void)startWithCompletionSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
@@ -446,64 +519,30 @@
     [[JKNetworkAgent sharedAgent] addChainRequest:self];
 }
 
-- (void)manualStartNextRequest
-{
-    if (self.lastRequest.error) {
-#if DEBUG
-        NSAssert(NO, @"lastRequest has error,can't startNextRequest!");
-#endif
-        return;
-    }
-    if (self.lastRequest.manualStartNextRequest) {
-        [self startNextRequest];
-    } else {
-#if DEBUG
-        NSAssert(NO, @"can't invoke manualStartNextRequest now,please check");
-#endif
-    }
-}
 
-- (void)inAdvanceCompleteChainRequestWithResult:(BOOL)isSuccess
+- (void)inAdvanceCompleteWithResult:(BOOL)isSuccess
 {
-    if (self.lastRequest.error) {
-#if DEBUG
-        NSAssert(NO, @"lastRequest has error,can't inAdvanceCompleteChainRequest!");
-#endif
-        return;
-    }
     self.inAdvanceCompleted = YES;
     if (isSuccess) {
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-            [self.requestAccessory requestWillStop:self];
-        }
-        if (self.successBlock) {
-            self.successBlock(self);
-        }
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-            [self.requestAccessory requestDidStop:self];
-        }
+        [self handleAccessoryWithBlock:^{
+            if (self.successBlock) {
+                self.successBlock(self);
+            }
+        }];
     } else {
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-            [self.requestAccessory requestWillStop:self];
-        }
-        if (self.failureBlock) {
-            self.failureBlock(self);
-        }
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-            [self.requestAccessory requestDidStop:self];
-        }
+        [self handleAccessoryWithBlock:^{
+            if (self.failureBlock) {
+                self.failureBlock(self);
+            }
+        }];
     }
     [self stop];
 }
 
 - (void)startNextRequest
 {
-    if (self.finishedCount < [self.requestArray count]) {
-        JKBaseRequest *request = self.requestArray[self.finishedCount];
+    if (self.canStartNextRequest) {
+        __kindof NSObject<JKRequestInGroupProtocol> *request = self.requestArray[self.finishedCount];
         self.finishedCount++;
         if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
             JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
@@ -538,34 +577,28 @@
     }
 }
 
-- (void)handleSuccessOfRequest:(__kindof JKBaseRequest *)request
+- (void)handleSuccessOfRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
     self.lastRequest = request;
-    BOOL canStartNextRequest = self.finishedCount < [self.requestArray count];
     if (request.groupSuccessBlock) {
         request.groupSuccessBlock(request);
+        if (self.inAdvanceCompleted) {
+            return;
+        }
     }
-    if (canStartNextRequest) {
-        if (!request.manualStartNextRequest) {
-            [self startNextRequest];
-        }
+    if (self.canStartNextRequest) {
+        [self startNextRequest];
     } else {
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-            [self.requestAccessory requestWillStop:self];
-        }
-        if (self.successBlock) {
-            self.successBlock(self);
-        }
-        if (self.requestAccessory
-            && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-            [self.requestAccessory requestDidStop:self];
-        }
+        [self handleAccessoryWithBlock:^{
+            if (self.successBlock) {
+                self.successBlock(self);
+            }
+        }];
         [self stop];
     }
 }
 
-- (void)handleFailureOfRequest:(__kindof JKBaseRequest *)request
+- (void)handleFailureOfRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
     if (!self.failedRequests) {
         self.failedRequests = [NSMutableArray new];
@@ -574,22 +607,25 @@
     self.lastRequest = request;
     if (request.groupFailureBlock) {
         request.groupFailureBlock(request);
+        if (self.inAdvanceCompleted) {
+            return;
+        }
     }
-    for (__kindof JKBaseRequest *tmpRequest in [self.requestArray copy]) {
+    for (__kindof NSObject<JKRequestInGroupProtocol> *tmpRequest in [self.requestArray copy]) {
         [tmpRequest stop];
     }
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestWillStop:)]) {
-        [self.requestAccessory requestWillStop:self];
-    }
-    if (self.failureBlock) {
-        self.failureBlock(self);
-    }
-    if (self.requestAccessory
-        && [self.requestAccessory respondsToSelector:@selector(requestDidStop:)]) {
-        [self.requestAccessory requestDidStop:self];
-    }
+    [self handleAccessoryWithBlock:^{
+        if (self.failureBlock) {
+            self.failureBlock(self);
+        }
+    }];
     [self stop];
+}
+
+#pragma mark - - getter - -
+- (BOOL)canStartNextRequest
+{
+    return self.finishedCount < [self.requestArray count] && !self.inAdvanceCompleted;
 }
 
 @end

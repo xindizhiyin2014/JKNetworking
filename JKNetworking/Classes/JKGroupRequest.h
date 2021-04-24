@@ -10,22 +10,33 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JKGroupRequest : NSObject
+@interface JKGroupRequest : NSObject<JKRequestInGroupProtocol>
 /// the array of the JKBaseRequest
-@property (nonatomic, strong, readonly) NSMutableArray<__kindof JKBaseRequest *> *requestArray;
+@property (nonatomic, strong, readonly) NSMutableArray<__kindof NSObject<JKRequestInGroupProtocol> *> *requestArray;
 /// the class to handle the request indicator
 @property (nonatomic, strong, nullable) Class<JKRequestAccessoryProtocol> requestAccessory;
 
 /// the failed requests
-@property (nonatomic, strong, readonly, nullable) NSMutableArray<__kindof JKBaseRequest *> *failedRequests;
+@property (nonatomic, strong, readonly, nullable) NSMutableArray<__kindof NSObject<JKRequestInGroupProtocol> *> *failedRequests;
 
-- (void)addRequest:(__kindof JKBaseRequest *)request;
+/// the status of the groupRequest is complete inadvance
+@property (nonatomic, assign, readonly) BOOL inAdvanceCompleted;
 
-- (void)addRequestsWithArray:(NSArray<__kindof JKBaseRequest *> *)requestArray;
+/// add child request,make sure request conform protocol JKRequestProtocol
+/// @param request request
+- (void)addRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request;
+
+/// add child requests,make sure the request in requestArray conform protocol JKRequestProtocol
+/// @param requestArray requestArray
+- (void)addRequestsWithArray:(NSArray<__kindof NSObject<JKRequestInGroupProtocol> *>*)requestArray;
 
 - (void)start;
 
 - (void)stop;
+
+/// inadvance self with the result
+/// @param isSuccess the result
+- (void)inAdvanceCompleteWithResult:(BOOL)isSuccess;
 
 + (void)configNormalRequest:(__kindof JKBaseRequest *)request
                     success:(void(^)(__kindof JKBaseRequest *request))successBlock
@@ -42,6 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
                       success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
                       failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
++ (void)configChildGroupRequest:(__kindof JKGroupRequest *)request
+                        success:(void(^)(__kindof JKGroupRequest *request))successBlock
+                        failure:(void(^)(__kindof JKGroupRequest *request))failureBlock;
+
 @end
 
 #pragma mark - - JKBatchRequest - -
@@ -54,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
  if config the requests,only the requests in the config requests all success,then the batchRequest success block will be called,if one of request in config request failed,the batchRequest fail block will be called.
  this method should invoke after you add the request in the batchRequest.
  */
-- (void)configRequireSuccessRequests:(nullable NSArray <__kindof JKBaseRequest *> *)requests;
+- (void)configRequireSuccessRequests:(nullable NSArray <__kindof NSObject<JKRequestInGroupProtocol> *> *)requests;
 
 - (void)startWithCompletionSuccess:(nullable void (^)(JKBatchRequest *batchRequest))successBlock
                            failure:(nullable void (^)(JKBatchRequest *batchRequest))failureBlock;
@@ -64,18 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - - JKChainRequest - -
 @interface JKChainRequest : JKGroupRequest
 
-/// the chainRequest not really completed, user call inAdvanceCompleteChainRequest method,to complete the chainRequest inadvance.defalut is NO
-@property (nonatomic, assign, readonly) BOOL inAdvanceCompleted;
-
-/// config the request is manual start the next request,deafult is NO,must config before the chainRequest start.
-- (void)configRequest:(__kindof JKBaseRequest *)request manualStartNextRequest:(BOOL)manualStartNextRequest;
-
 - (void)startWithCompletionSuccess:(nullable void (^)(JKChainRequest *chainRequest))successBlock
                            failure:(nullable void (^)(JKChainRequest *chainRequest))failureBlock;
-/// manual start the next request
-- (void)manualStartNextRequest;
-/// complete the chainRequest in advance,even if the ChainRequest has requests not complete.this function can only call when a manual request success
-- (void)inAdvanceCompleteChainRequestWithResult:(BOOL)isSuccess;
 
 @end
 
