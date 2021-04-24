@@ -35,3 +35,11 @@ Carthage/Build
 # `pod install` in .travis.yml
 #
 # Pods/
+Example/Pods/Target Support Files/AFNetworking/AFNetworking.debug.xcconfig
+Example/Pods/Target Support Files/AFNetworking/AFNetworking.release.xcconfig
+Example/Pods/Target Support Files/JKDataHelper/JKDataHelper.debug.xcconfig
+Example/Pods/Target Support Files/JKDataHelper/JKDataHelper.release.xcconfig
+Example/Pods/Target Support Files/JKNetworking_/JKNetworking_.debug.xcconfig
+Example/Pods/Target Support Files/JKNetworking_/JKNetworking_.release.xcconfig
+Example/Pods/Target Support Files/Kiwi/Kiwi.debug.xcconfig
+Example/Pods/Target Support Files/Kiwi/Kiwi.release.xcconfig

@@ -15,8 +15,8 @@ PODS:
   - AFNetworking/UIKit (4.0.0):
     - AFNetworking/NSURLSession
   - JKDataHelper (0.1.23)
-  - JKNetworking_ (0.1.9):
-    - AFNetworking (= 4.0.0)
+  - JKNetworking_ (0.2.8.7):
+    - AFNetworking
     - JKDataHelper
   - Kiwi (3.0.0)
 
@@ -37,9 +37,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: d9fdf484a3c723ec3c558a41cc5754c7e845ee77
   JKDataHelper: b30fcfa50b345140ad55f3868e3b5a9e9e39283c
-  JKNetworking_: 4dfeac62e46a6a6a78c2afe1e44ead19d6e6f695
+  JKNetworking_: 267ffbbfd2a9394d6424abe778bee9889dc6e523
   Kiwi: fbeafef0f00e4d8f7dcb3420a4930afe70af77f7
 
 PODFILE CHECKSUM: 1129336e50b5cd4d7024d64f024efcac1b65fc80
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.10.0

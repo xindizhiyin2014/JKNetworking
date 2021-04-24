@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "JKBackgroundSessionManager.h"
 #import "JKBaseRequest.h"
 #import "JKGroupRequest.h"
 #import "JKMockManager.h"
@@ -17,6 +18,8 @@
 #import "JKNetworkConfig.h"
 #import "JKNetworking.h"
 #import "JKNetworkingMacro.h"
+#import "JKNetworkTaskDelegate.h"
+#import "JKRequestInGroupProtocol.h"
 
 FOUNDATION_EXPORT double JKNetworking_VersionNumber;
 FOUNDATION_EXPORT const unsigned char JKNetworking_VersionString[];
