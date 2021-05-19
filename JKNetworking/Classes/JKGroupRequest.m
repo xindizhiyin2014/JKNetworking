@@ -18,8 +18,6 @@
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
 /// is a default/download/upload request
 @property (nonatomic, assign) JKRequestType requestType;
-/// the data need to upload
-@property (nonatomic, strong) NSData *uploadData;
 /// the request success block
 @property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
@@ -33,7 +31,6 @@
 @dynamic progressBlock;
 @dynamic formDataBlock;
 @dynamic requestType;
-@dynamic uploadData;
 @dynamic groupSuccessBlock;
 @dynamic groupFailureBlock;
 
@@ -448,7 +445,7 @@
 - (void)configRequireSuccessRequests:(nullable NSArray <__kindof NSObject<JKRequestInGroupProtocol> *> *)requests
 {
  
-    for (__kindof JKBaseRequest *request in requests) {
+    for (__kindof NSObject<JKRequestInGroupProtocol> *request in requests) {
         if (![request conformsToProtocol:@protocol(JKRequestInGroupProtocol)]) {
 #if DEBUG
             NSAssert(NO, @"please make sure request conforms protocol JKRequestInGroupProtocol");

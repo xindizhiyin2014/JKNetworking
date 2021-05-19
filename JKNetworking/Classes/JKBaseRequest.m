@@ -34,8 +34,6 @@
 @property (nonatomic, assign) JKRequestType requestType;
 /// when upload data cofig the formData
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
-/// only in chainRequest,can use this property
-@property (nonatomic, assign) BOOL manualStartNextRequest;
 
 @property (nonatomic, copy, readwrite, nullable) NSString *signaturedUrl;
 
