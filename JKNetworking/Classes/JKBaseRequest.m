@@ -42,7 +42,6 @@
 /// the params has signatured
 @property (nonatomic, strong, readwrite, nullable) id signaturedParams;
 
-
 @end
 
 @implementation JKBaseRequest
@@ -90,6 +89,12 @@
             [self.requestAccessory requestWillStart:self];
         }
     }
+    
+    if ([JKNetworkConfig sharedConfig].requestHelper
+        && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(judgeToChangeCachePolicy:)]) {
+        [[JKNetworkConfig sharedConfig].requestHelper judgeToChangeCachePolicy:self];
+    }
+    
     if (self.ignoreCache) {
         self.isDataFromCache = NO;
         [[JKNetworkAgent sharedAgent] addRequest:self];

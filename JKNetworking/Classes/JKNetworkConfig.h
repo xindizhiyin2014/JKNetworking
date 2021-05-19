@@ -60,6 +60,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param request request
 - (void)afterEachRequest:(__kindof JKBaseRequest *)request;
 
+/// according one api response to judge the request need to cache or not,and cacheTime
+/// @param request request
+- (void)judgeToChangeCachePolicy:(__kindof JKBaseRequest *)request;
+
 @end
 
 @interface JKNetworkConfig : NSObject
