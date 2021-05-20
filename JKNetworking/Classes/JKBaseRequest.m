@@ -24,6 +24,8 @@
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
 /// is the response frome cache
 @property (nonatomic, assign, readwrite) BOOL isDataFromCache;
+/// the parse block
+@property (nonatomic, copy, nullable) id(^parseBlock)(__kindof JKBaseRequest *request, NSRecursiveLock *lock);
 /// the request success block
 @property (nonatomic, copy, nullable) void(^successBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
@@ -43,6 +45,7 @@
 @end
 
 @implementation JKBaseRequest
+
 @synthesize isIndependentRequest;
 @synthesize groupRequest;
 @synthesize groupSuccessBlock;
@@ -59,6 +62,9 @@
 
 - (void)clearCompletionBlock
 {
+    if (self.parseBlock) {
+        self.parseBlock = nil;
+    }
     if (self.successBlock) {
         self.successBlock = nil;
     }
@@ -136,12 +142,19 @@
 - (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
 {
+    [self startWithCompletionParse:nil success:successBlock failure:failureBlock];
+}
+
+- (void)startWithCompletionParse:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
+                         success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+{
     if (self.requestType != JKRequestTypeDefault) {
 #if DEBUG
         NSAssert(NO, @" request is upload request or download request,please use the specified func");
 #endif
         return;
     }
+    self.parseBlock = parseBlock;
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
     [self start];

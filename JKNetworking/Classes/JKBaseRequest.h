@@ -112,7 +112,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, strong, readonly, nullable) id responseJSONObject;
 
 /// the object of the json validate config
-@property (nonatomic, strong, nullable) id jsonValidator;
+@property (atomic, strong, nullable) id jsonValidator;
 
 /// the error of the requestTask
 @property (nonatomic, strong, readonly, nullable) NSError *error;
@@ -168,7 +168,18 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 ///after request failure before successBlock callback,do this func,if you want extra handle,return YES,else return NO
 - (BOOL)requestFailurePreHandle;
 
+/// start the request
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
 - (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+
+/// start the request
+/// @param parseBlock the block used to parse response, exec not in mainThread
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)startWithCompletionParse:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
+                         success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
+                         failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
 
 - (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header;
 

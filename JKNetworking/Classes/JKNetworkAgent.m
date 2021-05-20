@@ -26,6 +26,8 @@
 @property (nonatomic, strong, readwrite, nullable) NSError *error;
 /// the progressBlock of download/upload request
 @property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
+/// the parse block
+@property (nonatomic, copy, nullable) id(^parseBlock)(__kindof JKBaseRequest *request, NSRecursiveLock *lock);
 /// the request success block
 @property (nonatomic, copy, nullable) void(^successBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
@@ -52,6 +54,7 @@
 @dynamic responseJSONObject;
 @dynamic error;
 @dynamic progressBlock;
+@dynamic parseBlock;
 @dynamic successBlock;
 @dynamic failureBlock;
 @dynamic requestType;
@@ -101,6 +104,7 @@
 @property (nonatomic, strong, nonnull) NSMutableArray *bufferRequests;
 
 @property (nonatomic, strong,nonnull) JKBackgroundSessionManager *backgroundSessionMananger;
+@property (nonatomic, strong) NSRecursiveLock *parseLock;
 
 
 @end
@@ -137,6 +141,7 @@
         _jsonResponseSerializer = [self config_jsonResponseSerializer];
         _xmlParserResponseSerialzier = [self config_xmlParserResponseSerialzier];
         _backgroundSessionMananger = [JKBackgroundSessionManager new];
+        _parseLock = [[NSRecursiveLock alloc] init];
     }
     return self;
 }
@@ -489,6 +494,9 @@
                 [[JKNetworkConfig sharedConfig].requestHelper preHandleSuccessRequest:request];
             }
         }
+    }
+    if (request.parseBlock) {
+        request.parsedData = request.parseBlock(request,self.parseLock);
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (request.isIndependentRequest) {

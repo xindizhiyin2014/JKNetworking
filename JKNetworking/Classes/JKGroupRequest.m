@@ -18,6 +18,8 @@
 @property (nonatomic, copy, nullable) void (^formDataBlock)(id<AFMultipartFormData> formData);
 /// is a default/download/upload request
 @property (nonatomic, assign) JKRequestType requestType;
+/// the parse block
+@property (nonatomic, copy, nullable) id(^parseBlock)(__kindof JKBaseRequest *request, NSRecursiveLock *lock);
 /// the request success block
 @property (nonatomic, copy, nullable) void(^groupSuccessBlock)(__kindof JKBaseRequest *request);
 /// the request failure block
@@ -31,6 +33,7 @@
 @dynamic progressBlock;
 @dynamic formDataBlock;
 @dynamic requestType;
+@dynamic parseBlock;
 @dynamic groupSuccessBlock;
 @dynamic groupFailureBlock;
 
@@ -147,16 +150,27 @@
                     success:(void(^)(__kindof JKBaseRequest *request))successBlock
                     failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
 {
+    [self configNormalRequest:request parseBlock:nil success:successBlock failure:failureBlock];
+}
+
++ (void)configNormalRequest:(__kindof JKBaseRequest *)request
+                 parseBlock:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
+                    success:(void(^)(__kindof JKBaseRequest *request))successBlock
+                    failure:(void(^)(__kindof JKBaseRequest *request))failureBlock
+{
     NSAssert(request.requestType == JKRequestTypeDefault, @"make sure request.requestType == JKRequestTypeDefault be YES");
-    if (request.groupSuccessBlock
+    if (request.parseBlock
+        || request.groupSuccessBlock
         || request.groupFailureBlock) {
 #if DEBUG
+    NSAssert(!request.parseBlock, @"can't config the parseBlock");
     NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
     NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
 #else
         return;
 #endif
     }
+    request.parseBlock = parseBlock;
     request.groupSuccessBlock = successBlock;
     request.groupFailureBlock = failureBlock;
 }
