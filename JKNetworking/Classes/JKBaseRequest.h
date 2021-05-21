@@ -112,10 +112,10 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, strong, readonly, nullable) id responseJSONObject;
 
 /// the object of the json validate config
-@property (atomic, strong, nullable) id jsonValidator;
+@property (nonatomic, strong, nullable) id jsonValidator;
 
 /// the error of the requestTask
-@property (nonatomic, strong, readonly, nullable) NSError *error;
+@property (atomic, strong, readonly, nullable) NSError *error;
 
 /// the status of the requestTask is cancelled or not
 @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;

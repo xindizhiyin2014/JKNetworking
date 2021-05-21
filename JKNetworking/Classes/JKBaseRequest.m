@@ -21,7 +21,7 @@
 
 @property (nonatomic, strong, readwrite, nullable) id responseJSONObject;
 
-@property (nonatomic, strong, readwrite, nullable) NSError *error;
+@property (atomic, strong, readwrite, nullable) NSError *error;
 /// is the response frome cache
 @property (nonatomic, assign, readwrite) BOOL isDataFromCache;
 /// the parse block

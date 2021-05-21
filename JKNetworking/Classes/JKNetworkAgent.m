@@ -23,7 +23,7 @@
 @property (nonatomic, strong, readwrite) NSURLSessionTask *requestTask;
 @property (nonatomic, strong, readwrite, nullable) id responseObject;
 @property (nonatomic, strong, readwrite, nullable) NSDictionary *responseJSONObject;
-@property (nonatomic, strong, readwrite, nullable) NSError *error;
+@property (atomic, strong, readwrite, nullable) NSError *error;
 /// the progressBlock of download/upload request
 @property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
 /// the parse block
