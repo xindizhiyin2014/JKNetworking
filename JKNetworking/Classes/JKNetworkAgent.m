@@ -108,7 +108,7 @@
 /// the requests need after it fininsed,if the priority first request is not nil,
 @property (nonatomic, strong, nonnull) NSMutableArray *bufferRequests;
 
-@property (nonatomic, strong,nonnull) JKBackgroundSessionManager *backgroundSessionMananger;
+@property (nonatomic, strong, nonnull) JKBackgroundSessionManager *backgroundSessionMananger;
 @property (nonatomic, strong) NSRecursiveLock *parseLock;
 
 
