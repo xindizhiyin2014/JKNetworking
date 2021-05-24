@@ -41,6 +41,9 @@
 @property (nonatomic, copy, readwrite, nullable) NSString *signaturedUrl;
 /// the params has signatured
 @property (nonatomic, strong, readwrite, nullable) id signaturedParams;
+/// the data is from response is parsed
+@property (nonatomic, strong, readwrite, nullable) id parsedData;
+
 
 /// 每次真正发起请求前，重置状态，避免受到上次请求数据的干扰
 - (void)resetOriginStatus;
@@ -61,6 +64,7 @@
 @dynamic formDataBlock;
 @dynamic signaturedUrl;
 @dynamic signaturedParams;
+@dynamic parsedData;
 
 /// 每次真正发起请求前，重置状态，避免受到上次请求数据的干扰
 - (void)resetOriginStatus
@@ -71,6 +75,7 @@
     self.error = nil;
     self.signaturedUrl = nil;
     self.signaturedParams = nil;
+    self.parsedData = nil;
 }
 
 @end
@@ -496,7 +501,9 @@
         }
     }
     if (request.parseBlock) {
+        [self.parseLock lock];
         request.parsedData = request.parseBlock(request,self.parseLock);
+        [self.parseLock unlock];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (request.isIndependentRequest) {

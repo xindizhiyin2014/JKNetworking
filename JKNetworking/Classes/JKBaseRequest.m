@@ -42,6 +42,9 @@
 /// the params has signatured
 @property (nonatomic, strong, readwrite, nullable) id signaturedParams;
 
+/// the data is from response is parsed
+@property (nonatomic, strong, readwrite, nullable) id parsedData;
+
 @end
 
 @implementation JKBaseRequest

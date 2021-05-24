@@ -153,7 +153,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the customUrl of the request,it contain domain,path,query, and so on.
 @property (nonatomic, copy, nullable) NSString *customRequestUrl;
 /// the data is from response is parsed
-@property (atomic, strong, nullable) id parsedData;
+@property (nonatomic, strong, readonly, nullable) id parsedData;
 
 
 - (void)clearCompletionBlock;
