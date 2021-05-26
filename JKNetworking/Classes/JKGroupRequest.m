@@ -76,6 +76,12 @@
 
 - (void)addRequest:(__kindof NSObject<JKRequestInGroupProtocol> *)request
 {
+    if (self.executing) {
+#if DEBUG
+        NSAssert(NO, @"request is executing");
+#endif
+        return;
+    }
     if (![request conformsToProtocol:@protocol(JKRequestInGroupProtocol)]) {
 #if DEBUG
         NSAssert(NO, @"makesure request is conforms to protocol JKRequestInGroupProtocol");
@@ -94,6 +100,12 @@
 
 - (void)addRequestsWithArray:(NSArray<__kindof JKBaseRequest *> *)requestArray
 {
+    if (self.executing) {
+#if DEBUG
+        NSAssert(NO, @"request is executing");
+#endif
+        return;
+    }
     NSMutableSet *tmpSet = [NSMutableSet setWithArray:requestArray];
     if (tmpSet.count != requestArray.count) {
 #if DEBUG
