@@ -64,6 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param request request
 - (void)judgeToChangeCachePolicy:(__kindof JKBaseRequest *)request;
 
+/// validate the request is business success or not,only if the request is network successed will be called
+/// @param request request
+/// @param error error
+- (BOOL)validateBusinessSuccess:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error;
+
 @end
 
 @interface JKNetworkConfig : NSObject

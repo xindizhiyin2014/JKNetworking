@@ -49,6 +49,7 @@ typedef NS_ENUM(NSInteger,JKNetworkErrorType) {
   JKNetworkErrorNotSupportSignature = 10000,
    /// the response is not a valid json
   JKNetworkErrorInvalidJSONFormat,
+  JKNetworkErrorStatusCode,
 };
 
 typedef NS_ENUM(NSInteger,JKDownloadBackgroundPolicy) {

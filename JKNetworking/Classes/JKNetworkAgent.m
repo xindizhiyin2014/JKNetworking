@@ -467,10 +467,17 @@
 
 - (BOOL)validateResult:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error
 {
+    BOOL result = YES;
+    result = [request statusCodeValidator];
+    if (!result) {
+        if (error) {
+            *error = [NSError errorWithDomain:JKNetworkErrorDomain code:JKNetworkErrorStatusCode userInfo:@{NSLocalizedDescriptionKey:@"Invalid status code"}];
+        }
+        return result;
+    }
     if (request.requestType == JKRequestTypeDownload) {
         return YES;
     }
-    BOOL result = YES;
     id json = request.responseJSONObject;
     id validator = [request jsonValidator];
     if (json && validator) {
@@ -479,6 +486,14 @@
             NSError *tmpError = [[NSError alloc] initWithDomain:JKNetworkErrorDomain code:JKNetworkErrorInvalidJSONFormat userInfo:@{NSLocalizedDescriptionKey:@"validateResult failed",@"extra":request.responseJSONObject?:@{}}];
             if (error != NULL) {
               *error = tmpError;
+            }
+        } else {
+            if ([JKNetworkConfig sharedConfig].requestHelper
+                && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(validateBusinessSuccess:error:)]) {
+                result = [[JKNetworkConfig sharedConfig].requestHelper validateBusinessSuccess:request error:error];
+                if (!result) {
+                    return result;
+                }
             }
         }
     } else if (!json) {
