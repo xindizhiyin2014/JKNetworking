@@ -227,11 +227,16 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the background policy of the downloadRequest
 @property (nonatomic, assign) JKDownloadBackgroundPolicy backgroundPolicy;
 
+
 + (instancetype)new NS_UNAVAILABLE;
 
 + (instancetype)init NS_UNAVAILABLE;
 
 + (instancetype)initWithUrl:(nonnull NSString *)url;
+
+/// config the custom downloadedPath
+/// @param downloadedPath downloadedPath
+- (void)configCustomDownloadedPath:(NSString *)downloadedPath;
 
 /// downloadFile
 /// @param downloadProgressBlock downloadProgressBlock

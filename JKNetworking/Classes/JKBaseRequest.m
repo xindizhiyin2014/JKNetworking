@@ -346,6 +346,16 @@
     return request;
 }
 
+- (void)configCustomDownloadedPath:(NSString *)downloadedPath
+{
+    if (!downloadedPath) {
+#if DEBUG
+        NSAssert(NO, @"downloadedPath can't be nil!");
+#endif
+    }
+    _downloadedFilePath = downloadedPath;
+}
+
 - (instancetype)init
 {
     self = [super init];
