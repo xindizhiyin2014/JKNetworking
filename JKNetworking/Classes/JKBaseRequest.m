@@ -203,10 +203,12 @@
 
 - (BOOL)statusCodeValidator
 {
-//    NSHTTPURLResponse *response = (NSHTTPURLResponse *)self.requestTask.response;
-//    NSInteger statusCode = response.statusCode;
-//#warning todo
-    return YES;
+    NSHTTPURLResponse *response = (NSHTTPURLResponse *)self.requestTask.response;
+    NSInteger statusCode = response.statusCode;
+    if (statusCode == 200) {
+        return YES;
+    }
+    return NO;
 }
 
 - (NSString *)buildCustomRequestUrl
