@@ -169,19 +169,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 ///after request failure before successBlock callback,do this func,if you want extra handle,return YES,else return NO
 - (BOOL)requestFailurePreHandle;
 
-/// start the request
-/// @param successBlock successBlock
-/// @param failureBlock failureBlock
-- (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKBaseRequest *request))successBlock failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-
-/// start the request
-/// @param parseBlock the block used to parse response, exec not in mainThread
-/// @param successBlock successBlock
-/// @param failureBlock failureBlock
-- (void)startWithCompletionParse:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
-                         success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                         failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
-
 - (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header;
 
 /// add the validator for the reponse,if the jsonValidator isn't kind of NSArray or NSDictionary,the func do nothing
@@ -203,8 +190,23 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 @end
 
+@interface JKRequest : JKBaseRequest
+/// start the request
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKRequest *request))successBlock failure:(nullable void(^)(__kindof JKRequest *request))failureBlock;
 
-@interface JKBaseUploadRequest : JKBaseRequest
+/// start the request
+/// @param parseBlock the block used to parse response, exec not in mainThread
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)startWithCompletionParse:(nullable id(^)(__kindof JKRequest *request, NSRecursiveLock *lock))parseBlock
+                         success:(nullable void(^)(__kindof JKRequest *request))successBlock
+                         failure:(nullable void(^)(__kindof JKRequest *request))failureBlock;
+@end
+
+
+@interface JKUploadRequest : JKBaseRequest
 
 /// upload data
 /// @param uploadProgressBlock uploadProgressBlock
@@ -212,11 +214,11 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// @param failureBlock failureBlock
 - (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                   success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                   failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+                   success:(nullable void(^)(__kindof JKUploadRequest *request))successBlock
+                   failure:(nullable void(^)(__kindof JKUploadRequest *request))failureBlock;
 @end
 
-@interface JKBaseDownloadRequest :JKBaseRequest
+@interface JKDownloadRequest :JKBaseRequest
 
 /// the url of the download file resoure
 @property (nonatomic, copy, readonly) NSString *absoluteString;
@@ -243,8 +245,18 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// @param successBlock successBlock
 /// @param failureBlock failureBlock
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                     success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+                     success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
+
+/// downloadFile
+/// @param downloadProgressBlock downloadProgressBlock
+/// @param parseBlock parseBlock hanle decrypt,decode action,if use this block ,you need move the tempFilePath to downloadedFilePath youself
+/// @param successBlock successBlock
+/// @param failureBlock failureBlock
+- (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                       parse:(nullable id(^)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock))parseBlock
+                     success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
 
 @end
 

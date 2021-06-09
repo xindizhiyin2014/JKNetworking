@@ -187,11 +187,11 @@
     request.groupFailureBlock = failureBlock;
 }
 
-+ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
++ (void)configUploadRequest:(__kindof JKUploadRequest *)request
                    progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
               formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+                    success:(nullable void(^)(__kindof JKUploadRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKUploadRequest *request))failureBlock
 {
     NSAssert(request.requestType == JKRequestTypeUpload, @"make sure request.requestType == JKRequestTypeUpload be YES");
     if (request.progressBlock
@@ -213,10 +213,10 @@
     request.groupFailureBlock = failureBlock;
 }
 
-+ (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
++ (void)configDownloadRequest:(__kindof JKDownloadRequest *)request
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                      success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                      failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
 {
     NSAssert(request.requestType == JKRequestTypeDownload, @"make sure request.requestType == JKRequestTypeDownload be YES");
     if (request.progressBlock
@@ -331,33 +331,33 @@
     }
     for (__kindof NSObject<JKRequestInGroupProtocol> *request in self.requestArray) {
         
-        if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
-            JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
+        if ([request isKindOfClass:[JKUploadRequest class]]) {
+            JKUploadRequest *uploadRequest = (JKUploadRequest *)request;
             @weakify(self);
-            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKUploadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKUploadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
-        } else if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
-            JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
+        } else if ([request isKindOfClass:[JKDownloadRequest class]]) {
+            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
             @weakify(self);
-            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
         } else  if ([request isKindOfClass:[JKBaseRequest class]]) {
             @weakify(self);
-            JKBaseRequest *baseRequest = (JKBaseRequest *)request;
+            JKRequest *baseRequest = (JKRequest *)request;
             [baseRequest startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
@@ -567,23 +567,23 @@
     if (self.canStartNextRequest) {
         __kindof NSObject<JKRequestInGroupProtocol> *request = self.requestArray[self.finishedCount];
         self.finishedCount++;
-        if ([request isKindOfClass:[JKBaseUploadRequest class]]) {
-            JKBaseUploadRequest *uploadRequest = (JKBaseUploadRequest *)request;
+        if ([request isKindOfClass:[JKUploadRequest class]]) {
+            JKUploadRequest *uploadRequest = (JKUploadRequest *)request;
             @weakify(self);
-            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [uploadRequest uploadWithProgress:uploadRequest.progressBlock formDataBlock:uploadRequest.formDataBlock success:^(__kindof JKUploadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKUploadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
-        } else if ([request isKindOfClass:[JKBaseDownloadRequest class]]) {
-            JKBaseDownloadRequest *downloadRequest = (JKBaseDownloadRequest *)request;
+        } else if ([request isKindOfClass:[JKDownloadRequest class]]) {
+            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
             @weakify(self);
-            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];

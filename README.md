@@ -103,11 +103,11 @@ xindizhiyin2014, 929097264@qq.com
 GET请求
 
 ```
-JKBaseRequest *request = [JKBaseRequest new];
+JKRequest *request = [JKRequest new];
 request.requestUrl = @"/a1";
-[request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
+[request startWithCompletionBlockWithSuccess:^(__kindof JKRequest * request) {
 NSLog(@"AAA %@",request.responseJSONObject);
-} failure:^(__kindof JKBaseRequest * request) {
+} failure:^(__kindof JKRequest * request) {
 
 }];
 ```
@@ -116,13 +116,13 @@ POST请求
 
 ```
 
-JKBaseRequest *request = [JKBaseRequest new];
+JKRequest *request = [JKRequest new];
 request.requestUrl = @"/a2";
 request.requestMethod = JKRequestMethodPOST;
 request.requestArgument = @{@"name":@"jack"};
-[request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
+[request startWithCompletionBlockWithSuccess:^(__kindof JKRequest * request) {
 NSLog(@"BBB %@",request.responseJSONObject);
-} failure:^(__kindof JKBaseRequest * request) {
+} failure:^(__kindof JKRequest * request) {
 
 }];
 
@@ -130,13 +130,13 @@ NSLog(@"BBB %@",request.responseJSONObject);
 下载请求
 
 ```
-JKBaseDownloadRequest *downloadRequest = [JKBaseDownloadRequest initWithUrl:@"http://g.hiphotos.baidu.com/image/pic/item/c2cec3fdfc03924590b2a9b58d94a4c27d1e2500.jpg"];
+JKDownloadRequest *downloadRequest = [JKDownloadRequest initWithUrl:@"http://g.hiphotos.baidu.com/image/pic/item/c2cec3fdfc03924590b2a9b58d94a4c27d1e2500.jpg"];
 downloadRequest.backgroundPolicy = JKDownloadBackgroundRequire;// 下载文件有三种下载策略，大家感兴趣的话可以搜下JKDownloadBackgroundPolicy 这个枚举
 [downloadRequest downloadWithProgress:^(NSProgress * _Nonnull downloadProgress) {
 NSLog(@"progress %@",downloadProgress.localizedDescription);
-} success:^(__kindof JKBaseRequest * request) {
+} success:^(__kindof JKRequest * request) {
 NSLog(@"success %@",downloadRequest.downloadedFilePath);
-} failure:^(__kindof JKBaseRequest * request) {
+} failure:^(__kindof JKRequest * request) {
 NSLog(@"failure");
 }];
 
@@ -144,17 +144,17 @@ NSLog(@"failure");
 ### 组合网络请求
 BatchRequest
 ```
-JKBaseRequest *request1 = [JKBaseRequest new];
+JKRequest *request1 = [JKRequest new];
 request1.requestUrl = @"/a1";
-JKBaseRequest *request2 = [JKBaseRequest new];
+JKRequest *request2 = [JKRequest new];
 request2.requestUrl = @"/a2";
 request2.requestMethod = JKRequestMethodPOST;
 request2.requestArgument = @{@"name":@"jack"};
 JKBatchRequest *batchRequest = [[JKBatchRequest alloc] init];
 [batchRequest addRequestsWithArray:@[request1,request2]];
 [batchRequest startWithCompletionBlockWithSuccess:^(JKBatchRequest * _Nonnull batchRequest) {
-JKBaseRequest *requestA = batchRequest.requestArray.firstObject;
-JKBaseRequest *requestB = batchRequest.requestArray.lastObject;
+JKRequest *requestA = batchRequest.requestArray.firstObject;
+JKRequest *requestB = batchRequest.requestArray.lastObject;
 NSLog(@"AAA %@",requestA.responseJSONObject);
 NSLog(@"BBB %@",requestB.responseJSONObject);
 
@@ -167,10 +167,10 @@ ChainRequest
 
 1）正常用法
 ```
-JKBaseRequest *request1 = [JKBaseRequest new];
+JKRequest *request1 = [JKRequest new];
 request1.requestUrl = @"/a1";
 request1.responseSerializerType = JKResponseSerializerTypeJSON;
-JKBaseRequest *request2 = [JKBaseRequest new];
+JKRequest *request2 = [JKRequest new];
 request2.requestUrl = @"/a2";
 request2.requestMethod = JKRequestMethodPOST;
 request2.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -187,25 +187,25 @@ JKChainRequest *chainRequest = [JKChainRequest new];
 ```
 2）提前结束
 ```
-JKBaseRequest *request1 = [JKBaseRequest new];
+JKRequest *request1 = [JKRequest new];
 request1.requestUrl = @"/a1";
 request1.responseSerializerType = JKResponseSerializerTypeJSON;
-JKBaseRequest *request2 = [JKBaseRequest new];
+JKRequest *request2 = [JKRequest new];
 request2.requestUrl = @"/a2";
 request2.requestMethod = JKRequestMethodPOST;
 request2.responseSerializerType = JKResponseSerializerTypeJSON;
 request2.requestArgument = @{@"name":@"jack"};
 JKChainRequest *chainRequest = [JKChainRequest new];
-[JKChainRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+[JKChainRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
 	// 此处，如果传入参数为NO，那么chainRequest会执行failure 回调；如果传入YES，那么chainRequest会执行success 回调
     [request1 inAdvanceCompleteGroupRequestWithResult:YES];
-} failure:^(__kindof JKBaseRequest * _Nonnull request) {
+} failure:^(__kindof JKRequest * _Nonnull request) {
 
 }];
 
-[JKChainRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+[JKChainRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
  // 此处用来处理子网络请求的逻辑
-} failure:^(__kindof JKBaseRequest * _Nonnull request) {
+} failure:^(__kindof JKRequest * _Nonnull request) {
 
 }];
 
@@ -220,11 +220,11 @@ JKChainRequest *chainRequest = [JKChainRequest new];
 PriorityFirstRequest
 添加一个网络请求，可以单独的网路请求也可以是一个组合请求，所有的请求必须等到这个优先级网络请求执行完之后才会执行。
 
-1）JKBaseRequest
+1）JKRequest
 ```
 - (void)priorityFirstRequest
 {
-  JKBaseRequest *request = [JKBaseRequest new];
+  JKRequest *request = [JKRequest new];
   request.requestUrl = @"/a1";
   request.responseSerializerType = JKResponseSerializerTypeJSON;
   [[JKNetworkAgent sharedAgent] addPriorityFirstRequest:request];
@@ -234,10 +234,10 @@ PriorityFirstRequest
 ```
 - (void)priorityFirstRequest2
 {
-	JKBaseRequest *request1 = [JKBaseRequest new];
+	JKRequest *request1 = [JKRequest new];
 	request1.requestUrl = @"/a3";
 	request1.responseSerializerType = JKResponseSerializerTypeJSON;
-	JKBaseRequest *request2 = [JKBaseRequest new];
+	JKRequest *request2 = [JKRequest new];
 	request2.requestUrl = @"/a2";
 	request2.requestMethod = JKRequestMethodPOST;
 	request2.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -253,10 +253,10 @@ PriorityFirstRequest
 ```
 - (void)priorityFirstRequest3
 {
-	JKBaseRequest *request1 = [JKBaseRequest new];
+	JKRequest *request1 = [JKRequest new];
 	request1.requestUrl = @"/a3";
 	request1.responseSerializerType = JKResponseSerializerTypeJSON;
-	JKBaseRequest *request2 = [JKBaseRequest new];
+	JKRequest *request2 = [JKRequest new];
 	request2.requestUrl = @"/a2";
 	request2.requestMethod = JKRequestMethodPOST;
 	request2.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -282,12 +282,12 @@ PriorityFirstRequest
 [JKNetworkConfig sharedConfig].isMock = YES;
 NSDictionary *config = @{@"GET,/a1":@{}};
 [JKMockManager initMockConfig:config];
-JKBaseRequest *request = [JKBaseRequest new];
+JKRequest *request = [JKRequest new];
 request.requestUrl = @"/a1";
 request.responseSerializerType = JKResponseSerializerTypeJSON;
-[request startWithCompletionBlockWithSuccess:^(__kindof JKBaseRequest * request) {
+[request startWithCompletionBlockWithSuccess:^(__kindof JKRequest * request) {
 NSLog(@"AAA %@",request.responseJSONObject);
-} failure:^(__kindof JKBaseRequest * request) {
+} failure:^(__kindof JKRequest * request) {
 
 }];
 }
@@ -324,30 +324,30 @@ NSLog(@"AAA %@",responseObject);
 ```
 // 拼接从AppStore获取更新信息的网址
     NSString *requestUrl = [NSString stringWithFormat:@"https://itunes.apple.com/lookup?id=%@", appId];
-    JKBaseRequest *request = [[JKBaseRequest alloc] init];
+    JKRequest *request = [[JKRequest alloc] init];
     request.customRequestUrl = requestUrl;
     request.requestMethod = JKRequestMethodGET;
     request.requestSerializerType = JKRequestSerializerTypeHTTP;
     request.responseSerializerType = JKResponseSerializerTypeJSON;
-    [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) ....
+    [request startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) ....
 
 ```
-2)一组外部网络请求，如果是同一个供应商，一般域名是相同的可以定义一个JKBaseRequest子类，初始化时将request的baseUrl进行配置即可。
+2)一组外部网络请求，如果是同一个供应商，一般域名是相同的可以定义一个JKRequest子类，初始化时将request的baseUrl进行配置即可。
 
 ### 请求添加签名
-一般情况下接口都需要添加签名，不同的签名规则，需要创建不同的JKBaseRequest子类
+一般情况下接口都需要添加签名，不同的签名规则，需要创建不同的JKRequest子类
 进行签名需要操作的步骤如下：
 
 1）请求对象配置是否需要签名
 ```
-    JKBaseRequest *request = [[JKBaseRequest alloc] init];
+    JKRequest *request = [[JKRequest alloc] init];
 	request.useSignature = YES;
    // 子类可以封装在内部初始化中
 
 ```
 2）实现JKRequestHelperProtocol中的方法，具体如下：
 ```
-- (void)signatureRequest:(__kindof JKBaseRequest *)request;
+- (void)signatureRequest:(__kindof JKRequest *)request;
 // 在内部实现中，根据request的类根据不同的签名规则进行签名
 ```
 备注：如果app中只有某一个请求的签名规则和项目中的不太一样，那么没有必要创建子类，可以将签名后的url，赋值给request的customRequestUrl属性。
@@ -357,29 +357,29 @@ NSLog(@"AAA %@",responseObject);
 
 1）如果是客户端开发人员需要指定那个网络请求需要缓存，需要手动指定一下，具体如下：
 ```
- JKBaseRequest *request = [[JKBaseRequest alloc] init];
+ JKRequest *request = [[JKRequest alloc] init];
  request.ignoreCache = NO;// 这个属性默认是NO，也可以不用指定
  request.cacheTimeInSeconds = 30;//cacheTimeInSeconds大于0的时候才会对返回内容进行缓存
    
 ```
 2）如果api有下发指定哪些接口需要缓存，api下发的需要缓存的接口可能客户端开发者指定的有冲突，重叠。具体需要根据业务讨论一个优先级准则。需要实现JKRequestHelperProtocol中如下方法：
 ```
-- (void)judgeToChangeCachePolicy:(__kindof JKBaseRequest *)request;
+- (void)judgeToChangeCachePolicy:(__kindof JKRequest *)request;
 //内部根据条件判断是否需要改变相应网络请求的缓存配置
 ```
 3)具体实现缓存的操作，实现JKRequestHelperProtocol协议方法如下：
 ```
 /// load Cache data of the request
 /// @param request request
-- (id)loadCacheDataOfRequest:(__kindof JKBaseRequest *)request error:(NSError **)error
+- (id)loadCacheDataOfRequest:(__kindof JKRequest *)request error:(NSError **)error
 
 /// save the request's reponse to cache
 /// @param request request
-- (void)saveResponseToCacheOfRequest:(__kindof JKBaseRequest *)request
+- (void)saveResponseToCacheOfRequest:(__kindof JKRequest *)request
 
 /// clear the the request's response from cache
 /// @param request request
-- (void)clearResponseFromCacheOfRequest:(__kindof JKBaseRequest *)request
+- (void)clearResponseFromCacheOfRequest:(__kindof JKRequest *)request
 
 ```
 
@@ -390,7 +390,7 @@ NSLog(@"AAA %@",responseObject);
 ```
 /// get the baseUrl of the request
 /// @param request request
-- (NSString *)baseUrlOfRequest:(__kindof JKBaseRequest *)request
+- (NSString *)baseUrlOfRequest:(__kindof JKRequest *)request
 
 ```
 
@@ -401,7 +401,7 @@ NSLog(@"AAA %@",responseObject);
 /// this is the url append or filter func
 /// @param originUrl originUrl
 /// @param request request
-- (NSString *)filterUrl:(NSString *)originUrl withRequest:(__kindof JKBaseRequest *)request;
+- (NSString *)filterUrl:(NSString *)originUrl withRequest:(__kindof JKRequest *)request;
 
 ```
 
@@ -413,12 +413,12 @@ NSLog(@"AAA %@",responseObject);
 /// @param parseBlock the block used to parse response, exec not in mainThread
 /// @param successBlock successBlock
 /// @param failureBlock failureBlock
-- (void)startWithCompletionParse:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
-                         success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                         failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+- (void)startWithCompletionParse:(nullable id(^)(__kindof JKRequest *request, NSRecursiveLock *lock))parseBlock
+                         success:(nullable void(^)(__kindof JKRequest *request))successBlock
+                         failure:(nullable void(^)(__kindof JKRequest *request))failureBlock;
 
 ```
-备注：JKBaseRequest或者其子类的对象调用该方法，并在parseBlock中将数据解析然后返回，这个返回值会赋给request的parsedData，开发者可以接着在successBlock中使用这个数据刷新UI（successBlock已经返回到主线程），如果用到了block以外的数据，需要用block中传递过来的lock，加锁，解锁。另外一个需要注意点就是这个parseBlock是在并发子线程执行，不能调用任何和UI相关的API。
+备注：JKRequest或者其子类的对象调用该方法，并在parseBlock中将数据解析然后返回，这个返回值会赋给request的parsedData，开发者可以接着在successBlock中使用这个数据刷新UI（successBlock已经返回到主线程），如果用到了block以外的数据，需要用block中传递过来的lock，加锁，解锁。另外一个需要注意点就是这个parseBlock是在并发子线程执行，不能调用任何和UI相关的API。
 
 ### 网络请求根据业务决定执行成功逻辑或者失败逻辑
 有时候网络请求成功了，但是返回的数据相关的code代表业务失败，需要执行业务失败的逻辑，为了避免才网络成功的回调中执行失败的逻辑，因此需要实现JKRequestHelperProtocol中的如下方法：
@@ -427,7 +427,7 @@ NSLog(@"AAA %@",responseObject);
 /// validate the request is business success or not,only if the request is network successed will be called
 /// @param request request
 /// @param error error
-- (BOOL)validateBusinessSuccess:(__kindof JKBaseRequest *)request error:(NSError * _Nullable __autoreleasing *)error;
+- (BOOL)validateBusinessSuccess:(__kindof JKRequest *)request error:(NSError * _Nullable __autoreleasing *)error;
 
 ```
 ## 技术交流，QQ扫描下方二维码

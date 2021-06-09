@@ -47,16 +47,16 @@ NS_ASSUME_NONNULL_BEGIN
                     success:(void(^)(__kindof JKBaseRequest *request))successBlock
                     failure:(void(^)(__kindof JKBaseRequest *request))failureBlock;
 
-+ (void)configUploadRequest:(__kindof JKBaseUploadRequest *)request
++ (void)configUploadRequest:(__kindof JKUploadRequest *)request
                    progress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
               formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                    success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                    failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+                    success:(nullable void(^)(__kindof JKUploadRequest *request))successBlock
+                    failure:(nullable void(^)(__kindof JKUploadRequest *request))failureBlock;
 
-+ (void)configDownloadRequest:(__kindof JKBaseDownloadRequest *)request
++ (void)configDownloadRequest:(__kindof JKDownloadRequest *)request
                      progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                      success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                      failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock;
+                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
 
 + (void)configChildGroupRequest:(__kindof JKGroupRequest *)request
                         success:(void(^)(__kindof JKGroupRequest *request))successBlock

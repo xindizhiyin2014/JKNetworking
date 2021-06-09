@@ -26,15 +26,15 @@ describe(@"BaseRequest", ^{
     context(@"single request", ^{
 
         it(@"return success", ^{
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             request.requestUrl = @"/a1";
             request.requestSerializerType = JKRequestSerializerTypeHTTP;
             request.responseSerializerType = JKResponseSerializerTypeJSON;
 
             __block BOOL success = NO;
-            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            [request startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
                 success = YES;
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             [[expectFutureValue(theValue(success)) shouldAfterWaitOf(5)] beYes];
@@ -42,36 +42,36 @@ describe(@"BaseRequest", ^{
 
         it(@"return failure", ^{
             //失败的网络请求
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             request.baseUrl = @"https://aacoioio.com";
             request.requestUrl = @"/aaa";
             request.requestSerializerType = JKRequestSerializerTypeHTTP;
             request.responseSerializerType = JKResponseSerializerTypeJSON;
             request.requestTimeoutInterval = 5;
             __block BOOL fail = NO;
-            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            [request startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail = YES;
             }];
             [[expectFutureValue(theValue(fail)) shouldAfterWaitOf(6)] beYes];
         });
 
         it(@"use same request instance repeat start requests", ^{
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             request.requestUrl = @"/a1";
             request.requestSerializerType = JKRequestSerializerTypeHTTP;
             request.responseSerializerType = JKResponseSerializerTypeJSON;
 
             __block BOOL success = NO;
-            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            [request startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
                 success = YES;
                 [[request.responseObject shouldNot] beNil];
                 [[request.responseJSONObject shouldNot] beNil];
                 [request startWithCompletionSuccess:nil failure:nil];
                 [[request.responseObject should] beNil];
                 [[request.responseJSONObject should] beNil];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             [[expectFutureValue(theValue(success)) shouldAfterWaitOf(3)] beYes];
@@ -87,17 +87,17 @@ describe(@"BaseRequest", ^{
         beforeEach(^{
             [[JKNetworkAgent sharedAgent] cancelAllRequests];
         });
-        it(@"addRequest,request is not a JKBaseRequest", ^{
+        it(@"addRequest,request is not a JKRequest", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
             JKChainRequest *request = [JKChainRequest new];
             [[theBlock(^{
                 [batchRequest addRequest:request];
-            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKRequest class]] be YES"];
         });
 
         it(@"addRequest,request has added in", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             [batchRequest addRequest:request];
             [[batchRequest.requestArray should] haveCountOf:1];
             [[theBlock(^{
@@ -107,27 +107,27 @@ describe(@"BaseRequest", ^{
 
         it(@"addRequestsWithArray,array has repeated requests", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             NSArray *array = @[request,request];
             [[theBlock(^{
                 [batchRequest addRequestsWithArray:array];
             }) should] raiseWithReason:@"requestArray has duplicated requests"];
         });
 
-        it(@"addRequestsWithArray,array has a request not a JKBaseRequest", ^{
+        it(@"addRequestsWithArray,array has a request not a JKRequest", ^{
            JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             JKChainRequest *chainRequest = [JKChainRequest new];
             NSArray *array = @[request,chainRequest];
             [[theBlock(^{
                 [batchRequest addRequestsWithArray:array];
-            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKRequest class]] be YES"];
         });
 
         it(@"addRequestsWithArray,array has a request add in", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
+            JKRequest *request2 = [JKRequest new];
             [batchRequest addRequest:request1];
             NSArray *array = @[request1,request2];
             [[theBlock(^{
@@ -137,8 +137,8 @@ describe(@"BaseRequest", ^{
 
         it(@"addRequestsWithArray,normal", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
+            JKRequest *request2 = [JKRequest new];
             NSArray *array = @[request1,request2];
             [batchRequest addRequestsWithArray:array];
             [[batchRequest.requestArray should] haveCountOf:2];
@@ -146,26 +146,26 @@ describe(@"BaseRequest", ^{
 
         it(@"configRequireSuccessRequests,requests is equal requestArray,require all success,all request success", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success1 = NO;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
                 success1 = YES;
                 [[request should] equal:request1];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.requestUrl = @"/a2";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success2 = NO;
-            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
                 success2 = YES;
                 [[request should] equal:request2];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             NSArray *array = @[request1,request2];
@@ -186,28 +186,28 @@ describe(@"BaseRequest", ^{
         
         it(@"configRequireSuccessRequests,requests is only has request1,require request1 success,all request success", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success1 = NO;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
                 success1 = YES;
                 [[request should] equal:request1];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             //失败的网络请求
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.baseUrl = @"https://aacoioio.com";
             request2.requestUrl = @"/aaa";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             request2.requestTimeoutInterval = 3;
             __block BOOL fail1 = NO;
-            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
                 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail1 = YES;
                 [[request should] equal:request2];
 
@@ -233,39 +233,39 @@ describe(@"BaseRequest", ^{
         
         it(@"configRequireSuccessRequests,requests is equal requestArray,one request failed", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             //失败的网络请求
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.baseUrl = @"https://aacoioio.com";
             request2.requestUrl = @"/aaa";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             request2.requestTimeoutInterval = 3;
             __block BOOL fail1 = NO;
-            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail1 = YES;
                 [[request should] equal:request2];
 
             }];
 
-            JKBaseRequest *request3 = [JKBaseRequest new];
+            JKRequest *request3 = [JKRequest new];
             request3.requestUrl = @"/a2";
             request3.requestMethod = JKRequestMethodPOST;
             request3.requestSerializerType = JKRequestSerializerTypeHTTP;
             request3.responseSerializerType = JKResponseSerializerTypeJSON;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
 
@@ -286,41 +286,41 @@ describe(@"BaseRequest", ^{
 
         it(@"configRequireSuccessRequests,requests is nil,one request success", ^{
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             //失败的网络请求
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.baseUrl = @"https://aacoioio.com";
             request2.requestUrl = @"/aaa";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             request2.requestTimeoutInterval = 3;
             __block BOOL fail1 = NO;
-            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail1 = YES;
                 [[request should] equal:request2];
 
             }];
             //失败的网络请求
-            JKBaseRequest *request3 = [JKBaseRequest new];
+            JKRequest *request3 = [JKRequest new];
             request3.baseUrl = @"https://aacoioio.com";
             request3.requestUrl = @"/aaa1";
             request3.requestSerializerType = JKRequestSerializerTypeHTTP;
             request3.responseSerializerType = JKResponseSerializerTypeJSON;
             request3.requestTimeoutInterval = 3;
             __block BOOL fail2 = NO;
-            [JKBatchRequest configNormalRequest:request3 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request3 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail2 = YES;
                 [[request should] equal:request3];
 
@@ -346,46 +346,46 @@ describe(@"BaseRequest", ^{
         it(@"configRequireSuccessRequests,requests is nil,all requests failed", ^{
             //失败的网络请求
             JKBatchRequest *batchRequest = [JKBatchRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.baseUrl = @"https://aacoioio.com";
             request1.requestUrl = @"/aaa1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
             request1.requestTimeoutInterval = 3;
             __block BOOL fail1 = NO;
-            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail1 = YES;
                 [[request should] equal:request1];
 
             }];
             //失败的网络请求
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.baseUrl = @"https://aacoioio.com";
             request2.requestUrl = @"/aaa2";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             request2.requestTimeoutInterval = 3;
             __block BOOL fail2 = NO;
-            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail2 = YES;
                 [[request should] equal:request2];
 
             }];
             //失败的网络请求
-            JKBaseRequest *request3 = [JKBaseRequest new];
+            JKRequest *request3 = [JKRequest new];
             request3.baseUrl = @"https://aacoioio.com";
             request3.requestUrl = @"/aaa3";
             request3.requestSerializerType = JKRequestSerializerTypeHTTP;
             request3.responseSerializerType = JKResponseSerializerTypeJSON;
             request3.requestTimeoutInterval = 3;
             __block BOOL fail3 = NO;
-            [JKBatchRequest configNormalRequest:request3 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKBatchRequest configNormalRequest:request3 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail3 = YES;
                 [[request should] equal:request3];
 
@@ -414,17 +414,17 @@ describe(@"BaseRequest", ^{
     
     context(@"chain request", ^{
 
-        it(@"addRequest,request is not a JKBaseRequest", ^{
+        it(@"addRequest,request is not a JKRequest", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
             JKBatchRequest *request = [JKBatchRequest new];
             [[theBlock(^{
                 [chainRequest addRequest:request];
-            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKRequest class]] be YES"];
         });
 
         it(@"addRequest,request has added in", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             [chainRequest addRequest:request];
             [[chainRequest.requestArray should] haveCountOf:1];
             [[theBlock(^{
@@ -434,27 +434,27 @@ describe(@"BaseRequest", ^{
 
         it(@"addRequestsWithArray,array has repeated requests", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             NSArray *array = @[request,request];
             [[theBlock(^{
                 [chainRequest addRequestsWithArray:array];
             }) should] raiseWithReason:@"requestArray has duplicated requests"];
         });
 
-        it(@"addRequestsWithArray,array has a request not a JKBaseRequest", ^{
+        it(@"addRequestsWithArray,array has a request not a JKRequest", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request = [JKBaseRequest new];
+            JKRequest *request = [JKRequest new];
             JKBatchRequest *batchRequest = [JKBatchRequest new];
             NSArray *array = @[request,batchRequest];
             [[theBlock(^{
                 [chainRequest addRequestsWithArray:array];
-            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+            }) should] raiseWithReason:@"makesure [request isKindOfClass:[JKRequest class]] be YES"];
         });
 
         it(@"addRequestsWithArray,array has a request add in", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
+            JKRequest *request2 = [JKRequest new];
             [chainRequest addRequest:request1];
             NSArray *array = @[request1,request2];
             [[theBlock(^{
@@ -464,8 +464,8 @@ describe(@"BaseRequest", ^{
 
         it(@"addRequestsWithArray,normal", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
+            JKRequest *request2 = [JKRequest new];
             NSArray *array = @[request1,request2];
             [chainRequest addRequestsWithArray:array];
             [[chainRequest.requestArray should] haveCountOf:2];
@@ -473,26 +473,26 @@ describe(@"BaseRequest", ^{
 
         it(@"all requests success", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success1 = NO;
-            [JKChainRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKChainRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
                 success1 = YES;
                 [[request should] equal:request1];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.requestUrl = @"/a2";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success2 = NO;
-            [JKChainRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKChainRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
                 success2 = YES;
                 [[request should] equal:request2];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             NSArray *array = @[request1,request2];
@@ -511,42 +511,42 @@ describe(@"BaseRequest", ^{
 
         it(@"a request in requests not first,not last, failed", ^{
             JKChainRequest *chainRequest = [JKChainRequest new];
-            JKBaseRequest *request1 = [JKBaseRequest new];
+            JKRequest *request1 = [JKRequest new];
             request1.requestUrl = @"/a1";
             request1.requestSerializerType = JKRequestSerializerTypeHTTP;
             request1.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL success1 = NO;
-            [JKChainRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKChainRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
                 success1 = YES;
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
 
             }];
             //失败的网络请求
-            JKBaseRequest *request2 = [JKBaseRequest new];
+            JKRequest *request2 = [JKRequest new];
             request2.baseUrl = @"https://aacoioio.com";
             request2.requestUrl = @"/aaa";
             request2.requestSerializerType = JKRequestSerializerTypeHTTP;
             request2.responseSerializerType = JKResponseSerializerTypeJSON;
             request2.requestTimeoutInterval = 3;
             __block BOOL fail1 = NO;
-            [JKChainRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKChainRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
 
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail1 = YES;
                 [[request should] equal:request2];
 
             }];
 
-            JKBaseRequest *request3 = [JKBaseRequest new];
+            JKRequest *request3 = [JKRequest new];
             request3.requestUrl = @"/a2";
             request3.requestMethod = JKRequestMethodPOST;
             request3.requestSerializerType = JKRequestSerializerTypeHTTP;
             request3.responseSerializerType = JKResponseSerializerTypeJSON;
             __block BOOL fail2 = NO;
             __block BOOL success2 = NO;
-            [JKChainRequest configNormalRequest:request3 success:^(__kindof JKBaseRequest * _Nonnull request) {
+            [JKChainRequest configNormalRequest:request3 success:^(__kindof JKRequest * _Nonnull request) {
                 success2 = YES;
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 fail2 = YES;
             }];
 
@@ -590,7 +590,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addRequest,request is a single request", ^{
-        JKBaseRequest *request = [JKBaseRequest new];
+        JKRequest *request = [JKRequest new];
         request.requestUrl = @"/a1";
         request.requestSerializerType = JKRequestSerializerTypeHTTP;
         request.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -600,7 +600,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addRequest,request is not a single request", ^{
-        JKBaseRequest *request = [JKBaseRequest new];
+        JKRequest *request = [JKRequest new];
         request.requestUrl = @"/a1";
         request.requestSerializerType = JKRequestSerializerTypeHTTP;
         request.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -608,7 +608,7 @@ describe(@"JKNetworkAgent", ^{
         [batchRequest addRequest:request];
         [[theBlock(^{
             [[JKNetworkAgent sharedAgent] addRequest:batchRequest];
-        }) should] raiseWithReason:@"please makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+        }) should] raiseWithReason:@"please makesure [request isKindOfClass:[JKRequest class]] be YES"];
     });
 
     it(@"addRequest,request is nil", ^{
@@ -625,7 +625,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"cancelRequest,request is a single request", ^{
-        JKBaseRequest *request = [JKBaseRequest new];
+        JKRequest *request = [JKRequest new];
         request.requestUrl = @"/a1";
         request.requestSerializerType = JKRequestSerializerTypeHTTP;
         request.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -638,7 +638,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"cancelRequest,request is not a single request", ^{
-        JKBaseRequest *request = [JKBaseRequest new];
+        JKRequest *request = [JKRequest new];
         request.requestUrl = @"/a1";
         request.requestSerializerType = JKRequestSerializerTypeHTTP;
         request.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -646,7 +646,7 @@ describe(@"JKNetworkAgent", ^{
         [batchRequest addRequest:request];
         [[theBlock(^{
             [[JKNetworkAgent sharedAgent] cancelRequest:batchRequest];
-        }) should] raiseWithReason:@"please makesure [request isKindOfClass:[JKBaseRequest class]] be YES"];
+        }) should] raiseWithReason:@"please makesure [request isKindOfClass:[JKRequest class]] be YES"];
     });
 
     it(@"addBatchRequest,request is nil", ^{
@@ -658,12 +658,12 @@ describe(@"JKNetworkAgent", ^{
     it(@"addBatchRequest,request is a batchRequest", ^{
         JKBatchRequest *batchRequest = [JKBatchRequest new];
 
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         [batchRequest addRequest:request1];
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a1";
         request2.requestMethod = JKRequestMethodPOST;
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
@@ -676,7 +676,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addBatchRequest,request is not a batchRequest", ^{
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -688,7 +688,7 @@ describe(@"JKNetworkAgent", ^{
     it(@"removeBatchRequest,request is a batchRequest", ^{
        JKBatchRequest *batchRequest = [JKBatchRequest new];
 
-       JKBaseRequest *request1 = [JKBaseRequest new];
+       JKRequest *request1 = [JKRequest new];
        request1.requestUrl = @"/a1";
        request1.requestSerializerType = JKRequestSerializerTypeHTTP;
        request1.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -705,7 +705,7 @@ describe(@"JKNetworkAgent", ^{
 
     it(@"removeBatchRequest,request is not a batchREquest", ^{
 
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -722,26 +722,26 @@ describe(@"JKNetworkAgent", ^{
 
     it(@"addChainRequest,request is a chainRequest", ^{
         JKChainRequest *chainRequest = [JKChainRequest new];
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         __block BOOL success1 = NO;
-        [JKChainRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+        [JKChainRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
             success1 = YES;
             [[request should] equal:request1];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
         __block BOOL success2 = NO;
-        [JKChainRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+        [JKChainRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[request should] equal:request2];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
         NSArray *array = @[request1,request2];
@@ -753,7 +753,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addChainRequest,request is not a chainRequest", ^{
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -764,26 +764,26 @@ describe(@"JKNetworkAgent", ^{
 
     it(@"removeChainRequest,request is a chainRequest", ^{
         JKChainRequest *chainRequest = [JKChainRequest new];
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         __block BOOL success1 = NO;
-        [JKChainRequest configNormalRequest:request1 success:^(__kindof JKBaseRequest * _Nonnull request) {
+        [JKChainRequest configNormalRequest:request1 success:^(__kindof JKRequest * _Nonnull request) {
             success1 = YES;
             [[request should] equal:request1];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
         __block BOOL success2 = NO;
-        [JKChainRequest configNormalRequest:request2 success:^(__kindof JKBaseRequest * _Nonnull request) {
+        [JKChainRequest configNormalRequest:request2 success:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[request should] equal:request2];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
         NSArray *array = @[request1,request2];
@@ -802,7 +802,7 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"removeChainRequest,request is not a chainRequest", ^{
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -824,12 +824,12 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addPriorityFirstRequest,has request started", ^{
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         [[JKNetworkAgent sharedAgent] addRequest:request1];
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -840,28 +840,28 @@ describe(@"JKNetworkAgent", ^{
     });
 
     it(@"addPriorityFirstRequest,request is a single request, success", ^{
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         [[JKNetworkAgent sharedAgent] addPriorityFirstRequest:request1];
 
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
         __block BOOL success1 = NO;
         __block BOOL success2 = NO;
-        [request2 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request2 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[theValue(success1) should] beYes];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
-        [request1 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request1 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success1 = YES;
             [[theValue(success2) should] beNo];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
         [[expectFutureValue(theValue(success1)) shouldAfterWaitOf(3)] beYes];
@@ -870,14 +870,14 @@ describe(@"JKNetworkAgent", ^{
 
     it(@"addPriorityFirstRequest,request is a single request, fail", ^{
 
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.baseUrl = @"https://aacoioio.com";
         request1.requestUrl = @"/aaa1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
         request1.requestTimeoutInterval = 3;
 
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a1";
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -887,16 +887,16 @@ describe(@"JKNetworkAgent", ^{
         __block BOOL success2 = NO;
         __block BOOL fail1 = NO;
         __block BOOL fail2 = NO;
-        [request2 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request2 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[theValue(success1) should] beYes];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
             fail2 = YES;
         }];
-        [request1 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request1 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success1 = YES;
             [[theValue(success2) should] beNo];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
             fail1 = YES;
         }];
         [[expectFutureValue(theValue(success1)) shouldAfterWaitOf(5)] beNo];
@@ -908,12 +908,12 @@ describe(@"JKNetworkAgent", ^{
     it(@"addPriorityFirstRequest,request is a batchRequest,success", ^{
         JKBatchRequest *batchRequest = [JKBatchRequest new];
 
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
 
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestMethod = JKRequestMethodPOST;
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
@@ -922,17 +922,17 @@ describe(@"JKNetworkAgent", ^{
 
         [[JKNetworkAgent sharedAgent] addPriorityFirstRequest:batchRequest];
 
-        JKBaseRequest *request3 = [JKBaseRequest new];
+        JKRequest *request3 = [JKRequest new];
         request3.requestUrl = @"/a1";
         request3.requestSerializerType = JKRequestSerializerTypeHTTP;
         request3.responseSerializerType = JKResponseSerializerTypeJSON;
 
         __block BOOL success1 = NO;
         __block BOOL success2 = NO;
-        [request3 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request3 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[theValue(success1) should] beYes];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
 
@@ -952,14 +952,14 @@ describe(@"JKNetworkAgent", ^{
 
       JKBatchRequest *batchRequest = [JKBatchRequest new];
 
-      JKBaseRequest *request1 = [JKBaseRequest new];
+      JKRequest *request1 = [JKRequest new];
       request1.baseUrl = @"https://aacoioio.com";
       request1.requestUrl = @"/aaa1";
       request1.requestSerializerType = JKRequestSerializerTypeHTTP;
       request1.responseSerializerType = JKResponseSerializerTypeJSON;
       request1.requestTimeoutInterval = 3;
 
-      JKBaseRequest *request2 = [JKBaseRequest new];
+      JKRequest *request2 = [JKRequest new];
       request2.requestUrl = @"/a2";
       request2.requestMethod = JKRequestMethodPOST;
       request2.requestSerializerType = JKRequestSerializerTypeHTTP;
@@ -969,7 +969,7 @@ describe(@"JKNetworkAgent", ^{
       [[JKNetworkAgent sharedAgent] addPriorityFirstRequest:batchRequest];
 
 
-      JKBaseRequest *request3 = [JKBaseRequest new];
+      JKRequest *request3 = [JKRequest new];
       request3.requestUrl = @"/a1";
       request3.requestSerializerType = JKRequestSerializerTypeHTTP;
       request3.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -978,9 +978,9 @@ describe(@"JKNetworkAgent", ^{
       __block BOOL success2 = NO;
       __block BOOL fail1 = NO;
       __block BOOL fail2 = NO;
-      [request3 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+      [request3 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
           success2 = YES;
-      } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+      } failure:^(__kindof JKRequest * _Nonnull request) {
           fail2 = YES;
       }];
 
@@ -999,19 +999,19 @@ describe(@"JKNetworkAgent", ^{
     it(@"addPriorityFirstRequest,request is a chainRequest,success", ^{
         JKChainRequest *chainRequest = [JKChainRequest new];
 
-        JKBaseRequest *request1 = [JKBaseRequest new];
+        JKRequest *request1 = [JKRequest new];
         request1.requestUrl = @"/a1";
         request1.requestSerializerType = JKRequestSerializerTypeHTTP;
         request1.responseSerializerType = JKResponseSerializerTypeJSON;
 
-        JKBaseRequest *request2 = [JKBaseRequest new];
+        JKRequest *request2 = [JKRequest new];
         request2.requestUrl = @"/a2";
         request2.requestMethod = JKRequestMethodPOST;
         request2.requestSerializerType = JKRequestSerializerTypeHTTP;
         request2.responseSerializerType = JKResponseSerializerTypeJSON;
         [chainRequest addRequestsWithArray:@[request1,request2]];
 
-        JKBaseRequest *request3 = [JKBaseRequest new];
+        JKRequest *request3 = [JKRequest new];
         request3.requestUrl = @"/a1";
         request3.requestSerializerType = JKRequestSerializerTypeHTTP;
         request3.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -1019,10 +1019,10 @@ describe(@"JKNetworkAgent", ^{
 
         __block BOOL success1 = NO;
         __block BOOL success2 = NO;
-        [request3 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+        [request3 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
             success2 = YES;
             [[theValue(success1) should] beYes];
-        } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+        } failure:^(__kindof JKRequest * _Nonnull request) {
 
         }];
 
@@ -1040,14 +1040,14 @@ describe(@"JKNetworkAgent", ^{
     it(@"addPriorityFirstRequest,request is a chainRequest,fail", ^{
         JKChainRequest *chainRequest = [JKChainRequest new];
 
-         JKBaseRequest *request1 = [JKBaseRequest new];
+         JKRequest *request1 = [JKRequest new];
          request1.baseUrl = @"https://aacoioio.com";
          request1.requestUrl = @"/aaa1";
          request1.requestSerializerType = JKRequestSerializerTypeHTTP;
          request1.responseSerializerType = JKResponseSerializerTypeJSON;
         request1.requestTimeoutInterval = 3;
 
-         JKBaseRequest *request2 = [JKBaseRequest new];
+         JKRequest *request2 = [JKRequest new];
          request2.requestUrl = @"/a2";
          request2.requestMethod = JKRequestMethodPOST;
          request2.requestSerializerType = JKRequestSerializerTypeHTTP;
@@ -1057,7 +1057,7 @@ describe(@"JKNetworkAgent", ^{
          [[JKNetworkAgent sharedAgent] addPriorityFirstRequest:chainRequest];
 
 
-         JKBaseRequest *request3 = [JKBaseRequest new];
+         JKRequest *request3 = [JKRequest new];
          request3.requestUrl = @"/a1";
          request3.requestSerializerType = JKRequestSerializerTypeHTTP;
          request3.responseSerializerType = JKResponseSerializerTypeJSON;
@@ -1066,9 +1066,9 @@ describe(@"JKNetworkAgent", ^{
          __block BOOL success2 = NO;
          __block BOOL fail1 = NO;
          __block BOOL fail2 = NO;
-         [request3 startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+         [request3 startWithCompletionSuccess:^(__kindof JKRequest * _Nonnull request) {
              success2 = YES;
-         } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+         } failure:^(__kindof JKRequest * _Nonnull request) {
              fail2 = YES;
          }];
 

@@ -9,7 +9,7 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
-@class JKBaseDownloadRequest;
+@class JKDownloadRequest;
 @class AFHTTPRequestSerializer;
 
 @interface JKBackgroundSessionManager : NSObject
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, nullable) void (^completionHandler)(void);
 
-- (NSURLSessionTask *)dataTaskWithDownloadRequest:(__kindof JKBaseDownloadRequest *)request
+- (NSURLSessionTask *)dataTaskWithDownloadRequest:(__kindof JKDownloadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                         URLString:(NSString *)URLString
                                        parameters:(id)parameters

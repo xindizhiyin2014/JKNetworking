@@ -152,7 +152,7 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
     }
 }
 
-- (NSURLSessionTask *)dataTaskWithDownloadRequest:(__kindof JKBaseDownloadRequest *)request
+- (NSURLSessionTask *)dataTaskWithDownloadRequest:(__kindof JKDownloadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                         URLString:(NSString *)URLString
                                        parameters:(id)parameters

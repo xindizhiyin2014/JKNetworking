@@ -10,60 +10,31 @@
 #import "JKNetworkingMacro.h"
 
 @interface JKNetworkBaseDownloadTaskDelegate()
-@property (nonatomic, weak, readwrite) __kindof JKBaseDownloadRequest *request;
+@property (nonatomic, weak, readwrite) __kindof JKDownloadRequest *request;
+@property (nonatomic, copy) NSString *downloadTargetPath;
+@property (nonatomic, copy) NSString *tempPath;
+@property (nonatomic, strong) NSProgress *progress;
+@property (nonatomic, assign) int64_t currentLength;
+@property (nonatomic, assign) int64_t totalLength;
+@property (nonatomic, copy, nullable) id(^parseBlock)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock);
+
+
+
 
 @end
 
 @implementation JKNetworkBaseDownloadTaskDelegate
 
-- (instancetype)initWithRequest:(__kindof JKBaseDownloadRequest *)request
+- (instancetype)initWithRequest:(__kindof JKDownloadRequest *)request
 {
     self = [super init];
     if (self) {
         _request = request;
-    }
-    return self;
-}
-
-- (void)URLSession:(NSURLSession *)session task:(__kindof NSURLSessionTask *)task
-                      didBecomeInvalidWithError:(NSError *)error
-{
-    
-}
-
-@end
-
-
-
-@interface JKNetworkDownloadTaskDelegate()
-
-@property (nonatomic, copy) NSString *downloadTargetPath;
-@property (nonatomic, copy) NSString *tempPath;
-@property (nonatomic, strong) NSProgress *progress;
-@property (nonatomic, strong) NSFileHandle *fileHandle;
-@property (nonatomic, assign) int64_t resumeDataLength;
-@property (nonatomic, assign) int64_t currentLength;
-@property (nonatomic, assign) int64_t totalLength;
-
-@end
-
-@implementation JKNetworkDownloadTaskDelegate
-
-- (instancetype)initWithRequest:(__kindof JKBaseDownloadRequest *)request
-{
-    self = [super initWithRequest:request];
-    if (self) {
         _progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
         _currentLength = 0;
-        _resumeDataLength = 0;
         _totalLength = 0;
         _downloadTargetPath = request.downloadedFilePath;
         _tempPath = request.tempFilePath;
-        BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:_tempPath];
-        if (resumeDataFileExists) {
-            NSData *resumeData = [NSData dataWithContentsOfFile:_tempPath];
-            _resumeDataLength = resumeData.length;
-        }
         NSURLSessionTask *task = request.requestTask;
         @weakify(task);
         _progress.totalUnitCount = NSURLSessionTransferSizeUnknown;
@@ -93,6 +64,40 @@
                    forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+    }
+    return self;
+}
+
+- (void)URLSession:(NSURLSession *)session task:(__kindof NSURLSessionTask *)task
+                      didBecomeInvalidWithError:(NSError *)error
+{
+    
+}
+
+@end
+
+
+
+@interface JKNetworkDownloadTaskDelegate()
+
+@property (nonatomic, strong) NSFileHandle *fileHandle;
+@property (nonatomic, assign) int64_t resumeDataLength;
+
+
+@end
+
+@implementation JKNetworkDownloadTaskDelegate
+
+- (instancetype)initWithRequest:(__kindof JKDownloadRequest *)request
+{
+    self = [super initWithRequest:request];
+    if (self) {
+        _resumeDataLength = 0;
+        BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:self.tempPath];
+        if (resumeDataFileExists) {
+            NSData *resumeData = [NSData dataWithContentsOfFile:self.tempPath];
+            _resumeDataLength = resumeData.length;
+        }
     }
     return self;
 }
@@ -179,60 +184,14 @@ didCompleteWithError:(NSError *)error
 
 @interface JKNetworkBackgroundDownloadTaskDelegate()
 
-@property (nonatomic, copy) NSString *downloadTargetPath;
-@property (nonatomic, strong) NSProgress *progress;
-@property (nonatomic, strong) NSData *resumeData;
-@property (nonatomic, assign) int64_t currentLength;
-@property (nonatomic, assign) int64_t totalLength;
-@property (nonatomic, copy) NSString *tempPath;
-
 @end
 
 @implementation JKNetworkBackgroundDownloadTaskDelegate
 
-- (instancetype)initWithRequest:(__kindof JKBaseDownloadRequest *)request
+- (instancetype)initWithRequest:(__kindof JKDownloadRequest *)request
 {
     self = [super initWithRequest:request];
     if (self) {
-        _progress = [[NSProgress alloc] initWithParent:nil userInfo:nil];
-        _currentLength = 0;
-        _totalLength = 0;
-        _downloadTargetPath = request.downloadedFilePath;
-        _tempPath = request.tempFilePath;
-        BOOL resumeDataFileExists = [[NSFileManager defaultManager] fileExistsAtPath:_tempPath];
-        if (resumeDataFileExists) {
-            NSData *resumeData = [NSData dataWithContentsOfFile:_tempPath];
-            _resumeData = resumeData;
-        }
-        NSURLSessionTask *task = request.requestTask;
-        @weakify(task);
-        _progress.totalUnitCount = NSURLSessionTransferSizeUnknown;
-        _progress.cancellable = YES;
-        _progress.cancellationHandler = ^{
-            @strongify(task);
-            [task cancel];
-        };
-        _progress.pausable = YES;
-        _progress.pausingHandler = ^{
-            @strongify(task);
-            [task suspend];
-        };
-    #if AF_CAN_USE_AT_AVAILABLE
-        if (@available(iOS 9, macOS 10.11, *))
-    #else
-        if ([_progress respondsToSelector:@selector(setResumingHandler:)])
-    #endif
-        {
-            _progress.resumingHandler = ^{
-                @strongify(task);
-                [task resume];
-            };
-        }
-        
-        [_progress addObserver:self
-                   forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
-                      options:NSKeyValueObservingOptionNew
-                      context:NULL];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;

@@ -142,27 +142,6 @@
     return NO;
 }
 
-- (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKBaseRequest *))successBlock
-                                    failure:(nullable void(^)(__kindof JKBaseRequest *))failureBlock
-{
-    [self startWithCompletionParse:nil success:successBlock failure:failureBlock];
-}
-
-- (void)startWithCompletionParse:(nullable id(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
-                         success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
-{
-    if (self.requestType != JKRequestTypeDefault) {
-#if DEBUG
-        NSAssert(NO, @" request is upload request or download request,please use the specified func");
-#endif
-        return;
-    }
-    self.parseBlock = parseBlock;
-    self.successBlock = successBlock;
-    self.failureBlock = failureBlock;
-    [self start];
-}
-
 - (void)addRequestHeader:(NSDictionary <NSString *,NSString *>*)header
 {
     if (!self.requestHeaders) {
@@ -291,11 +270,40 @@
 }
 @end
 
-@interface JKBaseUploadRequest()
+@interface JKRequest()
 
 @end
 
-@implementation JKBaseUploadRequest
+@implementation JKRequest
+
+- (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKRequest *))successBlock
+                                    failure:(nullable void(^)(__kindof JKRequest *))failureBlock
+{
+    [self startWithCompletionParse:nil success:successBlock failure:failureBlock];
+}
+
+- (void)startWithCompletionParse:(nullable id(^)(__kindof JKRequest *request, NSRecursiveLock *lock))parseBlock
+                         success:(nullable void(^)(__kindof JKRequest *request))successBlock failure:(nullable void(^)(__kindof JKRequest *request))failureBlock
+{
+    if (self.requestType != JKRequestTypeDefault) {
+#if DEBUG
+        NSAssert(NO, @" request is upload request or download request,please use the specified func");
+#endif
+        return;
+    }
+    self.parseBlock = parseBlock;
+    self.successBlock = successBlock;
+    self.failureBlock = failureBlock;
+    [self start];
+}
+
+@end
+
+@interface JKUploadRequest()
+
+@end
+
+@implementation JKUploadRequest
 
 - (instancetype)init
 {
@@ -308,8 +316,8 @@
 
 - (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
              formDataBlock:(nullable void(^)(id <AFMultipartFormData> formData))formDataBlock
-                   success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                   failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+                   success:(nullable void(^)(__kindof JKUploadRequest *request))successBlock
+                   failure:(nullable void(^)(__kindof JKUploadRequest *request))failureBlock
 {
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
@@ -321,7 +329,7 @@
 @end
 
 
-@interface JKBaseDownloadRequest()
+@interface JKDownloadRequest()
 
 /// the url of the download file resoure
 @property (nonatomic, copy, readwrite) NSString *absoluteString;
@@ -333,12 +341,12 @@
 
 @end
 
-@implementation JKBaseDownloadRequest
+@implementation JKDownloadRequest
 
 
 + (instancetype)initWithUrl:(nonnull NSString *)url
 {
-    JKBaseDownloadRequest *request = [[self alloc] init];
+    JKDownloadRequest *request = [[self alloc] init];
     if (request) {
 #if DEBUG
         NSAssert(url, @"url can't be nil");
@@ -373,12 +381,21 @@
 }
 
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                     success:(nullable void(^)(__kindof JKBaseRequest *request))successBlock
-                     failure:(nullable void(^)(__kindof JKBaseRequest *request))failureBlock
+                     success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
 {
+    [self downloadWithProgress:downloadProgressBlock parse:nil success:successBlock failure:failureBlock];
+}
+
+- (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                       parse:(nullable id(^)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock))parseBlock
+                     success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                     failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
+{
+    self.progressBlock = downloadProgressBlock;
+    self.parseBlock = parseBlock;
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
-    self.progressBlock = downloadProgressBlock;
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
 

@@ -312,7 +312,7 @@
     
     AFHTTPRequestSerializer *requestSerializer = [self requestSerializerForRequest:request];
     if (request.requestType == JKRequestTypeDownload) {
-        return [self downloadTaskWithRequest:(JKBaseDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param error:error];
+        return [self downloadTaskWithRequest:(JKDownloadRequest *)request requestSerializer:requestSerializer URLString:url parameters:param error:error];
     } else if (request.requestType == JKRequestTypeUpload) {
         return [self uploadTaskWithRequest:request requestSerializer:requestSerializer URLString:url parameters:param error:error];
     }
@@ -321,7 +321,7 @@
 
 
 
-- (NSURLSessionTask *)downloadTaskWithRequest:(__kindof JKBaseDownloadRequest *)request
+- (NSURLSessionTask *)downloadTaskWithRequest:(__kindof JKDownloadRequest *)request
                             requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                     URLString:(NSString *)URLString
                                     parameters:(id)parameters
@@ -333,7 +333,7 @@
     return dataTask;
 }
 
-- (NSURLSessionDataTask *)uploadTaskWithRequest:(__kindof JKBaseUploadRequest *)request
+- (NSURLSessionDataTask *)uploadTaskWithRequest:(__kindof JKUploadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer
                                         URLString:(NSString *)URLString
                                        parameters:(id)parameters
