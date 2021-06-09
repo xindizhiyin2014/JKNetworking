@@ -16,7 +16,8 @@
 @property (nonatomic, strong) NSProgress *progress;
 @property (nonatomic, assign) int64_t currentLength;
 @property (nonatomic, assign) int64_t totalLength;
-@property (nonatomic, copy, nullable) id(^parseBlock)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock);
+@property (nonatomic, copy, nullable) NSError *(^parseBlock)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock);
+@property (nonatomic, strong) NSRecursiveLock *lock;
 
 
 
@@ -35,6 +36,7 @@
         _totalLength = 0;
         _downloadTargetPath = request.downloadedFilePath;
         _tempPath = request.tempFilePath;
+        _lock = [NSRecursiveLock new];
         NSURLSessionTask *task = request.requestTask;
         @weakify(task);
         _progress.totalUnitCount = NSURLSessionTransferSizeUnknown;
@@ -133,7 +135,11 @@ didCompleteWithError:(NSError *)error
     }
     if (self.completionHandler) {
         if (!error) {
-            [[NSFileManager defaultManager] moveItemAtPath:self.tempPath toPath:self.downloadTargetPath error:nil];
+            if (self.parseBlock) {
+                error = self.parseBlock(self.request,self.lock);
+            } else {
+                [[NSFileManager defaultManager] moveItemAtPath:self.tempPath toPath:self.downloadTargetPath error:nil];
+            }
         }
         self.completionHandler(task.response, error);
     }
@@ -248,8 +254,14 @@ didCompleteWithError:(NSError *)error
                               didFinishDownloadingToURL:(NSURL *)location
 {
     NSError *error = nil;
-    [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:self.downloadTargetPath] error:&error];
-    [[NSFileManager defaultManager] removeItemAtPath:self.tempPath error:nil];
+    if (self.parseBlock) {
+        [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:self.tempPath] error:nil];
+        error = self.parseBlock(self.request,self.lock);
+    }else {
+        [[NSFileManager defaultManager] moveItemAtURL:location toURL:[NSURL fileURLWithPath:self.downloadTargetPath] error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:self.tempPath error:nil];
+    }
+    
     if (self.completionHandler) {
         self.completionHandler(downloadTask.response,error);
     }

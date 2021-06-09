@@ -177,6 +177,9 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
     if (request.backgroundPolicy == JKDownloadBackgroundRequire) {
         if (canBeResumed) {
             sessionTask = [self.backgroundURLSession downloadTaskWithResumeData:resumeData];
+            if (!sessionTask) {
+                sessionTask = [self.backgroundURLSession downloadTaskWithRequest:urlRequest];
+            }
         } else {
             sessionTask = [self.backgroundURLSession downloadTaskWithRequest:urlRequest];
         }

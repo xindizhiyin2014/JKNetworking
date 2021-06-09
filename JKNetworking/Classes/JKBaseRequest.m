@@ -388,7 +388,7 @@
 }
 
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
-                       parse:(nullable id(^)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock))parseBlock
+                       parse:(nullable NSError *(^)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock))parseBlock
                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
 {
