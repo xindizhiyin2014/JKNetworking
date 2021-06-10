@@ -36,6 +36,7 @@
         _totalLength = 0;
         _downloadTargetPath = request.downloadedFilePath;
         _tempPath = request.tempFilePath;
+        _parseBlock = [request valueForKey:@"parseBlock"];
         _lock = [NSRecursiveLock new];
         NSURLSessionTask *task = request.requestTask;
         @weakify(task);
