@@ -218,12 +218,23 @@
                       success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
                       failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
 {
+    [self configDownloadRequest:request progress:downloadProgressBlock parseBlock:nil success:successBlock failure:failureBlock];
+}
+
++ (void)configDownloadRequest:(__kindof JKDownloadRequest *)request
+                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                   parseBlock:(nullable NSError *(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
+                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
+{
     NSAssert(request.requestType == JKRequestTypeDownload, @"make sure request.requestType == JKRequestTypeDownload be YES");
     if (request.progressBlock
+        || request.parseBlock
         || request.groupSuccessBlock
         || request.groupFailureBlock) {
 #if DEBUG
     NSAssert(!request.progressBlock, @"can't config the downloadProgressBlock");
+    NSAssert(!request.parseBlock, @"can't config the parseBlock");
     NSAssert(!request.groupSuccessBlock, @"can't config the successBlock");
     NSAssert(!request.groupFailureBlock, @"can't config the failureBlock");
 #else
@@ -231,6 +242,7 @@
 #endif
     }
     request.progressBlock = downloadProgressBlock;
+    request.parseBlock = parseBlock;
     request.groupSuccessBlock = successBlock;
     request.groupFailureBlock = failureBlock;
 }

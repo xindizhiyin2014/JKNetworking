@@ -58,6 +58,12 @@ NS_ASSUME_NONNULL_BEGIN
                       success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
                       failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
 
++ (void)configDownloadRequest:(__kindof JKDownloadRequest *)request
+                     progress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
+                   parseBlock:(nullable NSError *(^)(__kindof JKBaseRequest *request, NSRecursiveLock *lock))parseBlock
+                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
+                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
+
 + (void)configChildGroupRequest:(__kindof JKGroupRequest *)request
                         success:(void(^)(__kindof JKGroupRequest *request))successBlock
                         failure:(void(^)(__kindof JKGroupRequest *request))failureBlock;
