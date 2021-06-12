@@ -515,7 +515,8 @@
             }
         }
     }
-    if (request.parseBlock) {
+    if ([request isKindOfClass:[JKRequest class]]
+        && request.parseBlock) {
         [self.parseLock lock];
         request.parsedData = request.parseBlock(request,self.parseLock);
         [self.parseLock unlock];
