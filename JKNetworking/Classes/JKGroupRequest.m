@@ -356,17 +356,17 @@
         } else if ([request isKindOfClass:[JKDownloadRequest class]]) {
             JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
             @weakify(self);
-            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock parse:downloadRequest.parseBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
             } failure:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
-        } else  if ([request isKindOfClass:[JKBaseRequest class]]) {
+        } else  if ([request isKindOfClass:[JKRequest class]]) {
             @weakify(self);
-            JKRequest *baseRequest = (JKRequest *)request;
-            [baseRequest startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            JKRequest *normalRequest = (JKRequest *)request;
+            [normalRequest startWithCompletionParse:normalRequest.parseBlock success:^(__kindof JKRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
             } failure:^(__kindof JKRequest * _Nonnull request) {
@@ -592,19 +592,20 @@
         } else if ([request isKindOfClass:[JKDownloadRequest class]]) {
             JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
             @weakify(self);
-            [downloadRequest downloadWithProgress:downloadRequest.progressBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
+            [downloadRequest downloadWithProgress:downloadRequest.progressBlock parse:downloadRequest.parseBlock success:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
             } failure:^(__kindof JKDownloadRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];
-        } else {
+        } else if ([request isKindOfClass:[JKRequest class]]) {
+            JKRequest *normalRequest = (JKRequest *)request;
             @weakify(self);
-            [request startWithCompletionSuccess:^(__kindof JKBaseRequest * _Nonnull request) {
+            [normalRequest startWithCompletionParse:normalRequest.parseBlock success:^(__kindof JKRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleSuccessOfRequest:request];
-            } failure:^(__kindof JKBaseRequest * _Nonnull request) {
+            } failure:^(__kindof JKRequest * _Nonnull request) {
                 @strongify(self);
                 [self handleFailureOfRequest:request];
             }];

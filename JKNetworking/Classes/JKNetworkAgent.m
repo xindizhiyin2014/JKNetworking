@@ -517,9 +517,7 @@
     }
     if ([request isKindOfClass:[JKRequest class]]
         && request.parseBlock) {
-        [self.parseLock lock];
         request.parsedData = request.parseBlock(request,self.parseLock);
-        [self.parseLock unlock];
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         if (request.isIndependentRequest) {
