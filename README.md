@@ -418,7 +418,7 @@ NSLog(@"AAA %@",responseObject);
                          failure:(nullable void(^)(__kindof JKRequest *request))failureBlock;
 
 ```
-备注：JKRequest或者其子类的对象调用该方法，并在parseBlock中将数据解析然后返回，这个返回值会赋给request的parsedData，开发者可以接着在successBlock中使用这个数据刷新UI（successBlock已经返回到主线程），如果用到了block以外的数据，需要用block中传递过来的lock，加锁，解锁。另外一个需要注意点就是这个parseBlock是在并发子线程执行，不能调用任何和UI相关的API。
+备注：JKRequest或者其子类的对象调用该方法，并在parseBlock中将数据解析然后返回，这个返回值会赋给request的parsedData，开发者可以接着在successBlock中使用这个数据刷新UI（successBlock已经返回到主线程），如果用到了block以外的变量，需要用block中传递过来的lock，加锁，解锁。另外一个需要注意点就是这个parseBlock是在并发子线程执行，不能调用任何和UI相关的API。
 
 ### 网络请求根据业务决定执行成功逻辑或者失败逻辑
 有时候网络请求成功了，但是返回的数据相关的code代表业务失败，需要执行业务失败的逻辑，为了避免才网络成功的回调中执行失败的逻辑，因此需要实现JKRequestHelperProtocol中的如下方法：
