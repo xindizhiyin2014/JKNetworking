@@ -84,44 +84,7 @@
 
 - (void)start
 {
-    if (self.requestType != JKRequestTypeDefault) {
-    #if DEBUG
-            NSAssert(NO, @" request is upload request or download request,please use the specified func");
-    #endif
-        return;
-    }
     
-    if (self.isIndependentRequest) {
-        if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
-            [self.requestAccessory requestWillStart:self];
-        }
-    }
-    
-    if ([JKNetworkConfig sharedConfig].requestHelper
-        && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(judgeToChangeCachePolicy:)]) {
-        [[JKNetworkConfig sharedConfig].requestHelper judgeToChangeCachePolicy:self];
-    }
-    
-    if (self.ignoreCache) {
-        self.isDataFromCache = NO;
-        [[JKNetworkAgent sharedAgent] addRequest:self];
-        return;
-    }
-    
-    NSError *error = nil;
-    if (![self readResponseFromCache:&error]) {
-        self.isDataFromCache = NO;
-        [[JKNetworkAgent sharedAgent] addRequest:self];
-        return;
-    }
-    
-    self.isDataFromCache = YES;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.successBlock) {
-            self.successBlock(self);
-        }
-        [self clearCompletionBlock];
-    });
 }
 
 - (void)stop
@@ -276,6 +239,50 @@
 
 @implementation JKRequest
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.requestType = JKRequestTypeDefault;
+    }
+    return self;
+}
+
+- (void)start
+{
+    if (self.isIndependentRequest) {
+        if (self.requestAccessory && [self.requestAccessory respondsToSelector:@selector(requestWillStart:)]) {
+            [self.requestAccessory requestWillStart:self];
+        }
+    }
+    
+    if ([JKNetworkConfig sharedConfig].requestHelper
+        && [[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(judgeToChangeCachePolicy:)]) {
+        [[JKNetworkConfig sharedConfig].requestHelper judgeToChangeCachePolicy:self];
+    }
+    
+    if (self.ignoreCache) {
+        self.isDataFromCache = NO;
+        [[JKNetworkAgent sharedAgent] addRequest:self];
+        return;
+    }
+    
+    NSError *error = nil;
+    if (![self readResponseFromCache:&error]) {
+        self.isDataFromCache = NO;
+        [[JKNetworkAgent sharedAgent] addRequest:self];
+        return;
+    }
+    
+    self.isDataFromCache = YES;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.successBlock) {
+            self.successBlock(self);
+        }
+        [self clearCompletionBlock];
+    });
+}
+
 - (void)startWithCompletionSuccess:(nullable void(^)(__kindof JKRequest *))successBlock
                                     failure:(nullable void(^)(__kindof JKRequest *))failureBlock
 {
@@ -285,12 +292,6 @@
 - (void)startWithCompletionParse:(nullable id(^)(__kindof JKRequest *request, NSRecursiveLock *lock))parseBlock
                          success:(nullable void(^)(__kindof JKRequest *request))successBlock failure:(nullable void(^)(__kindof JKRequest *request))failureBlock
 {
-    if (self.requestType != JKRequestTypeDefault) {
-#if DEBUG
-        NSAssert(NO, @" request is upload request or download request,please use the specified func");
-#endif
-        return;
-    }
     self.parseBlock = parseBlock;
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
@@ -312,6 +313,16 @@
         self.requestType = JKRequestTypeUpload;
     }
     return self;
+}
+
+- (void)start
+{
+#if DEBUG
+    NSAssert(self.formDataBlock, @"self.formDataBlock can't be nil");
+#endif
+    if (self.formDataBlock) {
+        [[JKNetworkAgent sharedAgent] addRequest:self];
+    }
 }
 
 - (void)uploadWithProgress:(nullable void(^)(NSProgress *progress))uploadProgressBlock
@@ -380,6 +391,16 @@
     return self.absoluteString;
 }
 
+- (void)start
+{
+#if DEBUG
+    NSAssert(self.requestUrl, @"self.requestUrl can't be nil");
+#endif
+    if (self.requestUrl) {
+        [[JKNetworkAgent sharedAgent] addRequest:self];
+    }
+}
+
 - (void)downloadWithProgress:(nullable void(^)(NSProgress *downloadProgress))downloadProgressBlock
                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock
@@ -398,7 +419,6 @@
     self.failureBlock = failureBlock;
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
-
 
 - (NSString *)MD5String:(NSString *)string
 {
