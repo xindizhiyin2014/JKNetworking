@@ -394,9 +394,9 @@
 - (void)start
 {
 #if DEBUG
-    NSAssert(self.requestUrl, @"self.requestUrl can't be nil");
+    NSAssert(self.absoluteString, @"self.absoluteString can't be nil");
 #endif
-    if (self.requestUrl) {
+    if (self.absoluteString) {
         [[JKNetworkAgent sharedAgent] addRequest:self];
     }
 }
