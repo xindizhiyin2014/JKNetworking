@@ -334,7 +334,7 @@
     self.failureBlock = failureBlock;
     self.progressBlock = uploadProgressBlock;
     self.formDataBlock = formDataBlock;
-    [[JKNetworkAgent sharedAgent] addRequest:self];
+    [self start];
 }
 
 @end
@@ -363,6 +363,30 @@
         NSAssert(url, @"url can't be nil");
 #endif
         request.absoluteString = url;
+    }
+    return request;
+}
+
++ (instancetype)initWithUrl:(NSString *)url
+             downloadedPath:(NSString *)downloadedPath
+           backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy
+{
+    JKDownloadRequest *request = nil;
+    NSArray *allRequests = [[[JKNetworkAgent sharedAgent] allRequests] copy];
+    for (JKBaseRequest *baseRequest in allRequests) {
+        if ([baseRequest isKindOfClass:[JKDownloadRequest class]]) {
+            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)baseRequest;
+            if ([downloadRequest.absoluteString isEqualToString:url]
+                && downloadRequest.backgroundPolicy == backgroundPolicy
+                && [downloadRequest.downloadedFilePath isEqualToString:downloadedPath]) {
+                request = downloadRequest;
+            }
+        }
+    }
+    if (!request) {
+        request = [self initWithUrl:url];
+        request.downloadedFilePath = downloadedPath;
+        request.backgroundPolicy = backgroundPolicy;
     }
     return request;
 }
@@ -417,18 +441,7 @@
     self.parseBlock = parseBlock;
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
-    NSArray *allRequests = [[[JKNetworkAgent sharedAgent] allRequests] copy];
-    for (JKBaseRequest *baseRequest in allRequests) {
-        if ([baseRequest isKindOfClass:[JKDownloadRequest class]]) {
-            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)baseRequest;
-            if ([downloadRequest.absoluteString isEqualToString:self.absoluteString]
-                && downloadRequest.backgroundPolicy == self.backgroundPolicy
-                && [downloadRequest.downloadedFilePath isEqualToString:self.downloadedFilePath]) {
-                [downloadRequest stop];
-            }
-        }
-    }
-    [[JKNetworkAgent sharedAgent] addRequest:self];
+    [self start];
 }
 
 - (NSString *)MD5String:(NSString *)string

@@ -166,6 +166,10 @@
 #endif
         return;
     }
+    
+    if (request.isExecuting) {
+        return;
+    }
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
       if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(beforeAllRequests)]) {
@@ -185,9 +189,6 @@
         }
     }
     
-    if (request.isExecuting) {
-        return;
-    }
     [request resetOriginStatus];
     if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(beforeEachRequest:)]) {
         [[JKNetworkConfig sharedConfig].requestHelper beforeEachRequest:request];

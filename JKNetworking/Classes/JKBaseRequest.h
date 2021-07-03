@@ -236,6 +236,14 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 + (instancetype)initWithUrl:(nonnull NSString *)url;
 
+/// init,if has request with same config,do not init again.
+/// @param url url
+/// @param downloadedPath downloadedPath
+/// @param backgroundPolicy backgroundPolicy
++ (instancetype)initWithUrl:(NSString *)url
+             downloadedPath:(NSString *)downloadedPath
+           backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy;
+
 /// config the custom downloadedPath
 /// @param downloadedPath downloadedPath
 - (void)configCustomDownloadedPath:(NSString *)downloadedPath;
