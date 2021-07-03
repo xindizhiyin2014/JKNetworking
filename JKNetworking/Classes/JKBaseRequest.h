@@ -233,8 +233,6 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 + (instancetype)init NS_UNAVAILABLE;
 
-+ (instancetype)initWithUrl:(nonnull NSString *)url;
-
 /// init,if has request with same config,do not init again.
 /// @param url url
 /// @param downloadedPath if downloadedPath nil,the downloadedFilePath use default
