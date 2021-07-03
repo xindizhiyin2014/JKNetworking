@@ -417,6 +417,17 @@
     self.parseBlock = parseBlock;
     self.successBlock = successBlock;
     self.failureBlock = failureBlock;
+    NSArray *allRequests = [[[JKNetworkAgent sharedAgent] allRequests] copy];
+    for (JKBaseRequest *baseRequest in allRequests) {
+        if ([baseRequest isKindOfClass:[JKDownloadRequest class]]) {
+            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)baseRequest;
+            if ([downloadRequest.absoluteString isEqualToString:self.absoluteString]
+                && downloadRequest.backgroundPolicy == self.backgroundPolicy
+                && [downloadRequest.downloadedFilePath isEqualToString:self.downloadedFilePath]) {
+                [downloadRequest stop];
+            }
+        }
+    }
     [[JKNetworkAgent sharedAgent] addRequest:self];
 }
 
