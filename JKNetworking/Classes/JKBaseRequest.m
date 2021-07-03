@@ -350,6 +350,8 @@
 
 @property (nonatomic, copy, readwrite) NSString *tempFilePath;
 
+@property (nonatomic, assign, readwrite) JKDownloadBackgroundPolicy backgroundPolicy;
+
 @end
 
 @implementation JKDownloadRequest
@@ -368,9 +370,29 @@
 }
 
 + (instancetype)initWithUrl:(NSString *)url
-             downloadedPath:(NSString *)downloadedPath
+             downloadedPath:(nullable NSString *)downloadedPath
            backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy
 {
+    JKDownloadRequest *request = [JKDownloadRequest excutingDownloadRequestWithUrl:url downloadedPath:downloadedPath backgroundPolicy:backgroundPolicy];
+    if (!request) {
+        request = [self initWithUrl:url];
+        request.downloadedFilePath = downloadedPath;
+        request.backgroundPolicy = backgroundPolicy;
+    }
+    return request;
+}
+
++ (nullable)excutingDownloadRequestWithUrl:(NSString *)url
+                            downloadedPath:(NSString *)downloadedPath
+                          backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy
+{
+    if (!url || !downloadedPath) {
+#if DEBUG
+        NSAssert(url, @"url can't be nil");
+        NSAssert(downloadedPath, @"downloadedPath can't be nil");
+#endif
+        return nil;
+    }
     JKDownloadRequest *request = nil;
     NSArray *allRequests = [[[JKNetworkAgent sharedAgent] allRequests] copy];
     for (JKBaseRequest *baseRequest in allRequests) {
@@ -383,22 +405,7 @@
             }
         }
     }
-    if (!request) {
-        request = [self initWithUrl:url];
-        request.downloadedFilePath = downloadedPath;
-        request.backgroundPolicy = backgroundPolicy;
-    }
     return request;
-}
-
-- (void)configCustomDownloadedPath:(NSString *)downloadedPath
-{
-    if (!downloadedPath) {
-#if DEBUG
-        NSAssert(NO, @"downloadedPath can't be nil!");
-#endif
-    }
-    _downloadedFilePath = downloadedPath;
 }
 
 - (instancetype)init

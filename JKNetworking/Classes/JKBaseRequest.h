@@ -227,8 +227,7 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 /// the temp filepath of the download file
 @property (nonatomic, copy, nullable, readonly) NSString *tempFilePath;
 /// the background policy of the downloadRequest
-@property (nonatomic, assign) JKDownloadBackgroundPolicy backgroundPolicy;
-
+@property (nonatomic, assign, readonly) JKDownloadBackgroundPolicy backgroundPolicy;
 
 + (instancetype)new NS_UNAVAILABLE;
 
@@ -238,15 +237,19 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 /// init,if has request with same config,do not init again.
 /// @param url url
-/// @param downloadedPath downloadedPath
+/// @param downloadedPath if downloadedPath nil,the downloadedFilePath use default
 /// @param backgroundPolicy backgroundPolicy
 + (instancetype)initWithUrl:(NSString *)url
-             downloadedPath:(NSString *)downloadedPath
+             downloadedPath:(nullable NSString *)downloadedPath
            backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy;
 
-/// config the custom downloadedPath
-/// @param downloadedPath downloadedPath
-- (void)configCustomDownloadedPath:(NSString *)downloadedPath;
+/// find the executing DownloadRequest
+/// @param url url
+/// @param downloadedPath downloadedPath can't be nil
+/// @param backgroundPolicy backgroundPolicy
++ (nullable)excutingDownloadRequestWithUrl:(NSString *)url
+                            downloadedPath:(NSString *)downloadedPath
+                          backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy;
 
 /// downloadFile
 /// @param downloadProgressBlock downloadProgressBlock
