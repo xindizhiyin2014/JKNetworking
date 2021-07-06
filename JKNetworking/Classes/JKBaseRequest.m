@@ -226,6 +226,7 @@
     return self.requestTask.state == NSURLSessionTaskStateRunning;
 }
 
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<%@: %p>{ URL: %@ } { method: %@ } { arguments: %@ }", NSStringFromClass([self class]), self, self.requestTask.currentRequest.URL, self.requestTask.currentRequest.HTTPMethod, self.requestArgument];
@@ -351,6 +352,7 @@
 @property (nonatomic, copy, readwrite) NSString *tempFilePath;
 
 @property (nonatomic, assign, readwrite) JKDownloadBackgroundPolicy backgroundPolicy;
+@property (nonatomic, assign, readwrite) BOOL isRecoveredFromSystem;
 
 @end
 
@@ -376,7 +378,9 @@
     JKDownloadRequest *request = [JKDownloadRequest excutingDownloadRequestWithUrl:url downloadedPath:downloadedPath backgroundPolicy:backgroundPolicy];
     if (!request) {
         request = [self initWithUrl:url];
-        request.downloadedFilePath = downloadedPath;
+        if (downloadedPath) {
+            request.downloadedFilePath = downloadedPath;
+        }
         request.backgroundPolicy = backgroundPolicy;
     }
     return request;
@@ -403,6 +407,16 @@
                 && [downloadRequest.downloadedFilePath isEqualToString:downloadedPath]) {
                 request = downloadRequest;
             }
+        }
+    }
+    if (!request) {
+        NSURLSessionTask *task = [[JKNetworkAgent sharedAgent] lastExcutingBackgroundTaskOfURLString:url];
+        if (task) {
+            request.requestTask = task;
+            request = [self initWithUrl:url];
+            request.downloadedFilePath = downloadedPath;
+            request.backgroundPolicy = backgroundPolicy;
+            request.isRecoveredFromSystem = YES;
         }
     }
     return request;

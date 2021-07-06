@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// app complete the background download task,handle the completeHandler.
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
                                                                    completionHandler:(void (^)(void))completionHandler;
+- (NSURLSessionTask *)lastExcutingBackgroundTaskOfURLString:(NSString *)URLString;
 
 @end
 NS_ASSUME_NONNULL_END

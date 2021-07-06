@@ -228,6 +228,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 @property (nonatomic, copy, nullable, readonly) NSString *tempFilePath;
 /// the background policy of the downloadRequest
 @property (nonatomic, assign, readonly) JKDownloadBackgroundPolicy backgroundPolicy;
+/// the request is recovered from the os system,when start a background request during the last runing time,and the request has not completed
+@property (nonatomic, assign, readonly) BOOL isRecoveredFromSystem;
 
 + (instancetype)new NS_UNAVAILABLE;
 

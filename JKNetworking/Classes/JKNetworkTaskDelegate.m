@@ -8,6 +8,17 @@
 #import "JKNetworkTaskDelegate.h"
 #import "JKNetworkConfig.h"
 #import "JKNetworkingMacro.h"
+@interface JKBaseRequest(JKNetworkBaseDownloadTaskDelegate)
+
+@property (nonatomic, copy, nullable) void(^progressBlock)(NSProgress *progress);
+
+@end
+
+@implementation JKBaseRequest(JKNetworkBaseDownloadTaskDelegate)
+@dynamic progressBlock;
+
+
+@end
 
 @interface JKNetworkBaseDownloadTaskDelegate()
 @property (nonatomic, weak, readwrite) __kindof JKDownloadRequest *request;
@@ -18,8 +29,6 @@
 @property (nonatomic, assign) int64_t totalLength;
 @property (nonatomic, copy, nullable) NSError *(^parseBlock)(__kindof JKDownloadRequest *request, NSRecursiveLock *lock);
 @property (nonatomic, strong) NSRecursiveLock *lock;
-
-
 
 
 @end
@@ -67,6 +76,7 @@
                    forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [_request  addObserver:self forKeyPath:@"progressBlock" options:NSKeyValueObservingOptionNew context:NULL];
     }
     return self;
 }
@@ -75,6 +85,31 @@
                       didBecomeInvalidWithError:(NSError *)error
 {
     
+}
+#pragma mark - observeValueForKeyPath
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSString *,id> *)change
+                       context:(void *)context {
+    if ([keyPath isEqualToString:@"fractionCompleted"]) {
+        if (self.downloadProgressBlock) {
+            self.downloadProgressBlock(object);
+        }
+    } else if ([keyPath isEqualToString:@"progressBlock"]) {
+        @synchronized (self) {
+            self.downloadProgressBlock = self.request.progressBlock;
+        }
+        
+    }
+        
+}
+
+
+- (void)dealloc
+{
+    [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+    [self.request removeObserver:self forKeyPath:@"progressBlock"];
 }
 
 @end
@@ -105,21 +140,7 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
-}
 
-#pragma mark - NSProgress Tracking
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary<NSString *,id> *)change
-                       context:(void *)context {
-        if (self.downloadProgressBlock) {
-            self.downloadProgressBlock(object);
-        }
-}
 
 #pragma mark - NSURLSessionTaskDelegate
 
@@ -206,7 +227,6 @@ didCompleteWithError:(NSError *)error
 
 - (void)dealloc
 {
-    [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
@@ -215,16 +235,6 @@ didCompleteWithError:(NSError *)error
     if (self.request.requestTask.state == NSURLSessionTaskStateRunning) {
         [self.request.requestTask resume];
     }
-}
-#pragma mark - NSProgress Tracking
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary<NSString *,id> *)change
-                       context:(void *)context {
-        if (self.downloadProgressBlock) {
-            self.downloadProgressBlock(object);
-        }
 }
 
 #pragma mark - NSURLSessionTaskDelegate

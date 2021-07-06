@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly, nonnull) NSString *backgroundTaskIdentifier;
 
 @property (nonatomic, copy, nullable) void (^completionHandler)(void);
+- (nullable NSURLSessionTask *)lastExcutingBackgroundTaskOfURLString:(NSString *)URLString;
 
 - (NSURLSessionTask *)dataTaskWithDownloadRequest:(__kindof JKDownloadRequest *)request
                                 requestSerializer:(AFHTTPRequestSerializer *)requestSerializer

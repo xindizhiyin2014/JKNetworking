@@ -166,9 +166,15 @@
 #endif
         return;
     }
-    
     if (request.isExecuting) {
-        return;
+        if ([request isKindOfClass:[JKDownloadRequest class]]) {
+            JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
+            if (!downloadRequest.isRecoveredFromSystem) {
+                return;
+            }
+        } else {
+            return;
+        }
     }
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -188,13 +194,12 @@
             return;
         }
     }
-    
     [request resetOriginStatus];
     if ([[JKNetworkConfig sharedConfig].requestHelper respondsToSelector:@selector(beforeEachRequest:)]) {
         [[JKNetworkConfig sharedConfig].requestHelper beforeEachRequest:request];
     }
     NSError * __autoreleasing requestSerializationError = nil;
-    request.requestTask = [self sessionTaskForRequest:request error:&requestSerializationError];
+        request.requestTask = [self sessionTaskForRequest:request error:&requestSerializationError];
     if (requestSerializationError) {
         [self requestDidFailWithRequest:request error:requestSerializationError];
         return;
@@ -205,7 +210,6 @@
     }
     
     [self.lock unlock];
-    
     [request.requestTask resume];
 }
 
@@ -794,6 +798,11 @@
     if ([self.backgroundSessionMananger.backgroundTaskIdentifier isEqualToString:identifier]) {
         self.backgroundSessionMananger.completionHandler = completionHandler;
     }
+}
+
+- (NSURLSessionTask *)lastExcutingBackgroundTaskOfURLString:(NSString *)URLString
+{
+    return [self.backgroundSessionMananger lastExcutingBackgroundTaskOfURLString:URLString];
 }
 
 - (void)judgeToStartBufferRequestsWithRequest:(id)request
