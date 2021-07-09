@@ -40,4 +40,9 @@
 #endif
 #endif
 
+/// when the background task completed while the app not run,and the invoke the app,then post the notification,the object posted is an NSURLSessionTask
+static NSString * const JKBackgroundTaskCompleteAndInvokeAppNotification = @"JKBackgroundTaskCompleteAndInvokeAppNotification";
+
+
+
 #endif /* JKNetworkingMacro_h */

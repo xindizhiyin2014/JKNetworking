@@ -269,6 +269,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
                      success:(nullable void(^)(__kindof JKDownloadRequest *request))successBlock
                      failure:(nullable void(^)(__kindof JKDownloadRequest *request))failureBlock;
 
++ (NSString *)tempFilePathWithURLString:(NSString *)URLString
+                       backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy;
 @end
 
 NS_ASSUME_NONNULL_END

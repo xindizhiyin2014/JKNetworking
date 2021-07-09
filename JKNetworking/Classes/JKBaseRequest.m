@@ -465,7 +465,7 @@
     [self start];
 }
 
-- (NSString *)MD5String:(NSString *)string
++ (NSString *)MD5String:(NSString *)string
 {
    if (!jk_safeStr(string)) {
         return nil;
@@ -482,6 +482,18 @@
     return  output?:@"";
 }
 
++ (NSString *)tempFilePathWithURLString:(NSString *)URLString
+                       backgroundPolicy:(JKDownloadBackgroundPolicy)backgroundPolicy
+{
+    if (!jk_safeStr(URLString)) {
+        return nil;
+    }
+    NSString *str = [NSString stringWithFormat:@"backgroundPolicy_%@_%@",@(backgroundPolicy),URLString];
+    NSString *md5URLStr = [self MD5String:str];
+    NSString *tempFilePath = [[JKNetworkConfig sharedConfig].incompleteCacheFolder stringByAppendingPathComponent:md5URLStr];
+    return tempFilePath;
+}
+
 #pragma mark - - getter - -
 - (nullable NSString *)downloadedFilePath
 {
@@ -490,7 +502,7 @@
             return nil;
         }
         NSString *downloadFolderPath = [JKNetworkConfig sharedConfig].downloadFolderPath;
-        NSString *fileName = [self MD5String:self.absoluteString];
+        NSString *fileName = [[self class] MD5String:self.absoluteString];
         fileName = [fileName stringByAppendingPathExtension:[self.absoluteString pathExtension]]?:@"";
         _downloadedFilePath = [NSString pathWithComponents:@[downloadFolderPath, fileName]];
     }
@@ -500,12 +512,7 @@
 - (nullable NSString *)tempFilePath
 {
     if (!_tempFilePath) {
-        if (!jk_safeStr(self.absoluteString)) {
-            return nil;
-        }
-        NSString *str = [NSString stringWithFormat:@"backgroundPolicy_%@_%@",@(self.backgroundPolicy),self.absoluteString];
-        NSString *md5URLStr = [self MD5String:str];
-        _tempFilePath = [[JKNetworkConfig sharedConfig].incompleteCacheFolder stringByAppendingPathComponent:md5URLStr];
+        _tempFilePath = [[self class] tempFilePathWithURLString:self.absoluteString backgroundPolicy:self.backgroundPolicy];
     }
     return _tempFilePath;
 }

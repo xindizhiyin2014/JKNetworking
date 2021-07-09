@@ -9,6 +9,7 @@
 #import "AFNetworking.h"
 #import "JKNetworkTaskDelegate.h"
 #import "JKBaseRequest.h"
+#import "JKNetworkingMacro.h"
 
 static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_background_task_identifier";
 
@@ -85,6 +86,15 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
             if (delegate
                 && [delegate respondsToSelector:@selector(URLSession:task:didBecomeInvalidWithError:)]) {
                 [delegate URLSession:session task:task didBecomeInvalidWithError:error];
+            } else {
+                if ([task isKindOfClass: [NSURLSessionDownloadTask class]]) {
+                    NSURLSessionDownloadTask *downloadTask = (NSURLSessionDownloadTask *)task;
+                    [downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+                        NSString *tempFilePath = [JKDownloadRequest tempFilePathWithURLString:task.originalRequest.URL.absoluteString backgroundPolicy:JKDownloadBackgroundRequire];
+                        [resumeData writeToFile:tempFilePath atomically:YES];
+                        
+                    }];
+                }
             }
         }
     }];
@@ -110,6 +120,12 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
         && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
         [self removeDelegateForTaskIdentifier:task.taskIdentifier];
         [delegate URLSession:session task:task didCompleteWithError:error];
+    } else {
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:JKBackgroundTaskCompleteAndInvokeAppNotification object:task];
+        } else {
+        }
+            
     }
 }
 
