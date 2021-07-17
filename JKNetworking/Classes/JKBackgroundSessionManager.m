@@ -13,6 +13,11 @@
 
 static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_background_task_identifier";
 
+NSString * const JKBackgroundTaskCompleteAndInvokeAppNotification = @"JKBackgroundTaskCompleteAndInvokeAppNotification";
+
+NSString * const JKBackgroundTaskCompleteTaskKey = @"downloadTask";
+NSString * const JKBackgroundTaskCompleteLocationKey = @"location";
+
 @interface JKBaseRequest(JKBackgroundSessionManager)
 
 @property (nonatomic, strong, readwrite) NSURLSessionTask *requestTask;
@@ -121,11 +126,9 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
         [self removeDelegateForTaskIdentifier:task.taskIdentifier];
         [delegate URLSession:session task:task didCompleteWithError:error];
     } else {
-        if (!error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:JKBackgroundTaskCompleteAndInvokeAppNotification object:task];
-        } else {
-        }
-            
+        [self.lock lock];
+        [self.lastExcutingBackgroundTasks removeObject:task];
+        [self.lock unlock];
     }
 }
 
@@ -164,6 +167,12 @@ static NSString * const kJKNetwork_background_task_identifier = @"kJKNetwork_bac
         && [delegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
         [self removeDelegateForTaskIdentifier:downloadTask.taskIdentifier];
         [delegate URLSession:session downloadTask:downloadTask didFinishDownloadingToURL:location];
+    } else {
+        NSMutableDictionary *info =[NSMutableDictionary new];
+        info[JKBackgroundTaskCompleteTaskKey] = downloadTask;
+        info[JKBackgroundTaskCompleteLocationKey] = location;
+        [[NSNotificationCenter defaultCenter] postNotificationName:JKBackgroundTaskCompleteAndInvokeAppNotification object:info];
+        
     }
 }
 

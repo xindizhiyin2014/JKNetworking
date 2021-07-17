@@ -235,7 +235,16 @@
         || request.requestTask.state == NSURLSessionTaskStateCompleted) {
         return;
     }
-    [request.requestTask cancel];
+    if ([request isKindOfClass:[JKDownloadRequest class]]) {
+        JKDownloadRequest *downloadRequest = (JKDownloadRequest *)request;
+        NSURLSessionDownloadTask *task = (NSURLSessionDownloadTask *)downloadRequest.requestTask;
+        [task cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+            [resumeData writeToFile:downloadRequest.tempFilePath atomically:YES];
+        }];
+        
+    } else {
+        [request.requestTask cancel];
+    }
     [self.lock lock];
     [self.allStartedRequests removeObject:request];
     [self.lock unlock];
