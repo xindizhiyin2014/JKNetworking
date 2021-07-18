@@ -412,8 +412,8 @@
     if (!request) {
         NSURLSessionTask *task = [[JKNetworkAgent sharedAgent] lastExcutingBackgroundTaskOfURLString:url];
         if (task) {
-            request.requestTask = task;
             request = [self initWithUrl:url];
+            request.requestTask = task;
             request.downloadedFilePath = downloadedPath;
             request.backgroundPolicy = backgroundPolicy;
             request.isRecoveredFromSystem = YES;

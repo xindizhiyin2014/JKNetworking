@@ -126,6 +126,15 @@ NSString * const JKBackgroundTaskCompleteLocationKey = @"location";
         [self removeDelegateForTaskIdentifier:task.taskIdentifier];
         [delegate URLSession:session task:task didCompleteWithError:error];
     } else {
+        if (error) {
+            if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
+                NSURLSessionDownloadTask *downloadTask = (NSURLSessionDownloadTask *)task;
+                NSString *tempPath = [JKDownloadRequest tempFilePathWithURLString:downloadTask.originalRequest.URL.absoluteString backgroundPolicy:JKDownloadBackgroundRequire];
+                [downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+                    [resumeData writeToFile:tempPath atomically:YES];
+                }];
+            }
+        }
         [self.lock lock];
         [self.lastExcutingBackgroundTasks removeObject:task];
         [self.lock unlock];
