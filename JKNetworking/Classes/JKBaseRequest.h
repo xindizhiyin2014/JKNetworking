@@ -61,6 +61,12 @@ typedef NS_ENUM(NSInteger,JKDownloadBackgroundPolicy) {
   JKDownloadBackgroundRequire,
 };
 
+typedef NS_ENUM(NSInteger, JKRequestPriority) {
+    JKRequestPriorityDefault = 0,
+    JKRequestPriorityLow,
+    JKRequestPriorityHigh
+};
+
 static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 
@@ -105,6 +111,8 @@ static NSString * const JKNetworkErrorDomain = @"JKNetworkError";
 
 /// the requestTask of the Request
 @property (nonatomic, strong, readonly, nullable) NSURLSessionTask *requestTask;
+
+@property (nonatomic, assign) JKRequestPriority priority;
 
 /// the responseObject of the request
 @property (nonatomic, strong, readonly, nullable) id responseObject;

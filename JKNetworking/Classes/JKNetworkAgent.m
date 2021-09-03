@@ -200,6 +200,13 @@
     }
     NSError * __autoreleasing requestSerializationError = nil;
         request.requestTask = [self sessionTaskForRequest:request error:&requestSerializationError];
+    if (request.priority == JKRequestPriorityDefault) {
+        request.requestTask.priority = NSURLSessionTaskPriorityDefault;
+    } else if (request.priority == JKRequestPriorityLow) {
+        request.requestTask.priority = NSURLSessionTaskPriorityLow;
+    }else if (request.priority == JKRequestPriorityHigh) {
+        request.requestTask.priority = NSURLSessionTaskPriorityHigh;
+   }
     if (requestSerializationError) {
         [self requestDidFailWithRequest:request error:requestSerializationError];
         return;
