@@ -430,6 +430,27 @@ NSLog(@"AAA %@",responseObject);
 - (BOOL)validateBusinessSuccess:(__kindof JKRequest *)request error:(NSError * _Nullable __autoreleasing *)error;
 
 ```
+## 实现历程博客
+[《iOS开发mock接口数据（一）之需求分析》](https://blog.csdn.net/hanhailong18/article/details/61206221?spm=1001.2014.3001.5502)
+
+[《iOS开发mock接口数据（二）之网络请求匹配》](https://blog.csdn.net/hanhailong18/article/details/61415720?spm=1001.2014.3001.5502)
+
+[《iOS开发mock接口数据（三）之实战教程》](https://blog.csdn.net/hanhailong18/article/details/61915780?spm=1001.2014.3001.5502)
+
+[《使用Charles进行mock的三种方式》](https://blog.csdn.net/hanhailong18/article/details/103092954?spm=1001.2014.3001.5502)
+
+[《说一说NSURLProtocol》](https://blog.csdn.net/hanhailong18/article/details/103116512?spm=1001.2014.3001.5502)
+
+[《网络请求框架需求梳理》](https://blog.csdn.net/hanhailong18/article/details/103175642?spm=1001.2014.3001.5502)
+
+[《打造一款高稳定易扩展的网络请求框架JKNetworking》](https://blog.csdn.net/hanhailong18/article/details/103303817?spm=1001.2014.3001.5502)
+
+[《JKNetworking 升级之JKBatchRequest优化升级》](https://blog.csdn.net/hanhailong18/article/details/107550876?spm=1001.2014.3001.5502)
+
+[《JKNetworking完整文档》](https://blog.csdn.net/hanhailong18/article/details/117317587?spm=1001.2014.3001.5502)
+
+[《谈一谈iOS开发后台下载》](https://blog.csdn.net/hanhailong18/article/details/118666943?spm=1001.2014.3001.5502)
+
 ## 技术交流，QQ扫描下方二维码
 ![交流](./doc/qq_contact.png)
 
